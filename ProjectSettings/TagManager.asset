@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Coin
+  - GM
   layers:
   - Default
   - TransparentFX
@@ -14,11 +15,11 @@ TagManager:
   - UI
   - 
   - 
+  - 
+  - Foreground_Env
   - Player
   - Vine_Back
-  - 
-  - 
-  - 
+  - Background_Env
   - 
   - 
   - 
