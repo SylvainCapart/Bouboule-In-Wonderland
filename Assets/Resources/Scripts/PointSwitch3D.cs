@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(Rigidbody2D))]
+
 public class PointSwitch3D : MonoBehaviour {
 
     public Transform[] points;
@@ -9,9 +11,11 @@ public class PointSwitch3D : MonoBehaviour {
     private float horizontalMove = 0f;
     public float moveSpeed = 40f;
     private Rigidbody2D m_Rigidbody2D;
+    [Range(0, .5f)][SerializeField] private float m_AxisAdjustment = 0f;
     private Vector3 velocity = Vector3.zero;
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;  // How much to smooth out the movement
     private bool m_FacingRight = false;
+    [SerializeField] private bool m_isObjectFlying = false;
     public bool m_Randomize;
     [SerializeField]
     private int[] m_validChoices;
@@ -53,27 +57,20 @@ public class PointSwitch3D : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        float horizontalMove;
-        float verticalMove;
+        float horizontalMove = 0f;
+        float verticalMove = 0f;
         int lastIndex;
 
-        if (points[targetPointIndex].position.x != this.transform.position.x)
+        if (m_isObjectFlying || Mathf.Abs(points[targetPointIndex].position.x - this.transform.position.x) > m_AxisAdjustment)
         {
             horizontalMove = ((points[targetPointIndex].position.x - this.transform.position.x) / Mathf.Abs(points[targetPointIndex].position.x - this.transform.position.x));
         }
-        else
-        {
-            horizontalMove = 0f;
-        }
 
-        if (points[targetPointIndex].position.y != this.transform.position.y)
+        if (m_isObjectFlying || Mathf.Abs(points[targetPointIndex].position.y - this.transform.position.y) > m_AxisAdjustment)
         {
             verticalMove = ((points[targetPointIndex].position.y - this.transform.position.y) / Mathf.Abs(points[targetPointIndex].position.y - this.transform.position.y));
         }
-        else
-        {
-            verticalMove = 0f;
-        }
+
 
         Move(horizontalMove * moveSpeed * Time.fixedDeltaTime, verticalMove * moveSpeed * Time.fixedDeltaTime);
         //Vector2 checkDistance = new Vector2(Vector2.Distance(points[targetPointIndex].position, this.transform.position), 0);
