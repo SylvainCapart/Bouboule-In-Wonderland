@@ -85,22 +85,6 @@ public class Player : MonoBehaviour {
         statusIndicator.SetHealth(stats.CurrentHealth, stats.maxHealth);
     }
 
-    void OnUpgradeMenuToggle(bool active)
-    {
-        //handle what happens when the upgrade menu is toggled
-        PlayerMovement _platControl = GetComponent<PlayerMovement>();
-        if (_platControl != null)
-            _platControl.enabled = !active;
 
-        Rigidbody2D _rb = GetComponent<Rigidbody2D>();
-        if (_rb != null)
-            _rb.gameObject.SetActive(!active);
-
-    }
-
-    private void OnDestroy()
-    {
-       // GameMaster.gm.onToggleUpgrademenu -= OnUpgradeMenuToggle;
-    }
 
 }

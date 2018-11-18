@@ -136,12 +136,12 @@ public class GameMaster : MonoBehaviour
         }
     }
 
-    /*public static void KillEnemy(Enemy enemy)
+    public static void KillEnemy(Enemy enemy)
     {
 
         gm._KillEnemy(enemy);
-    }*/
-    /*
+    }
+    
     public void _KillEnemy(Enemy _enemy)
     {
         //sound
@@ -160,6 +160,6 @@ public class GameMaster : MonoBehaviour
 
         Destroy(_enemy.gameObject);
 
-    }*/
+    }
 
 }
