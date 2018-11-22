@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: b066c6702c823714fad3d44c13690ce6
+guid: c5f94d1198e9f7643a7abcc8216a1838
 TextureImporter:
   fileIDToRecycleName:
     21300000: dragon_blue_parts_01_0
     21300002: dragon_blue_parts_01_1
     21300004: dragon_blue_parts_01_2
-    21300006: dragon_blue_parts_01_4
-    21300008: dragon_blue_parts_01_3
+    21300006: dragon_blue_parts_01_3
+    21300008: dragon_blue_parts_01_4
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -108,13 +108,13 @@ TextureImporter:
         width: 170
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 97e9084a0e98b6845a9670ee10334173
+      spriteID: 33999947e0f0b674c898f4bac54f9fea
       vertices: []
       indices: 
       edges: []
@@ -128,13 +128,13 @@ TextureImporter:
         width: 65
         height: 45
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b009c92da29f2224c8e33fff1a9ade5b
+      spriteID: d421990b14efef34093ad76da0d98cd2
       vertices: []
       indices: 
       edges: []
@@ -148,33 +148,13 @@ TextureImporter:
         width: 89
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9d5f201486bcec340ba117df368acd4d
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: dragon_blue_parts_01_4
-      rect:
-        serializedVersion: 2
-        x: 403
-        y: 74
-        width: 74
-        height: 77
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b68eb11779e0e5e45b5f72df4b04f6a7
+      spriteID: 0cb2c991a880b6347be4bf8227ddc69f
       vertices: []
       indices: 
       edges: []
@@ -183,18 +163,38 @@ TextureImporter:
       name: dragon_blue_parts_01_3
       rect:
         serializedVersion: 2
-        x: 206
-        y: 20
-        width: 65
-        height: 28
-      alignment: 9
-      pivot: {x: 0.9996826, y: 0.76425236}
+        x: 403
+        y: 75
+        width: 74
+        height: 77
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3477f54420816094e9212b9f070ea1e3
+      spriteID: 75a1e0ecf7506ae4e98e0fa6e72b5e39
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dragon_blue_parts_01_4
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 20
+        width: 65
+        height: 28
+      alignment: 9
+      pivot: {x: 0.9461877, y: 0.7191105}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edff33472309547458cdaefc4eeb0d5b
       vertices: []
       indices: 
       edges: []
@@ -202,7 +202,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: ebf5232e7d80e8842a85b23765d1359f
+    spriteID: e82baec260d301d468e3c0a0a1e926c5
     vertices: []
     indices: 
     edges: []

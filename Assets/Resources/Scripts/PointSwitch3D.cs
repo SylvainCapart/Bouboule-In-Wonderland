@@ -141,6 +141,7 @@ public class PointSwitch3D : MonoBehaviour {
         {
             if (m_validChoices[i] == value)
                 return i;
+
         }
         return 0;
     }

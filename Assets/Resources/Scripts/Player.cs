@@ -71,10 +71,10 @@ public class Player : MonoBehaviour {
 
     private void Update()
     {
-        if (transform.position.y <= -20)
+        /*if (transform.position.y <= -20)
         {
             DamagePlayer( 10^6);
-        }
+        }*/
 
         statusIndicator.SetHealth(stats.CurrentHealth, stats.maxHealth);
     }

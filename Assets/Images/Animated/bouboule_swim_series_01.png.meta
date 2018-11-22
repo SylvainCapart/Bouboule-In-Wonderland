@@ -1,0 +1,562 @@
+fileFormatVersion: 2
+guid: d4fcfadadf1f23d49aae64e77ec7213d
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: bouboule_swim_series_01_0
+    21300002: bouboule_swim_series_01_1
+    21300004: bouboule_swim_series_01_2
+    21300006: bouboule_swim_series_01_3
+    21300008: bouboule_swim_series_01_4
+    21300010: bouboule_swim_series_01_5
+    21300012: bouboule_swim_series_01_6
+    21300014: bouboule_swim_series_01_7
+    21300016: bouboule_swim_series_01_8
+    21300018: bouboule_swim_series_01_9
+    21300020: bouboule_swim_series_01_10
+    21300022: bouboule_swim_series_01_11
+    21300024: bouboule_swim_series_01_12
+    21300026: bouboule_swim_series_01_13
+    21300028: bouboule_swim_series_01_14
+    21300030: bouboule_swim_series_01_15
+    21300032: bouboule_swim_series_01_16
+    21300034: bouboule_swim_series_01_17
+    21300036: bouboule_swim_series_01_18
+    21300038: bouboule_swim_series_01_19
+    21300040: bouboule_swim_series_01_20
+    21300042: bouboule_swim_series_01_22
+    21300044: bouboule_swim_series_01_23
+    21300046: bouboule_swim_series_01_24
+    21300048: bouboule_swim_series_01_25
+    21300050: bouboule_swim_series_01_26
+    21300052: bouboule_swim_series_01_27
+    21300054: bouboule_swim_series_01_28
+    21300056: bouboule_swim_series_01_29
+    21300058: bouboule_swim_series_01_30
+    21300060: bouboule_swim_series_01_31
+    21300062: bouboule_swim_series_01_32
+  externalObjects: {}
+  serializedVersion: 7
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_0
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 172
+        width: 88
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5440197, y: 0.54402393}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33493a6c06acaf8439cc6d76046e78dc
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_1
+      rect:
+        serializedVersion: 2
+        x: 124
+        y: 172
+        width: 88
+        height: 72
+      alignment: 9
+      pivot: {x: 0.55558205, y: 0.5351783}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8323fb5cd5f3c404bb6df9108cca9e5a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_2
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 168
+        width: 84
+        height: 74
+      alignment: 9
+      pivot: {x: 0.58004725, y: 0.5440455}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b19e9bd266af7ba47aa9e6db86301113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_3
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 164
+        width: 83
+        height: 77
+      alignment: 9
+      pivot: {x: 0.57684255, y: 0.5652985}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa4e04eee7c71544785b45b1ac551016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_4
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 162
+        width: 82
+        height: 78
+      alignment: 9
+      pivot: {x: 0.57042193, y: 0.571452}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95711fb7f49510a41a35649bd585df78
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_5
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 159
+        width: 82
+        height: 81
+      alignment: 9
+      pivot: {x: 0.5730859, y: 0.5619283}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b0cbb37c4314cd44bb3928ee478e6fd
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_6
+      rect:
+        serializedVersion: 2
+        x: 622
+        y: 157
+        width: 82
+        height: 80
+      alignment: 9
+      pivot: {x: 0.56948036, y: 0.5759323}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3bb509998ce8aa74c8526a236d19e74a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_7
+      rect:
+        serializedVersion: 2
+        x: 722
+        y: 154
+        width: 82
+        height: 80
+      alignment: 9
+      pivot: {x: 0.55427665, y: 0.5669977}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9521a40cbe2804b48b8c9d5cc39308dc
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_8
+      rect:
+        serializedVersion: 2
+        x: 820
+        y: 155
+        width: 82
+        height: 81
+      alignment: 9
+      pivot: {x: 0.56856036, y: 0.55721384}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9ddb1d5fdb46d04ba1ce6d7d4af75f1
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_9
+      rect:
+        serializedVersion: 2
+        x: 916
+        y: 152
+        width: 81
+        height: 80
+      alignment: 9
+      pivot: {x: 0.56960946, y: 0.5641674}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ddf6562ff6c77c4aa7b330f3cbb333d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_10
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 53
+        width: 82
+        height: 76
+      alignment: 9
+      pivot: {x: 0.5664882, y: 0.5541493}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 242bca1f33b372b4098f1e9e55d83b78
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_11
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 54
+        width: 85
+        height: 74
+      alignment: 9
+      pivot: {x: 0.5524269, y: 0.5437218}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5fc5c849dc4d9794d847be0ad7e5a508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_12
+      rect:
+        serializedVersion: 2
+        x: 186
+        y: 57
+        width: 82
+        height: 71
+      alignment: 9
+      pivot: {x: 0.5629261, y: 0.5385353}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c5765c700f052f4bae29b23a77f4dee
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_13
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 57
+        width: 84
+        height: 71
+      alignment: 9
+      pivot: {x: 0.5577193, y: 0.5375076}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7129b659804e5641971a862d3831dee
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_14
+      rect:
+        serializedVersion: 2
+        x: 369
+        y: 56
+        width: 83
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5612723, y: 0.52906716}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb8d7a446513ca64683a43af9cdf15ac
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_15
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 55
+        width: 84
+        height: 71
+      alignment: 9
+      pivot: {x: 0.5671997, y: 0.52589977}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a28d7e069cacffc458b73ece87a26f50
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_16
+      rect:
+        serializedVersion: 2
+        x: 551
+        y: 55
+        width: 82
+        height: 71
+      alignment: 9
+      pivot: {x: 0.56863475, y: 0.53037703}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 23fea272a35f80e40bee0e807f88d6f3
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_17
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 52
+        width: 82
+        height: 71
+      alignment: 9
+      pivot: {x: 0.570282, y: 0.52567077}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c23980f26359d344ba1fa27e7167957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_18
+      rect:
+        serializedVersion: 2
+        x: 729
+        y: 50
+        width: 84
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5636306, y: 0.52487576}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dceb9c64a60b1724bbd629d9ebd6bdc0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_19
+      rect:
+        serializedVersion: 2
+        x: 821
+        y: 48
+        width: 87
+        height: 71
+      alignment: 9
+      pivot: {x: 0.544, y: 0.52402097}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ee4e3524d409364898a0d4716634c2d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bouboule_swim_series_01_20
+      rect:
+        serializedVersion: 2
+        x: 915
+        y: 44
+        width: 89
+        height: 72
+      alignment: 9
+      pivot: {x: 0.51786613, y: 0.5175686}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29998cc13a160d04f812f93aa9f923d8
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: b2c21c041ea5ec84189379cce9a2651c
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

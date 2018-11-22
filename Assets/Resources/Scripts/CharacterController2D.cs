@@ -361,6 +361,15 @@ public class CharacterController2D : MonoBehaviour
         return speedRatio;
     }
 
+    void OnTriggerStay2D(Collider2D other)
+    {
+        //other.attachedRigidbody.AddForce(-0.1F * other.attachedRigidbody.velocity);
+        if (other.gameObject.tag == "Water")
+        {
+            Debug.LogError("WATER");
+        }
+    }
+
 
 
 }
