@@ -5,9 +5,10 @@ using UnityEngine;
 public class FireThrow : MonoBehaviour {
     private Animator m_Anim;
     private ParticleSystem m_mouthFireEffect;
-    private const string mouthFireStr = "MouthFire";
+    [SerializeField] private const string mouthFireStr = "MouthFire";
     private float lastDirection = 1f;
     public bool m_isSpittingFire = false;
+
 
     // Use this for initialization
     void Start () {
@@ -40,7 +41,7 @@ public class FireThrow : MonoBehaviour {
         }
 
         // only enable to spit fire if player is not rolling
-        if (!GetComponentInParent<CharacterController2D>().m_Rolling && !GetComponentInParent<CharacterController2D>().m_Climbing)
+        if (!GetComponentInParent<CharacterController2D>().m_Rolling && !GetComponentInParent<CharacterController2D>().m_Climbing && !GetComponentInParent<CharacterController2D>().m_Swim)
         {
             if (Input.GetButtonDown("Fire1"))
             {
@@ -51,6 +52,7 @@ public class FireThrow : MonoBehaviour {
                 StopSpitFire();
             }
         }
+
     }
 
     public void StartSpitFire()
