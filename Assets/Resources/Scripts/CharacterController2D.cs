@@ -6,13 +6,13 @@ using System.Collections.Generic;
 
 public class CharacterController2D : MonoBehaviour
 {
-	[SerializeField] private float m_JumpForce = 400f;							// Amount of force added when the player jumps.
+    [SerializeField] private float m_JumpForce = 400f;							// Amount of force added when the player jumps.
     [Range(0, 1)] [SerializeField] private float m_rollSpeed = .76f;          // Amount of maxSpeed applied to rolling movement. 1 = 100%
     [Range(0, 1)] [SerializeField] private float m_climbSpeed = .5f;          // Amount of maxSpeed applied to climbing movement. 1 = 100%
     [Range(0, 1)] [SerializeField] private float m_SwimSpeed = .5f;          // Amount of maxSpeed applied to swimming movement. 1 = 100%
-    [Range(0, .3f)] [SerializeField] private float m_movementSmoothing = .05f;	// How much to smooth out the movement
-	[SerializeField] private bool m_airControl = false;							// Whether or not a player can steer while jumping;
-	[SerializeField] private LayerMask m_whatIsGround;							// A mask determining what is ground to the character                                                                   //[SerializeField] private Transform m_GroundCheck;							// A position marking where to check if the player is grounded.
+    [Range(0, .3f)] [SerializeField] private float m_movementSmoothing = .05f;  // How much to smooth out the movement
+    [SerializeField] private bool m_airControl = false;                         // Whether or not a player can steer while jumping;
+    [SerializeField] private LayerMask m_whatIsGround;							// A mask determining what is ground to the character                                                                   //[SerializeField] private Transform m_GroundCheck;							// A position marking where to check if the player is grounded.
     [SerializeField] private Transform[] m_GroundCheckTable;                           // A positions table marking where to check if the player is grounded.
     [SerializeField] private Transform m_CeilingCheck;							// A position marking where to check for ceilings
     [SerializeField] private Collider2D[] m_RollDisableColliderTable;                // A collider that will be disabled when rolling
@@ -31,9 +31,9 @@ public class CharacterController2D : MonoBehaviour
     public bool m_Swimming = false;        // Wether player is currently swimming or not
 
     const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
-	private Rigidbody2D m_Rigidbody2D;
-	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
-	private Vector3 m_velocity = Vector3.zero;
+    private Rigidbody2D m_Rigidbody2D;
+    private bool m_FacingRight = true;  // For determining which way the player is currently facing.
+    private Vector3 m_velocity = Vector3.zero;
     private Animator m_Anim;
     private float m_MaxAnimSpeed = 3f;
     private float m_IncrementAnimSpeed = 1.5f;
@@ -53,13 +53,13 @@ public class CharacterController2D : MonoBehaviour
     void OnGUI()
     {
         GUI.Label(new Rect(0, 0, 100, 100), "" + (int)(1.0f / Time.smoothDeltaTime));
-        
+
     }
 
 
     private void Awake()
-	{
-		m_Rigidbody2D = GetComponent<Rigidbody2D>();
+    {
+        m_Rigidbody2D = GetComponent<Rigidbody2D>();
         if (m_Rigidbody2D == null)
             Debug.LogError(this.name + " : RB not found");
 
@@ -70,29 +70,29 @@ public class CharacterController2D : MonoBehaviour
     }
 
 
-	private void FixedUpdate()
-	{
-		m_Grounded = false;
+    private void FixedUpdate()
+    {
+        m_Grounded = false;
         Collider2D[] colliders;
 
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
         //if (m_GroundCheckTable[0].gameObject.activeSelf)
         //{
-            for (int i = 0; i < m_GroundCheckTable.Length; i++)
+        for (int i = 0; i < m_GroundCheckTable.Length; i++)
+        {
+            if (!m_Swim)
+                colliders = Physics2D.OverlapCircleAll(m_GroundCheckTable[i].position, k_GroundedRadiusTable[i], m_whatIsGround);
+            else
+                colliders = Physics2D.OverlapCircleAll(m_GroundCheckTable[i].position, k_GroundedRadiusWaterTable[i], m_whatIsGround);
+
+            for (int j = 0; j < colliders.Length; j++)
             {
-                if (!m_Swim)
-                    colliders = Physics2D.OverlapCircleAll(m_GroundCheckTable[i].position, k_GroundedRadiusTable[i], m_whatIsGround);
-                else
-                    colliders = Physics2D.OverlapCircleAll(m_GroundCheckTable[i].position, k_GroundedRadiusWaterTable[i], m_whatIsGround);
-
-                for (int j = 0; j < colliders.Length; j++)
-                    {
-                        if (colliders[j].gameObject != gameObject)
-                            m_Grounded = true;
-                    }
-
+                if (colliders[j].gameObject != gameObject)
+                    m_Grounded = true;
             }
+
+        }
         //}
 
         if (!m_Grounded && !inAir)
@@ -117,8 +117,9 @@ public class CharacterController2D : MonoBehaviour
         hSliderValue = GUI.HorizontalSlider(new Rect(25, 45, 100, 30), hSliderValue, 0.0F, 3.0F);
     }*/
 
+
     public void Move(float xMove, float yMove, bool jump, bool roll, bool charging, bool climb, bool swim)
-	{
+    {
 
         //Debug.Log("xMove : " + xMove + " / yMove : " + yMove);
         m_Rolling = roll;
@@ -139,6 +140,10 @@ public class CharacterController2D : MonoBehaviour
             charging = false;
             m_Grounded = false;
         }
+        else
+        {
+            m_Swimming = false;
+        }
 
         m_Anim.SetBool("Swim", swim);
 
@@ -158,7 +163,7 @@ public class CharacterController2D : MonoBehaviour
 
         //only control the player if grounded or airControl is turned on
         if (m_Grounded || m_airControl)
-		{
+        {
             // If rolling
             if (roll)
             {
@@ -181,9 +186,9 @@ public class CharacterController2D : MonoBehaviour
 
                     RollCharge();
 
-                    speedRatio = (m_Anim.speed  - 1f)/ m_MaxAnimSpeed;
+                    speedRatio = (m_Anim.speed - 1f) / m_MaxAnimSpeed;
 
-                        
+
 
 
                     ParticleSystem.MainModule main = m_SparkEffect.main;
@@ -201,7 +206,7 @@ public class CharacterController2D : MonoBehaviour
 
                 for (int i = 0; i < m_GroundCheckTable.Length; i++)
                 {
-                    m_GroundCheckTable[i].gameObject.SetActive(false); 
+                    m_GroundCheckTable[i].gameObject.SetActive(false);
                 }
 
                 for (int i = 0; i < m_RollDisableColliderTable.Length; i++)
@@ -233,7 +238,7 @@ public class CharacterController2D : MonoBehaviour
                     RollChargeRelease();
                 else
                     RollChargeReset();
-               
+
             }
 
             // The Speed animator parameter is set to the absolute value of the horizontal input.
@@ -304,10 +309,10 @@ public class CharacterController2D : MonoBehaviour
                     Flip();
                 }
             }
-		}
-		// If the player should jump...
-		if ( !swim && ((m_Grounded && jump && m_Anim.GetBool("Ground")) || (jump && climb)))
-		{
+        }
+        // If the player should jump...
+        if (!m_Swim && ((m_Grounded && jump && m_Anim.GetBool("Ground")) || (jump && climb)))
+        {
             // Add a vertical force to the player.
             StartCoroutine(DisableClimbFor(m_JumpDisableClimbingTime));
             m_Grounded = false;
@@ -322,7 +327,7 @@ public class CharacterController2D : MonoBehaviour
     }
 
 
-	private void Flip()
+    /*private void Flip()
 	{
 		// Switch the way the player is labelled as facing.
 		m_FacingRight = !m_FacingRight;
@@ -331,7 +336,19 @@ public class CharacterController2D : MonoBehaviour
 		Vector3 theScale = transform.localScale;
 		theScale.x *= -1;
 		transform.localScale = theScale;
-	}
+	}*/
+
+    private void Flip()
+    {
+
+            transform.Rotate(new Vector3(0, 180, 0));
+         //   transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, 0, transform.rotation.z));
+        //transform.Rotate Quaternion.Euler(new Vector3(transform.rotation.x, 180, transform.rotation.z));
+        // Switch the way the player is labelled as facing.
+        m_FacingRight = !m_FacingRight;
+
+    }
+
 
     IEnumerator DisableClimbFor(float deactivateTime)
     {
@@ -378,7 +395,7 @@ public class CharacterController2D : MonoBehaviour
         if (m_Anim.speed <= 1f)
         {
             m_Anim.speed = 1f;
-            
+
 
         }
         EnableParticleEffect(m_SparkEffect, false);
@@ -402,7 +419,7 @@ public class CharacterController2D : MonoBehaviour
                     oppositeForce.y = 0f;
 
                     if (m_FacingRight)
-                        oppositeForce.x = -7.5f * m_Anim.speed / collision.rigidbody.mass -20f;
+                        oppositeForce.x = -7.5f * m_Anim.speed / collision.rigidbody.mass - 20f;
                     else
                         oppositeForce.x = 7.5f * m_Anim.speed / collision.rigidbody.mass + 20f;
 
@@ -410,12 +427,12 @@ public class CharacterController2D : MonoBehaviour
                 }
             }
         }
-        
+
     }
 
     float GetSpeedRatio()
     {
-        float speedRatio = (-1.2f * m_Anim.speed + 11.5f) * m_Anim.speed;
+        float speedRatio = (-1.2f * m_Anim.speed + 7.5f) * m_Anim.speed;
         return speedRatio;
     }
 

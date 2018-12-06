@@ -36,7 +36,7 @@ public class FireThrow : MonoBehaviour {
         // ensure that fire is following the player direction
         if (Input.GetAxisRaw("Horizontal") != 0f && Input.GetAxisRaw("Horizontal") != lastDirection)
         {
-            m_mouthFireEffect.transform.Rotate(new Vector3(0, 90, 0));
+            m_mouthFireEffect.transform.Rotate(new Vector3(0, 180, 0));
             lastDirection = Input.GetAxisRaw("Horizontal");
         }
 

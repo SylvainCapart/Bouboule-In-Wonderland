@@ -2,6 +2,6 @@
 
 public class Globals
 {
-    public const float WORLD_BOTTOM = -10f;
+    public const float WORLD_BOTTOM = -6f;
 }
 

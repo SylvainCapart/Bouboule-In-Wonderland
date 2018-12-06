@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float m_SwimShutoffDelay = 0.3f;                            // Deactivate swim after immersion
     private bool m_LastSwimStatus = false;
     private bool m_FacingRight = true;
+   
 
     private void Start()
     {
@@ -33,9 +34,12 @@ public class PlayerMovement : MonoBehaviour
             Debug.LogError(gameObject.name + " : m_climbingCollider is not assigned");
     }
 
+
+
     // Update is called once per frame
     void Update()
     {
+        Collider2D[] colliders;
 
         if (m_climbingCollider.IsTouchingLayers(m_WhatIsVine))
         {
@@ -49,51 +53,57 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-        /*if (m_swimmingTrigger.IsTouchingLayers(m_WhatIsWater))
-        {
-            m_swim = !m_swim;
+        colliders = Physics2D.OverlapCircleAll(this.transform.position, 0.01f, m_WhatIsWater);
 
-            Debug.Log("SWIM changed  : " + m_swim);
-            StartCoroutine(DisableSwimFor(m_SwimShutoffDelay));
-        }*/
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            // Debug.Log("colliders : " + colliders[i].name);
+        }
+
+
+        //Get the mouse position on the screen and send a raycast into the game world from that position.
+        //Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //RaycastHit2D hit = Physics2D.Raycast(this.transform.position, this.transform.position, detect, m_WhatIsWater);
+        //Debug.DrawLine(this.transform.position, worldPoint, Color.red);
+        //Debug.Log("end : " + Input.mousePosition);
+        //If something was hit, the RaycastHit2D.collider will not be null.
+
+
+        
+        if (m_swim)
+        {
+
+
+            //m_flipAngleY = 
+
+            transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, GetSwimAngle(m_horizontalMove, m_verticalMove)));
+            // If the input is moving the player right and the player is facing left...
+            if (m_horizontalMove >= 0 && !m_FacingRight && IsPlayerMoving(m_horizontalMove, m_verticalMove))
+            {
+                Flip();
+            }
+            // Otherwise if the input is moving the player left and the player is facing right...
+            else if (m_horizontalMove < 0 && m_FacingRight && IsPlayerMoving(m_horizontalMove, m_verticalMove))
+            {
+                Flip();
+            }
+
+        }
+
+
+
+
+        //if (m_swimmingTrigger.IsTouchingLayers(m_WhatIsWater))
+
+        
 
 
         m_horizontalMove = Input.GetAxisRaw("Horizontal") * m_speedCoeff;
 
         m_verticalMove = Input.GetAxisRaw("Vertical") * m_speedCoeff;
-
+        float m_flipAngleY = transform.rotation.y;
         //Debug.Log(m_horizontalMove + " " + m_verticalMove);
-        if (m_swim)
-        {
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, GetSwimAngle(m_horizontalMove, m_verticalMove)));
-            /*
-            if (m_verticalMove > 0.1f)
-            {
-                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90 ));
-                
-                /*if (transform.rotation.z < 0.6f)
-                    transform.Rotate(Vector3.forward * Time.deltaTime * 150);
-            }
-            else if (m_verticalMove < -0.1f)
-            {
-                transform.rotation = Quaternion.Euler(new Vector3(0, 0, -90));
-            }
 
-            if (m_horizontalMove > 0.1f)
-            {
-                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-
-                /*if (transform.rotation.z < 0.6f)
-                    transform.Rotate(Vector3.forward * Time.deltaTime * 150);
-            }
-            else if (m_horizontalMove < -0.1f)
-            {
-                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-
-            }*/
-
-
-        }
 
 
 
@@ -129,27 +139,34 @@ public class PlayerMovement : MonoBehaviour
         // Move our character
         controller.Move(m_horizontalMove * Time.fixedDeltaTime, m_verticalMove * Time.fixedDeltaTime, m_jump, m_roll, m_charging, m_climb, m_swim);
         m_jump = false;
+
+
     }
 
-    void OnTriggerStay2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
         //Debug.LogError("other name : " + other.gameObject.name);
-        if (other.gameObject.tag == "Water")
+        if (other.gameObject.tag == "Water" && this.transform.position.y < other.gameObject.GetComponentInChildren<WaterLevel>().WaterLevelPosition.position.y)
         {
-            //m_verticalMove = Input.GetAxisRaw("Vertical") * m_speedCoeff;
-            Debug.Log("SWIM :  :  STAY");
+            
+            //Debug.Log("SWIM : NEAZAZAZA :  STAY");
             m_swim = true;
         }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        //Debug.LogError("other name : " + other.gameObject.name);
-        if (other.gameObject.tag == "Water")
+        if (other.gameObject.tag == "Water" ) //&& m_swimmingTrigger.IsTouchingLayers(m_WhatIsWater))
         {
-            //m_verticalMove = Input.GetAxisRaw("Vertical") * m_speedCoeff;
-            Debug.Log("SWIM :EXIT : ");
-            m_swim = false;
+            if (this.transform.position.y > other.gameObject.GetComponentInChildren<WaterLevel>().WaterLevelPosition.position.y)
+            {
+                m_swim = false;
+                transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
+            }  
+            else
+            {
+                m_swim = true;
+            }
         }
     }
 
@@ -164,7 +181,7 @@ public class PlayerMovement : MonoBehaviour
     {
         float moveDetected = 0.0f;
         float retAngle = 0f;
-        
+
         if (x > moveDetected && y > moveDetected) //up right
             retAngle = 45f;
         else if (x > moveDetected && y == 0f) // right
@@ -193,32 +210,22 @@ public class PlayerMovement : MonoBehaviour
             Debug.LogError("angle not possible");
         }
 
-        // If the input is moving the player right and the player is facing left...
-        if (x >= 0 && !m_FacingRight && IsPlayerMoving(m_horizontalMove, m_verticalMove))
-        {
-            // ... flip the player.
-            Flip();
-        }
-        // Otherwise if the input is moving the player left and the player is facing right...
-        else if (x < 0 && m_FacingRight && IsPlayerMoving(m_horizontalMove, m_verticalMove))
-        {
-            // ... flip the player.
-            Flip();
-        }
+        
 
         return retAngle;
     }
 
     private void Flip()
-    {
-        // Switch the way the player is labelled as facing.
-        m_FacingRight = !m_FacingRight;
+	{
+		// Switch the way the player is labelled as facing.
+		m_FacingRight = !m_FacingRight;
 
-        // Multiply the player's x local scale by -1.
-        Vector3 theScale = transform.localScale;
-        theScale.x *= -1;
-        transform.localScale = theScale;
-    }
+		// Multiply the player's x local scale by -1.
+		Vector3 theScale = transform.localScale;
+		theScale.x *= -1;
+		transform.localScale = theScale;
+	}
+
 
     bool IsPlayerMoving(float x, float y)
     {
