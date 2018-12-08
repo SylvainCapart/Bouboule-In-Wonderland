@@ -48,7 +48,11 @@ public class CharacterController2D : MonoBehaviour
     private float m_MaxSparkParticles = 60f;
     private float m_MaxSparkSimulationSpeed = 3f;
 
-
+    public bool Grounded
+    {
+        get { return m_Grounded;}
+        set {m_Grounded = value;}
+    }
 
     void OnGUI()
     {
@@ -121,7 +125,16 @@ public class CharacterController2D : MonoBehaviour
     public void Move(float xMove, float yMove, bool jump, bool roll, bool charging, bool climb, bool swim)
     {
 
-        //Debug.Log("xMove : " + xMove + " / yMove : " + yMove);
+        // If rolling, check to see if the character can stand up
+        if (!roll && !swim)
+        {
+            // If the character has a ceiling preventing them from standing up, keep them rolling
+            if (Physics2D.OverlapCircle(m_CeilingCheck.position, k_CeilingRadius, m_whatIsGround) && !climb)
+            {
+                roll = true;
+            }
+        }
+
         m_Rolling = roll;
         m_Climbing = climb;
         m_Jump = jump;
@@ -149,18 +162,6 @@ public class CharacterController2D : MonoBehaviour
 
 
 
-        // If rolling, check to see if the character can stand up
-        if (!roll && !swim)
-        {
-            // If the character has a ceiling preventing them from standing up, keep them rolling
-            if (Physics2D.OverlapCircle(m_CeilingCheck.position, k_CeilingRadius, m_whatIsGround) && !climb)
-            {
-                roll = true;
-            }
-        }
-
-
-
         //only control the player if grounded or airControl is turned on
         if (m_Grounded || m_airControl)
         {
@@ -168,12 +169,6 @@ public class CharacterController2D : MonoBehaviour
             if (roll)
             {
                 float speedRatio = 0f;
-
-                // if player is spitting fire, stop the fire before rolling
-                if (GetComponentInChildren<FireThrow>().m_isSpittingFire)
-                {
-                    GetComponentInChildren<FireThrow>().StopSpitFire();
-                }
 
                 // Reduce the speed by the m_rollSpeed multiplier
                 xMove *= m_rollSpeed;
@@ -250,7 +245,6 @@ public class CharacterController2D : MonoBehaviour
 
             if (climb)
             {
-                this.GetComponentInChildren<FireThrow>().StopSpitFire();
                 m_Anim.SetBool("Climb", true);
 
                 if (Mathf.Abs(xMove) > 0.1f || Mathf.Abs(yMove) > 0.1f)
@@ -278,7 +272,7 @@ public class CharacterController2D : MonoBehaviour
 
                 m_Anim.SetBool("Swimming", m_Swimming);
                 this.gameObject.GetComponent<Rigidbody2D>().gravityScale = m_archimedeGravity;
-                this.GetComponentInChildren<FireThrow>().StopSpitFire();
+                //this.GetComponentInChildren<FireThrow>().StopSpitFire();
                 targetVelocity = new Vector2(xMove * m_SwimSpeed * 10f, yMove * m_SwimSpeed * 10f);
             }
             else
