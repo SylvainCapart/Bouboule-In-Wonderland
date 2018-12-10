@@ -4,14 +4,14 @@ public class PlayerStats : MonoBehaviour
 {
     public static PlayerStats instance;
 
-    private int _currentHealth;
+    private int m_currentHealth;
     public int maxHealth = 100;
     public float startPcHealh = 1f;
 
     public int CurrentHealth
     {
-        get { return _currentHealth; }
-        set { _currentHealth = Mathf.Clamp(value, 0, maxHealth); }
+        get { return m_currentHealth; }
+        set { m_currentHealth = Mathf.Clamp(value, 0, maxHealth); }
     }
 
     public float healthRegenRate = 2f;

@@ -21,6 +21,8 @@ namespace UnityStandardAssets._2D
         // Use this for initialization
         private void Start()
         {
+            
+
             m_LastTargetPosition = target.position;
             m_OffsetZ = (transform.position - target.position).z;
             transform.parent = null;
@@ -28,6 +30,10 @@ namespace UnityStandardAssets._2D
 
         private void Awake()
         {
+
+            Transform playerTransfom = GameObject.Find("Player").transform;
+            if (playerTransfom != null)
+                target = playerTransfom;
             this.transform.position = new Vector3(target.transform.position.x, target.transform.position.y, -10f);
         }
 

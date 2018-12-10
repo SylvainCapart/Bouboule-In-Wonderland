@@ -81,8 +81,7 @@ public class CharacterController2D : MonoBehaviour
 
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
-        //if (m_GroundCheckTable[0].gameObject.activeSelf)
-        //{
+
         for (int i = 0; i < m_GroundCheckTable.Length; i++)
         {
             if (!m_Swim)
@@ -97,7 +96,7 @@ public class CharacterController2D : MonoBehaviour
             }
 
         }
-        //}
+
 
         if (!m_Grounded && !inAir)
         {

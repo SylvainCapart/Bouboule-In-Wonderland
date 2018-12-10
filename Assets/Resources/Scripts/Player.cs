@@ -9,13 +9,15 @@ public class Player : MonoBehaviour {
 
     AudioManager audioManager;
 
-    public int fallBoundary = -20;
+    [SerializeField] private float m_FallBoundary = -20f;
 
     public string deathSoundName = "DeathVoice";
     public string damageSoundName = "Grunt";
 
     [SerializeField]
     private StatusIndicator statusIndicator;
+
+
 
     private void Start()
     {
@@ -49,6 +51,9 @@ public class Player : MonoBehaviour {
 
         InvokeRepeating("RegenHealth", 1f/stats.healthRegenRate, 1f/stats.healthRegenRate);
 
+        GameMaster.InitializePlayerRespawn(this);
+        statusIndicator = Camera.main.GetComponentInChildren<StatusIndicator>();
+
     }
 
     public void DamagePlayer(int damageReceived)
@@ -56,7 +61,7 @@ public class Player : MonoBehaviour {
         stats.CurrentHealth -= damageReceived;
         if (stats.CurrentHealth <= 0)
         {
-            audioManager.PlaySound(deathSoundName);
+            //audioManager.PlaySound(deathSoundName);
             GameMaster.KillPlayer(this);
         }
         else
@@ -71,10 +76,10 @@ public class Player : MonoBehaviour {
 
     private void Update()
     {
-        /*if (transform.position.y <= -20)
+        if (transform.position.y <= m_FallBoundary)
         {
             DamagePlayer( 10^6);
-        }*/
+        }
 
         statusIndicator.SetHealth(stats.CurrentHealth, stats.maxHealth);
     }

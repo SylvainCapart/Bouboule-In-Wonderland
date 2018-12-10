@@ -7,16 +7,17 @@ public class GameMaster : MonoBehaviour
 
     public static GameMaster gm;
 
-    private static int _remainingLives;
+    private static int m_RemainingLives;
 
     [SerializeField]
     private int maxLives = 3;
 
+    
     public Transform playerPrefab;
-    public Transform spawnPoint;
-    public float spawnDelay = 2f;
+    [SerializeField] private static Transform m_SpawnPoint;
+    public float spawnDelay = 0.5f;
     public bool isRespawning = false;
-    public Transform spawnPrefab;
+    //public Transform spawnPrefab;
 
 
     public string respawnCountdownSoundName = "RespawnCountdown";
@@ -45,15 +46,14 @@ public class GameMaster : MonoBehaviour
 
     public static int RemainingLives
     {
-        get
-        {
-            return _remainingLives;
-        }
+        get {return m_RemainingLives;}
+        set {m_RemainingLives = value;}
+    }
 
-        set
-        {
-            _remainingLives = value;
-        }
+    public static Transform SpawnPoint
+    {
+        get {return m_SpawnPoint; }
+        set {m_SpawnPoint = value;}
     }
 
     public void EndGame()
@@ -64,7 +64,7 @@ public class GameMaster : MonoBehaviour
 
     private void Start()
     {
-        _remainingLives = maxLives;
+        m_RemainingLives = maxLives;
         if (cameraShake == null)
         {
             Debug.LogError("No camera shake found in Gamemaster");
@@ -84,6 +84,11 @@ public class GameMaster : MonoBehaviour
             gm = GameObject.FindGameObjectWithTag("GM").GetComponent<GameMaster>();
     }
 
+    public static void InitializePlayerRespawn(Player player)
+    {
+        m_SpawnPoint = player.gameObject.transform;
+    }
+
     private void Update()
     {
         if (!isRespawning && Input.GetKeyDown(KeyCode.U))
@@ -99,7 +104,7 @@ public class GameMaster : MonoBehaviour
         //onToggleUpgrademenu.Invoke(upgradeMenu.activeSelf);
     }
 
-    public IEnumerator _RespawnPlayer()
+    public IEnumerator RespawnPlayer()
     {
         isRespawning = true;
         
@@ -108,32 +113,36 @@ public class GameMaster : MonoBehaviour
         yield return new WaitForSeconds(spawnDelay);
 
         //audioManager.PlaySound(spawnSoundName);
-        Transform clone = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
-        Transform spawnClone = Instantiate(spawnPrefab, spawnPoint.position, spawnPoint.rotation);
+        //Transform clone = Instantiate(playerPrefab, m_SpawnPoint.position, m_SpawnPoint.rotation);
+        GameObject clone = (GameObject)Instantiate(Resources.Load("Prefabs\\Player"));
+        //Transform spawnClone = Instantiate(spawnPrefab, m_SpawnPoint.position, m_SpawnPoint.rotation);
 
-        Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
+        //Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
 
-        cameraFollow.target = clone;
+        //cameraFollow.target = clone;
 
-        Destroy(spawnClone.gameObject, 3f);
+        //Destroy(spawnClone.gameObject, 3f);
 
         isRespawning = false;
     }
 
     public static void KillPlayer(Player player)
     {
-        Destroy(player.gameObject);
+        if (player.gameObject != null)
+            Destroy(player.gameObject);
+        else return;
 
-        _remainingLives -= 1;
+        m_RemainingLives -= 1;
 
-        if (_remainingLives <= 0)
+        if (m_RemainingLives <= 0)
         {
-            gm.EndGame();
+            //gm.EndGame();
         }
         else
         {
-            gm.StartCoroutine(gm._RespawnPlayer());
+           // gm.StartCoroutine(gm.RespawnPlayer());
         }
+        gm.StartCoroutine(gm.RespawnPlayer());
     }
 
     public static void KillEnemy(Enemy enemy)
