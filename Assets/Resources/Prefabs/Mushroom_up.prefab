@@ -55,7 +55,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1688863001130284}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 12.52, y: 0.05, z: 0}
+  m_LocalPosition: {x: 11.534, y: 6.159, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4897317927962670}
@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_repulsiveForce: 10
-  m_coinRepulsiveForce: 15
+  m_jewelRepulsiveForce: 30
 --- !u!198 &198554848359697456
 ParticleSystem:
   m_ObjectHideFlags: 1

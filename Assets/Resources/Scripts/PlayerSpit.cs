@@ -6,20 +6,14 @@ public class PlayerSpit : MonoBehaviour
 {
     private Animator m_Anim;
 
-    //[SerializeField] private ParticleSystem m_MouthFireEffect;
-    //[SerializeField] private ParticleSystem m_mouthBubbleEffect;
     [SerializeField] private ParticleSystem[] m_SpitEffects;
 
-    [SerializeField] private const string mouthFireStr = "MouthFire";
-
     private float lastDirection = 1f;
-
-    //[SerializeField] private bool m_isSpittingFire = false;
-    //[SerializeField] private bool m_isSpittingBubble = false;
 
     enum SpitParticle { FIRE, BUBBLE };
     private SpitParticle m_SpitStatus = SpitParticle.FIRE;
     private SpitParticle m_LastSpitStatus = SpitParticle.FIRE;
+    private bool m_isSpitting = false;
 
     // Use this for initialization
     void Start()
@@ -28,6 +22,11 @@ public class PlayerSpit : MonoBehaviour
         if (m_Anim == null)
             Debug.LogError(this.name + " : Animator not found");
 
+    }
+
+    private void FixedUpdate()
+    {
+        bool m_button = Input.GetButton("Fire1");
     }
 
     // Update is called once per frame
@@ -60,16 +59,16 @@ public class PlayerSpit : MonoBehaviour
 
                 if (!roll && !climb && !swim)
                 {
-                    if (Input.GetButtonDown("Fire1"))
+                    if (Input.GetButton("Fire1"))
                     {
                         StartSpit();
                     }
-                    else if (Input.GetButtonUp("Fire1"))
+                    else if (!Input.GetButton("Fire1"))
                     {
                         StopSpit();
                     }
                 }
-                else //if (climb || roll)
+                else
                 {
                     StopSpit();
                 }
@@ -77,16 +76,16 @@ public class PlayerSpit : MonoBehaviour
             case SpitParticle.BUBBLE:
                 if ((swim && !swimming) || (swim && swimming && grounded))
                 {
-                    if (Input.GetButtonDown("Fire1"))
+                    if (Input.GetButton("Fire1"))
                     {
                         StartSpit();
                     }
-                    else if (Input.GetButtonUp("Fire1"))
+                    else if (!Input.GetButton("Fire1"))
                     {
                         StopSpit();
                     }
                 }
-                else if (!swim )//|| swimming)
+                else if (!swim || swimming)
                 {
                     StopSpit();
                 }
@@ -95,20 +94,17 @@ public class PlayerSpit : MonoBehaviour
                 Debug.LogError(this.name + "Spit Particle Status not found");
                 break;
         }
-
-
-
     }
 
 
     public void StartSpit()
     {
         m_Anim.SetBool("MouthOpen", true);
-        /*for (int i = 0; i < m_SpitEffects.Length; i++)
+        if (!m_isSpitting)
         {
-            m_SpitEffects[i].Stop();
-        }*/
-        m_SpitEffects[(int)m_SpitStatus].Play();
+            m_SpitEffects[(int)m_SpitStatus].Play();
+            m_isSpitting = true;
+        }
 
     }
 
@@ -120,24 +116,7 @@ public class PlayerSpit : MonoBehaviour
         {
             m_SpitEffects[i].Stop();
         }
-
-        /*
-        switch (m_SpitStatus)
-        {
-            case SpitParticle.FIRE:
-                m_MouthFireEffect.Stop();
-                m_isSpittingFire = false;
-                break;
-            case SpitParticle.BUBBLE:
-                m_mouthBubbleEffect.Stop();
-                m_isSpittingBubble = false;
-                break;
-            default:
-                Debug.LogError(this.name + "Spit Particle Status not found");
-                break;
-        }*/
-
-
+        m_isSpitting = false;
 
     }
 

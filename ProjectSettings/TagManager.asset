@@ -8,6 +8,7 @@ TagManager:
   - GM
   - Enemy
   - Water
+  - Jewel
   layers:
   - Default
   - TransparentFX
