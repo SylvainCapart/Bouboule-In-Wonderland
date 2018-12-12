@@ -39,13 +39,18 @@ public class PlayerSpit : MonoBehaviour
         bool roll = GetComponentInParent<CharacterController2D>().m_Rolling;
         bool climb = GetComponentInParent<CharacterController2D>().m_Climbing;
 
-        // ensure that fire is following the player direction
-        if (Input.GetAxisRaw("Horizontal") != 0f && Input.GetAxisRaw("Horizontal") != lastDirection)
-        {
-            m_SpitEffects[(int)m_SpitStatus].transform.Rotate(new Vector3(180, 0, 0));
+        Vector3 difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        difference.Normalize();
+        float rotZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
+        float swimOffset = 0f;
 
-            lastDirection = Input.GetAxisRaw("Horizontal");
-        }
+        if (this.transform.parent.transform.localScale.x == -1)
+            swimOffset = 180f;
+        else
+            swimOffset = 0f;
+
+        m_SpitEffects[(int)m_SpitStatus].transform.rotation = Quaternion.Euler(0f, 0f, rotZ + swimOffset);
+
 
         m_SpitStatus = (swim ? SpitParticle.BUBBLE : SpitParticle.FIRE);
         if (m_SpitStatus != m_LastSpitStatus)

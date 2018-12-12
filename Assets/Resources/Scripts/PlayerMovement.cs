@@ -68,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
         //Debug.Log("end : " + Input.mousePosition);
         //If something was hit, the RaycastHit2D.collider will not be null.
 
-
+        /*
         
         if (m_swim)
         {
@@ -80,16 +80,17 @@ public class PlayerMovement : MonoBehaviour
             // If the input is moving the player right and the player is facing left...
             if (m_horizontalMove >= 0 && !m_FacingRight && IsPlayerMoving(m_horizontalMove, m_verticalMove))
             {
-                Flip();
+                FlipScale();
             }
             // Otherwise if the input is moving the player left and the player is facing right...
             else if (m_horizontalMove < 0 && m_FacingRight && IsPlayerMoving(m_horizontalMove, m_verticalMove))
             {
-                Flip();
+                FlipScale();
             }
 
         }
 
+    */
 
 
 
@@ -215,7 +216,7 @@ public class PlayerMovement : MonoBehaviour
         return retAngle;
     }
 
-    private void Flip()
+    private void FlipScale()
 	{
 		// Switch the way the player is labelled as facing.
 		m_FacingRight = !m_FacingRight;

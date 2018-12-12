@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using UnityEngine;
 
 namespace UnityStandardAssets._2D
@@ -6,7 +6,7 @@ namespace UnityStandardAssets._2D
     public class Camera2DFollow : MonoBehaviour
     {
         public Transform target;
-        public float damping = 1;
+        public float m_Damping = 1;
         public float lookAheadFactor = 3;
         public float lookAheadReturnSpeed = 0.5f;
         public float lookAheadMoveThreshold = 0.1f;
@@ -68,7 +68,7 @@ namespace UnityStandardAssets._2D
             }
 
             Vector3 aheadTargetPos = target.position + m_LookAheadPos + Vector3.forward * m_OffsetZ;
-            Vector3 newPos = Vector3.SmoothDamp(transform.position, aheadTargetPos, ref m_CurrentVelocity, damping);
+            Vector3 newPos = Vector3.SmoothDamp(transform.position, aheadTargetPos, ref m_CurrentVelocity, m_Damping);
 
             if (newPos.x < xPosRestriction)
                 newPos.x = xPosRestriction;
@@ -79,5 +79,16 @@ namespace UnityStandardAssets._2D
 
             m_LastTargetPosition = target.position;
         }
+
+
+        public IEnumerator m_DampingShutOff(float delay)
+        {
+            m_Damping = 0f;
+
+            yield return new WaitForSeconds(delay);
+
+            m_Damping = 1f;
+        }
     }
+
 }

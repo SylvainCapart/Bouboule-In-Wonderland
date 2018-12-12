@@ -14,7 +14,8 @@ public class GameMaster : MonoBehaviour
 
     
     public Transform playerPrefab;
-    [SerializeField] private static Transform m_SpawnPoint;
+    private static Vector3 m_SpawnPoint;
+    [SerializeField] private Vector3 m_InitSpawnPoint;
     public float spawnDelay = 0.5f;
     public bool isRespawning = false;
     //public Transform spawnPrefab;
@@ -50,7 +51,7 @@ public class GameMaster : MonoBehaviour
         set {m_RemainingLives = value;}
     }
 
-    public static Transform SpawnPoint
+    public static Vector3 SpawnPoint
     {
         get {return m_SpawnPoint; }
         set {m_SpawnPoint = value;}
@@ -76,6 +77,8 @@ public class GameMaster : MonoBehaviour
         }
 
         Money = startingMoney;
+        m_SpawnPoint = m_InitSpawnPoint;
+
     }
 
     void Awake()
@@ -84,10 +87,6 @@ public class GameMaster : MonoBehaviour
             gm = GameObject.FindGameObjectWithTag("GM").GetComponent<GameMaster>();
     }
 
-    public static void InitializePlayerRespawn(Player player)
-    {
-        m_SpawnPoint = player.gameObject.transform;
-    }
 
     private void Update()
     {
@@ -115,11 +114,13 @@ public class GameMaster : MonoBehaviour
         //audioManager.PlaySound(spawnSoundName);
         //Transform clone = Instantiate(playerPrefab, m_SpawnPoint.position, m_SpawnPoint.rotation);
         GameObject clone = (GameObject)Instantiate(Resources.Load("Prefabs\\Player"));
+        clone.transform.position = m_SpawnPoint;
         //Transform spawnClone = Instantiate(spawnPrefab, m_SpawnPoint.position, m_SpawnPoint.rotation);
 
-        //Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
+        Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
 
-        //cameraFollow.target = clone;
+        cameraFollow.target = clone.transform;
+        gm.StartCoroutine(cameraFollow.m_DampingShutOff(0.1f));
 
         //Destroy(spawnClone.gameObject, 3f);
 
@@ -169,6 +170,10 @@ public class GameMaster : MonoBehaviour
 
         Destroy(_enemy.gameObject);
 
+    }
+    public static void InitializePlayerRespawn(Player player)
+    {
+        m_SpawnPoint = player.gameObject.transform.position;
     }
 
 }

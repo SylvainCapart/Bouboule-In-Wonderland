@@ -287,20 +287,42 @@ public class CharacterController2D : MonoBehaviour
 
             // And then smoothing it out and applying it to the character
             m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_velocity, m_movementSmoothing);
-            if (!m_Swimming)
+
+            if (!m_Swimming && !m_Swim)
             {
                 // If the input is moving the player right and the player is facing left...
                 if (xMove > 0 && !m_FacingRight)
                 {
                     // ... flip the player.
-                    Flip();
+                    FlipRotate();
                 }
                 // Otherwise if the input is moving the player left and the player is facing right...
                 else if (xMove < 0 && m_FacingRight)
                 {
                     // ... flip the player.
-                    Flip();
+                    FlipRotate();
                 }
+            }
+            else if(m_Swim)
+            {
+                transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, GetSwimAngle(xMove, yMove)));
+                
+                // If the input is moving the player right and the player is facing left...
+                if (xMove >= 0 && !m_FacingRight && IsPlayerMoving(xMove, yMove))
+                {
+                    
+                    FlipScale();
+                }
+                // Otherwise if the input is moving the player left and the player is facing right...
+                else if (xMove < 0 && m_FacingRight && IsPlayerMoving(xMove, yMove))
+                {
+                    
+                    FlipScale();
+                }
+            }
+            else
+            {
+                // Do nothing
             }
         }
         // If the player should jump...
@@ -320,7 +342,7 @@ public class CharacterController2D : MonoBehaviour
     }
 
 
-    /*private void Flip()
+    private void FlipScale()
 	{
 		// Switch the way the player is labelled as facing.
 		m_FacingRight = !m_FacingRight;
@@ -329,9 +351,9 @@ public class CharacterController2D : MonoBehaviour
 		Vector3 theScale = transform.localScale;
 		theScale.x *= -1;
 		transform.localScale = theScale;
-	}*/
+	}
 
-    private void Flip()
+    private void FlipRotate()
     {
 
             transform.Rotate(new Vector3(0, 180, 0));
@@ -342,6 +364,36 @@ public class CharacterController2D : MonoBehaviour
 
     }
 
+    float GetSwimAngle(float x, float y)
+    {
+        float moveDetected = 0.0f;
+        float retAngle = 0f;
+
+        if (x > moveDetected && y > moveDetected) //up right
+            retAngle = 45f;
+        else if (x > moveDetected && y == 0f) // right
+            retAngle = 0f;
+        else if (x > moveDetected && y < moveDetected) // bottom right
+            retAngle = -45f;
+        else if (x == 0f && y < moveDetected) // bottom
+            retAngle = -90f;
+        else if (x < moveDetected && y < moveDetected) // bottom left
+            retAngle = 45f;
+        else if (x < moveDetected && y == 0f) // left
+            retAngle = 0f;
+        else if (x < moveDetected && y > moveDetected) // up left
+            retAngle = -45f;
+        else if (x == 0f && y > moveDetected) // up
+            retAngle = 90f;
+        else if (x == 0f && y == 0f) // no move
+            retAngle = 0f;
+        else
+        {
+            retAngle = 0f;
+            Debug.LogError("angle not possible");
+        }
+        return retAngle;
+    }
 
     IEnumerator DisableClimbFor(float deactivateTime)
     {

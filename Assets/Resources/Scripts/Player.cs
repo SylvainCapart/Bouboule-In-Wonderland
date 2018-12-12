@@ -51,7 +51,7 @@ public class Player : MonoBehaviour {
 
         InvokeRepeating("RegenHealth", 1f/stats.healthRegenRate, 1f/stats.healthRegenRate);
 
-        GameMaster.InitializePlayerRespawn(this);
+        //GameMaster.InitializePlayerRespawn(this);
         statusIndicator = Camera.main.GetComponentInChildren<StatusIndicator>();
 
     }

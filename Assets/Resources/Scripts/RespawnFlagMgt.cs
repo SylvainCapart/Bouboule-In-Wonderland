@@ -4,6 +4,7 @@ public class RespawnFlagMgt : MonoBehaviour {
 
     private bool m_FlagTriggered = false;
     private Animator m_Anim;
+    private BoxCollider2D m_Box2D;
 
     public bool FlagTriggered
     {
@@ -23,6 +24,11 @@ public class RespawnFlagMgt : MonoBehaviour {
         m_Anim = this.GetComponentInParent<Animator>();
         if (m_Anim == null)
             Debug.LogError(this.name + " : Animator not found");
+
+        m_Box2D = this.GetComponentInParent<BoxCollider2D>();
+        if (m_Box2D == null)
+            Debug.LogError(this.name + " : BoxCollider2D not found");
+
     }
 	
 
@@ -30,6 +36,8 @@ public class RespawnFlagMgt : MonoBehaviour {
     {
         m_FlagTriggered = true;
         m_Anim.SetBool("FlagTriggered", true);
+        m_Box2D.enabled = false;
+        GameMaster.SpawnPoint = this.transform.position;
     }
 
 
