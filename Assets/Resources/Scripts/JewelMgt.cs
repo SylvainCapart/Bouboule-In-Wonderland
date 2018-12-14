@@ -6,8 +6,8 @@ public class JewelMgt : MonoBehaviour {
 
 
     private Vector2 m_Speed;
-    [SerializeField] private Vector2 m_RespawnPos;
-    [SerializeField] private float m_RespawnLimitY;
+    private Vector2 m_RespawnPos;
+    private float m_RespawnLimitY;
 
     private void Start()
     {

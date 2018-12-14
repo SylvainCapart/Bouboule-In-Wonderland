@@ -26,6 +26,7 @@ public class CoinMgt : MonoBehaviour {
             this.gameObject.GetComponent<Collider2D>().enabled = false;
             
             explosionClone = Instantiate(m_ExplosionCoin, transform.position, Quaternion.identity);
+            explosionClone.transform.SetParent(GameObject.Find("Coins").transform);
             Destroy(explosionClone, 1f);
             Destroy(this.gameObject, 1f);
         }

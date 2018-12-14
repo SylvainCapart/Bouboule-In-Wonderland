@@ -120,7 +120,7 @@ public class GameMaster : MonoBehaviour
         Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
 
         cameraFollow.target = clone.transform;
-        gm.StartCoroutine(cameraFollow.m_DampingShutOff(0.1f));
+        gm.StartCoroutine(cameraFollow.DampingShutOff(0.1f));
 
         //Destroy(spawnClone.gameObject, 3f);
 

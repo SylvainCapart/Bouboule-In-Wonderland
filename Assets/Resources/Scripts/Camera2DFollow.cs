@@ -81,7 +81,7 @@ namespace UnityStandardAssets._2D
         }
 
 
-        public IEnumerator m_DampingShutOff(float delay)
+        public IEnumerator DampingShutOff(float delay)
         {
             m_Damping = 0f;
 
