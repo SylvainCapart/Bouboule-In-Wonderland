@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerSpit : MonoBehaviour
 {
     private Animator m_Anim;
+    private PlayerStats stats;
 
     [SerializeField] private ParticleSystem[] m_SpitEffects;
 
@@ -18,6 +19,8 @@ public class PlayerSpit : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        stats = PlayerStats.instance;
+
         m_Anim = this.GetComponent<Animator>();
         if (m_Anim == null)
             Debug.LogError(this.name + " : Animator not found");
@@ -62,7 +65,7 @@ public class PlayerSpit : MonoBehaviour
         {
             case SpitParticle.FIRE:
 
-                if (!roll && !climb && !swim)
+                if (!roll && !climb && !swim && (stats.CurrentOxygen > 0))
                 {
                     if (Input.GetButton("Fire1"))
                     {
@@ -104,12 +107,14 @@ public class PlayerSpit : MonoBehaviour
 
     public void StartSpit()
     {
+
         m_Anim.SetBool("MouthOpen", true);
         if (!m_isSpitting)
         {
             m_SpitEffects[(int)m_SpitStatus].Play();
             m_isSpitting = true;
         }
+
 
     }
 

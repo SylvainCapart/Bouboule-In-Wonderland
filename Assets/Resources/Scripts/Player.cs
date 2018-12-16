@@ -23,7 +23,7 @@ public class Player : MonoBehaviour {
     {
         stats = PlayerStats.instance;
 
-        stats.CurrentHealth = stats.maxHealth;
+        stats.CurrentHealth = stats.m_MaxHealth;
 
         if (GameObject.FindObjectsOfType<Player>().Length > 1)
         {
@@ -38,7 +38,7 @@ public class Player : MonoBehaviour {
         }
         else
         {
-            statusIndicator.SetHealth(stats.CurrentHealth, stats.maxHealth);
+            statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
         }
 
         //GameMaster.gm.onToggleUpgrademenu += OnUpgradeMenuToggle;
@@ -49,10 +49,10 @@ public class Player : MonoBehaviour {
             Debug.LogError("No audioManager found in Player");
         }
 
-        InvokeRepeating("RegenHealth", 1f/stats.healthRegenRate, 1f/stats.healthRegenRate);
+        InvokeRepeating("RegenHealth", 1f/stats.m_HealthRegenRate, 1f/stats.m_HealthRegenRate);
 
         //GameMaster.InitializePlayerRespawn(this);
-        statusIndicator = Camera.main.GetComponentInChildren<StatusIndicator>();
+        //statusIndicator = Camera.main.GetComponentInChildren<StatusIndicator>();
 
     }
 
@@ -69,7 +69,7 @@ public class Player : MonoBehaviour {
             audioManager.PlaySound(damageSoundName);
         }
 
-        statusIndicator.SetHealth(stats.CurrentHealth, stats.maxHealth);
+        statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
 
 
     }
@@ -81,13 +81,13 @@ public class Player : MonoBehaviour {
             DamagePlayer( 10^6);
         }
 
-        statusIndicator.SetHealth(stats.CurrentHealth, stats.maxHealth);
+        statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
     }
 
     void RegenHealth()
     {
         stats.CurrentHealth += 1;
-        statusIndicator.SetHealth(stats.CurrentHealth, stats.maxHealth);
+        statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
     }
 
 

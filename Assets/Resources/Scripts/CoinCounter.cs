@@ -22,11 +22,11 @@ public class CoinCounter : MonoBehaviour {
 
     public void IncreaseCoinCount()
     {
-        if (Time.time - m_lastCoinTime > m_CoinShutOffDelay)
-        {
+        //if (Time.time - m_lastCoinTime > m_CoinShutOffDelay)
+        //{
             m_CoinCounter++;
             m_lastCoinTime = Time.time;
-        }
+        //}
 
     }
 
