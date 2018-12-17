@@ -4887,6 +4887,7 @@ MonoBehaviour:
   m_SpitEffects:
   - {fileID: 1012740004}
   - {fileID: 942609364}
+  m_SpitStatus: 0
 --- !u!212 &580941369
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5383,13 +5384,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43bd6663d4a8d54683ac0ed634eb3b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_CurrentHealth: 0
   m_CurrentOxygen: 0
   m_MaxHealth: 100
   m_StartPcHealh: 1
   m_StartPcOxygen: 1
-  m_MaxOxygen: 100
+  m_MaxOxygen: 1000
   m_OxygenDecreaseRate: 45
   m_OxygenIncreaseRate: 22
+  m_PassiveOxygenLossRate: 7
+  m_DrowningDamageRate: 2
+  m_DrowningDamage: 12
   m_HealthRegenRate: 2
 --- !u!114 &658171767
 MonoBehaviour:
@@ -25392,9 +25397,9 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 1
+  scalingMode: 2
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -30145,9 +30150,8 @@ GameObject:
   - component: {fileID: 1211253037}
   - component: {fileID: 1211253041}
   - component: {fileID: 1211253038}
-  - component: {fileID: 1211253039}
   m_Layer: 5
-  m_Name: AirBarUI
+  m_Name: AirBarBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30198,18 +30202,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &1211253039
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1211253036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b51560d493598fd4c987b1d8c6ed539f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_OxygenBarRect: {fileID: 1211253037}
 --- !u!222 &1211253041
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -35785,7 +35777,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1438636116
 RectTransform:
   m_ObjectHideFlags: 0
@@ -42323,7 +42315,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1606707043
 RectTransform:
   m_ObjectHideFlags: 0
@@ -47479,7 +47471,7 @@ GameObject:
   - component: {fileID: 1810222491}
   - component: {fileID: 1810222490}
   m_Layer: 0
-  m_Name: AiBarFrame
+  m_Name: AirBarFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47894,8 +47886,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1882255597}
   - component: {fileID: 1882255598}
+  - component: {fileID: 1882255599}
   m_Layer: 0
-  m_Name: AirBarCanvas
+  m_Name: AirBarUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47918,11 +47911,11 @@ RectTransform:
   m_Father: {fileID: 1320170784}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -375.6, y: -340.4}
-  m_SizeDelta: {x: 340, y: 29.5}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 27.600006, y: 43.600006}
+  m_SizeDelta: {x: -684, y: 29.5}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!223 &1882255598
 Canvas:
   m_ObjectHideFlags: 0
@@ -47943,6 +47936,26 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1882255599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1882255596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b51560d493598fd4c987b1d8c6ed539f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OxygenBarRect: {fileID: 1211253037}
+  m_PlayerSpit: {fileID: 580941368}
+  m_IconArray:
+  - {fileID: 1606707042}
+  - {fileID: 1438636115}
+  m_BarImageArray:
+  - {fileID: 21300000, guid: 60853d487165aba458b931607e1ac27a, type: 3}
+  - {fileID: 21300000, guid: cd22b772192296442a717dea38e499b0, type: 3}
+  m_BarImageSlot: {fileID: 1211253038}
 --- !u!1 &1888420977
 GameObject:
   m_ObjectHideFlags: 0
@@ -48228,15 +48241,6 @@ MonoBehaviour:
   m_RollMovableTags:
   - Jewel
   m_Grounded: 0
-  m_Rolling: 0
-  m_Climbing: 0
-  m_Jump: 0
-  m_Swim: 0
-  m_Swimming: 0
-  m_normalGravity: 3.5
-  m_archimedeGravity: 1
-  m_JumpDisableClimbingTime: 0.2
-  m_JumpReductionWhenClimbing: 0.3
   m_SparkEffect: {fileID: 1319037855}
 --- !u!114 &1891382120
 MonoBehaviour:
@@ -48251,13 +48255,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1891382119}
-  m_jump: 0
-  m_roll: 0
-  m_charging: 0
-  m_swim: 0
+  m_Jump: 0
+  m_Roll: 0
+  m_Charging: 0
+  m_Swim: 0
+  m_Climb: 0
   m_climbingCollider: {fileID: 1891382113}
   m_swimmingTrigger: {fileID: 1891382112}
-  m_climb: 0
   m_WhatIsVine:
     serializedVersion: 2
     m_Bits: 512
@@ -48341,7 +48345,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1891382111}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.9, y: -2.23, z: 0}
+  m_LocalPosition: {x: 17.44, y: -3.53, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1916210279}
@@ -48364,7 +48368,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd2a77a2466944546b4cc9d12231d307, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AirBarUI: {fileID: 1211253039}
+  m_AirBarUI: {fileID: 1882255599}
+  m_SwimMode: 0
 --- !u!1 &1905738189
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,14 +4,17 @@ public class PlayerStats : MonoBehaviour
 {
     public static PlayerStats instance;
 
-    private int m_CurrentHealth;
-    public int m_CurrentOxygen;
+    [SerializeField] private int m_CurrentHealth;
+    [SerializeField] private int m_CurrentOxygen;
     public int m_MaxHealth = 100;
     public float m_StartPcHealh = 1f;
     public float m_StartPcOxygen = 1f;
     public int m_MaxOxygen = 100;
     public float m_OxygenDecreaseRate = 1f;
     public float m_OxygenIncreaseRate = 1f;
+    public float m_PassiveOxygenLossRate = 7f;
+    public float m_DrowningDamageRate = 1f;
+    public int m_DrowningDamage = 25;
     public float m_HealthRegenRate = 2f;
 
     public int CurrentHealth
@@ -23,7 +26,7 @@ public class PlayerStats : MonoBehaviour
     public int CurrentOxygen
     {
         get { return m_CurrentOxygen;}
-        set { m_CurrentOxygen = Mathf.Clamp(value, 0, m_MaxHealth); }
+        set { m_CurrentOxygen = Mathf.Clamp(value, 0, m_MaxOxygen); }
     }
 
 

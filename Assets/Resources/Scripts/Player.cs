@@ -13,10 +13,30 @@ public class Player : MonoBehaviour {
 
     public string deathSoundName = "DeathVoice";
     public string damageSoundName = "Grunt";
+    private bool m_Drowning = false;
 
     [SerializeField]
     private StatusIndicator statusIndicator;
 
+    public bool Drowning
+    {
+        get
+        {
+            return m_Drowning;
+        }
+
+        set
+        {
+            if (m_Drowning == value) return;
+            m_Drowning = value;
+            if (OnDrowning != null)
+                OnDrowning(value);
+
+        }
+    }
+
+    public delegate void OnDrowningDelegate(bool drowning);
+    public static event OnDrowningDelegate OnDrowning;
 
 
     private void Start()
@@ -49,7 +69,7 @@ public class Player : MonoBehaviour {
             Debug.LogError("No audioManager found in Player");
         }
 
-        InvokeRepeating("RegenHealth", 1f/stats.m_HealthRegenRate, 1f/stats.m_HealthRegenRate);
+       
 
         //GameMaster.InitializePlayerRespawn(this);
         //statusIndicator = Camera.main.GetComponentInChildren<StatusIndicator>();
@@ -81,12 +101,33 @@ public class Player : MonoBehaviour {
             DamagePlayer( 10^6);
         }
 
+        if (stats.CurrentOxygen <= 0)
+        {
+            if (!IsInvoking("OnDrowningCall"))
+                InvokeRepeating("OnDrowningCall", 1f / stats.m_DrowningDamageRate, 1f / stats.m_DrowningDamageRate);
+            Drowning = true;
+        }
+        else
+        {
+            if (IsInvoking("OnDrowningCall"))
+                CancelInvoke("OnDrowningCall");
+            Drowning = false;
+        }
+
         statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
+
     }
 
     void RegenHealth()
     {
         stats.CurrentHealth += 1;
+        statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
+    }
+
+    void OnDrowningCall()
+    {
+
+        stats.CurrentHealth -= stats.m_DrowningDamage;
         statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
     }
 

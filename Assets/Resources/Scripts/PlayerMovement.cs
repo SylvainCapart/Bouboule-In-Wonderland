@@ -12,21 +12,24 @@ public class PlayerMovement : MonoBehaviour
     float m_horizontalMove = 0f;
     float m_verticalMove = 0f;
 
-    [SerializeField] private bool m_jump = false;
-    [SerializeField] private bool m_roll = false;
-    [SerializeField] private bool m_charging = false;
-    [SerializeField] private bool m_swim = false;
+    [SerializeField] private bool m_Jump = false;
+    [SerializeField] private bool m_Roll = false;
+    [SerializeField] private bool m_Charging = false;
+    [SerializeField] private bool m_Swim = false;
+    [SerializeField] private bool m_Climb = false;
 
     [SerializeField] private Collider2D m_climbingCollider;                // A collider that detects objects where climbing is possible
     [SerializeField] private Collider2D m_swimmingTrigger;
-    [SerializeField] private bool m_climb = false;
     [SerializeField] private LayerMask m_WhatIsVine;                            // A mask determining what is vine to the character     
     [SerializeField] private LayerMask m_WhatIsWater;                            // A mask determining what is water to the character     
 
     [SerializeField] private float m_SwimShutoffDelay = 0.3f;                            // Deactivate swim after immersion
     private bool m_LastSwimStatus = false;
     private bool m_FacingRight = true;
-   
+
+
+
+
 
     private void Start()
     {
@@ -44,12 +47,12 @@ public class PlayerMovement : MonoBehaviour
         if (m_climbingCollider.IsTouchingLayers(m_WhatIsVine))
         {
             // m_verticalMove = Input.GetAxisRaw("Vertical") * m_speedCoeff;
-            m_climb = true;
+            m_Climb = true;
         }
         else
         {
             //m_verticalMove = 0f;
-            m_climb = false;
+            m_Climb = false;
 
         }
 
@@ -70,7 +73,7 @@ public class PlayerMovement : MonoBehaviour
 
         /*
         
-        if (m_swim)
+        if (m_Swim)
         {
 
 
@@ -110,36 +113,36 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Roll"))
         {
-            m_roll = true;
+            m_Roll = true;
         }
         else if (Input.GetButtonUp("Roll"))
         {
-            m_roll = false;
+            m_Roll = false;
         }
 
-        m_charging = Input.GetButton("Roll");
+        m_Charging = Input.GetButton("Roll");
 
         if (Input.GetButtonDown("Jump"))
         {
-            m_jump = true;
+            m_Jump = true;
         }
 
 
-        //m_swim = !m_swim;
-        if (!m_swim && m_LastSwimStatus)
+        //m_Swim = !m_Swim;
+        if (!m_Swim && m_LastSwimStatus)
         {
-            m_jump = true;
+            m_Jump = true;
             m_verticalMove = 30;
         }
-        m_LastSwimStatus = m_swim;
+        m_LastSwimStatus = m_Swim;
 
     }
 
     void FixedUpdate()
     {
         // Move our character
-        controller.Move(m_horizontalMove * Time.fixedDeltaTime, m_verticalMove * Time.fixedDeltaTime, m_jump, m_roll, m_charging, m_climb, m_swim);
-        m_jump = false;
+        controller.Move(m_horizontalMove * Time.fixedDeltaTime, m_verticalMove * Time.fixedDeltaTime, m_Jump, m_Roll, m_Charging, m_Climb, m_Swim);
+        m_Jump = false;
 
 
     }
@@ -151,7 +154,7 @@ public class PlayerMovement : MonoBehaviour
         {
             
             //Debug.Log("SWIM : NEAZAZAZA :  STAY");
-            m_swim = true;
+            m_Swim = true;
         }
     }
 
@@ -161,12 +164,12 @@ public class PlayerMovement : MonoBehaviour
         {
             if (this.transform.position.y > other.gameObject.GetComponentInChildren<WaterLevel>().WaterLevelPosition.position.y)
             {
-                m_swim = false;
+                m_Swim = false;
                 transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
             }  
             else
             {
-                m_swim = true;
+                m_Swim = true;
             }
         }
     }
@@ -232,4 +235,5 @@ public class PlayerMovement : MonoBehaviour
     {
         return (Mathf.Abs(x) > 0.1f || Mathf.Abs(y) > 0.1f);
     }
+
 }

@@ -24,11 +24,17 @@ public class CharacterController2D : MonoBehaviour
     private float[] k_GroundedRadiusTable = { .1f, .05f, .05f }; // Radius of the overlap circle to determine if grounded
     private float[] k_GroundedRadiusWaterTable = { .02f, .02f, .02f }; // Radius of the overlap circle to determine if grounded
     [SerializeField] private bool m_Grounded;            // Whether or not the player is grounded.
-    public bool m_Rolling;             // Wether player is currently rolling or not
-    public bool m_Climbing;            // Wether player is currently climbing or not
-    public bool m_Jump = false;        // Wether player is currently jumping or not
-    public bool m_Swim = false;        // Wether player can swim or not
-    public bool m_Swimming = false;        // Wether player is currently swimming or not
+
+    private bool m_Rolling = false;             // Wether player is currently rolling or not
+    private bool m_Climbing = false;            // Wether player is currently climbing or not
+    private bool m_Jump = false;        // Wether player is currently jumping or not
+    private bool m_Swim = false;        // Wether player can swim or not
+    private bool m_Swimming = false;        // Wether player is currently swimming or not
+    private bool m_Charging = false;        // Wether player is currently charging or not
+
+    // event for the status above
+    public delegate void OnMovementStatusChange(string statusName, bool state);
+    public static event OnMovementStatusChange MovementStatusChange;
 
     const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
     private Rigidbody2D m_Rigidbody2D;
@@ -39,10 +45,11 @@ public class CharacterController2D : MonoBehaviour
     private float m_IncrementAnimSpeed = 1.5f;
 
     private bool inAir = false;       // to prevent the foot steps sound to be played twice
-    [SerializeField] private float m_normalGravity = 3.5f;
-    [SerializeField] private float m_archimedeGravity = 0.5f;
-    [SerializeField] private float m_JumpDisableClimbingTime = 0.2f;
-    [SerializeField] private float m_JumpReductionWhenClimbing = 0.5f;
+    private float m_normalGravity = 3.5f;
+    private float m_archimedeGravity = 0.5f;
+    private float m_DrowningSpeedReduction = 1f;
+    private float m_JumpDisableClimbingTime = 0.2f;
+    private float m_JumpReductionWhenClimbing = 0.5f;
 
     [SerializeField] private ParticleSystem m_SparkEffect;
     private float m_MaxSparkParticles = 60f;
@@ -53,6 +60,8 @@ public class CharacterController2D : MonoBehaviour
         get { return m_Grounded;}
         set {m_Grounded = value;}
     }
+
+   
 
     void OnGUI()
     {
@@ -73,6 +82,15 @@ public class CharacterController2D : MonoBehaviour
 
     }
 
+    private void OnEnable()
+    {
+        Player.OnDrowning += OnDrowningHandler;
+    }
+
+    private void OnDisable()
+    {
+        Player.OnDrowning -= OnDrowningHandler;
+    }
 
     private void FixedUpdate()
     {
@@ -84,7 +102,7 @@ public class CharacterController2D : MonoBehaviour
 
         for (int i = 0; i < m_GroundCheckTable.Length; i++)
         {
-            if (!m_Swim)
+            if (!Swim)
                 colliders = Physics2D.OverlapCircleAll(m_GroundCheckTable[i].position, k_GroundedRadiusTable[i], m_whatIsGround);
             else
                 colliders = Physics2D.OverlapCircleAll(m_GroundCheckTable[i].position, k_GroundedRadiusWaterTable[i], m_whatIsGround);
@@ -134,10 +152,11 @@ public class CharacterController2D : MonoBehaviour
             }
         }
 
-        m_Rolling = roll;
-        m_Climbing = climb;
-        m_Jump = jump;
-        m_Swim = swim;
+        Rolling = roll;
+        Climbing = climb;
+        Charging = charging;
+        Jump = jump;
+        Swim = swim;
 
         // disable climbing if player is rolling
         if (roll && climb)
@@ -154,7 +173,7 @@ public class CharacterController2D : MonoBehaviour
         }
         else
         {
-            m_Swimming = false;
+            Swimming = false;
         }
 
         m_Anim.SetBool("Swim", swim);
@@ -262,17 +281,16 @@ public class CharacterController2D : MonoBehaviour
             {
                 if (IsPlayerMoving(xMove, yMove) && !m_Grounded)
                 {
-                    m_Swimming = true;
+                    Swimming = true;
                 }
                 else
                 {
-                    m_Swimming = false;
+                    Swimming = false;
                 }
 
-                m_Anim.SetBool("Swimming", m_Swimming);
+                m_Anim.SetBool("Swimming", Swimming);
                 this.gameObject.GetComponent<Rigidbody2D>().gravityScale = m_archimedeGravity;
-                //this.GetComponentInChildren<FireThrow>().StopSpitFire();
-                targetVelocity = new Vector2(xMove * m_SwimSpeed * 10f, yMove * m_SwimSpeed * 10f);
+                targetVelocity = new Vector2(xMove * m_SwimSpeed * 10f * m_DrowningSpeedReduction, yMove * m_SwimSpeed * 10f * m_DrowningSpeedReduction);
             }
             else
             {
@@ -288,22 +306,22 @@ public class CharacterController2D : MonoBehaviour
             // And then smoothing it out and applying it to the character
             m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_velocity, m_movementSmoothing);
 
-            if (!m_Swimming && !m_Swim)
+            if (!Swimming && !Swim)
             {
                 // If the input is moving the player right and the player is facing left...
                 if (xMove > 0 && !m_FacingRight)
                 {
                     // ... flip the player.
-                    FlipRotate();
+                    FlipScale();
                 }
                 // Otherwise if the input is moving the player left and the player is facing right...
                 else if (xMove < 0 && m_FacingRight)
                 {
                     // ... flip the player.
-                    FlipRotate();
+                    FlipScale();
                 }
             }
-            else if(m_Swim)
+            else if(Swim)
             {
                 transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, GetSwimAngle(xMove, yMove)));
                 
@@ -326,7 +344,7 @@ public class CharacterController2D : MonoBehaviour
             }
         }
         // If the player should jump...
-        if (!m_Swim && ((m_Grounded && jump && m_Anim.GetBool("Ground")) || (jump && climb)))
+        if (!Swim && ((m_Grounded && jump && m_Anim.GetBool("Ground")) || (jump && climb)))
         {
             // Add a vertical force to the player.
             StartCoroutine(DisableClimbFor(m_JumpDisableClimbingTime));
@@ -427,7 +445,7 @@ public class CharacterController2D : MonoBehaviour
         if (m_Anim.speed > m_MaxAnimSpeed)
             m_Anim.speed = m_MaxAnimSpeed;
 
-        if (!m_Jump)
+        if (!Jump)
             EnableParticleEffect(m_SparkEffect, true);
         else
             EnableParticleEffect(m_SparkEffect, false);
@@ -454,7 +472,7 @@ public class CharacterController2D : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (m_Rolling)
+        if (Rolling)
         {
             foreach (string tag in m_RollMovableTags)
             {
@@ -475,6 +493,14 @@ public class CharacterController2D : MonoBehaviour
 
     }
 
+    public void OnDrowningHandler(bool drowning)
+    {
+        if (drowning == true)
+            m_DrowningSpeedReduction = 0.5f;
+        else
+            m_DrowningSpeedReduction = 1f;
+    }
+
     float GetSpeedRatio()
     {
         float speedRatio = (-1.2f * m_Anim.speed + 7.5f) * m_Anim.speed;
@@ -491,7 +517,101 @@ public class CharacterController2D : MonoBehaviour
         return (Mathf.Abs(x) > 0.1f);
     }
 
+    public bool Rolling
+    {
+        get
+        {
+            return m_Rolling;
+        }
 
+        set
+        {
+            if (m_Rolling == value) return;
+            m_Rolling = value;
+            if (MovementStatusChange != null)
+                MovementStatusChange("Rolling", value);
+        }
+    }
+
+    public bool Climbing
+    {
+        get
+        {
+            return m_Climbing;
+        }
+
+        set
+        {
+            if (m_Climbing == value) return;
+            m_Climbing = value;
+            if (MovementStatusChange != null)
+                MovementStatusChange("Climbing", value);
+        }
+    }
+
+    public bool Jump
+    {
+        get
+        {
+            return m_Jump;
+        }
+
+        set
+        {
+            if (m_Jump == value) return;
+            m_Jump = value;
+            if (MovementStatusChange != null)
+                MovementStatusChange("Jump", value);
+        }
+    }
+
+    public bool Swim
+    {
+        get
+        {
+            return m_Swim;
+        }
+
+        set
+        {
+            if (m_Swim == value) return;
+            m_Swim = value;
+            if (MovementStatusChange != null)
+                MovementStatusChange("Swim", value);
+        }
+    }
+
+    public bool Swimming
+    {
+        get
+        {
+            return m_Swimming;
+        }
+
+        set
+        {
+            if (m_Swimming == value) return;
+            m_Swimming = value;
+            if (MovementStatusChange != null)
+                MovementStatusChange("Swimming", value);
+        }
+    }
+
+    public bool Charging
+    {
+        get
+        {
+            return m_Charging;
+        }
+
+        set
+        {
+            if (m_Charging == value) return;
+            m_Charging = value;
+            if (MovementStatusChange != null)
+                MovementStatusChange("Charging", value);
+        }
+    }
 
 
 }
