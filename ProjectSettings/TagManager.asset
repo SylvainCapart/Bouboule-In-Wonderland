@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - Water
   - Jewel
+  - StreamBubble
   layers:
   - Default
   - TransparentFX

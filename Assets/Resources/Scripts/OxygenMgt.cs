@@ -48,10 +48,10 @@ public class OxygenMgt : MonoBehaviour
                 if (!IsInvoking("DecreaseOxygen"))
                     InvokeRepeating("DecreaseOxygen", 1f / stats.m_OxygenDecreaseRate, 1f / stats.m_OxygenDecreaseRate);
             }
-            else if (!Input.GetButton("Fire1") )
+            else if (!Input.GetButton("Fire1"))
             {
                 CancelInvoke("DecreaseOxygen");
-                
+
             }
         }
         else
@@ -107,5 +107,14 @@ public class OxygenMgt : MonoBehaviour
     void PassiveOxygenLoss()
     {
         stats.CurrentOxygen -= 1;
+    }
+
+
+    private void OnParticleCollision(GameObject other)
+    {
+        if (other.tag == "StreamBubble")
+            stats.CurrentOxygen += 3;
+
+        //Debug.Log(other.GetComponent<ParticleSystem.Particle>().remainingLifetime);
     }
 }
