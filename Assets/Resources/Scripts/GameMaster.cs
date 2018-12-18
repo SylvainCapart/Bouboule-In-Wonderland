@@ -42,6 +42,9 @@ public class GameMaster : MonoBehaviour
 
     private AudioManager audioManager;
 
+    public delegate void OnResetDelegate();
+    public static event OnResetDelegate ResetDelegate;
+
     /*[SerializeField]
     private WaveSpawner waveSpawner;*/
 
@@ -125,6 +128,7 @@ public class GameMaster : MonoBehaviour
         //Destroy(spawnClone.gameObject, 3f);
 
         isRespawning = false;
+        ResetDelegate();
     }
 
     public static void KillPlayer(Player player)
@@ -162,8 +166,8 @@ public class GameMaster : MonoBehaviour
         audioManager.PlaySound("Money");
 
         //particles
-        Transform clone = Instantiate(_enemy.deathParticles, _enemy.transform.position, Quaternion.identity);
-        Destroy(clone.gameObject, 5f);
+        //Transform clone = Instantiate(_enemy.deathParticles, _enemy.transform.position, Quaternion.identity);
+        //Destroy(clone.gameObject, 5f);
 
         //camerashake
         cameraShake.Shake(_enemy.shakeAmountAmt, _enemy.shakeLength);
@@ -175,5 +179,7 @@ public class GameMaster : MonoBehaviour
     {
         m_SpawnPoint = player.gameObject.transform.position;
     }
+
+
 
 }

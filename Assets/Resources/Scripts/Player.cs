@@ -3,35 +3,34 @@ using UnityEngine;
 using UnityStandardAssets._2D;
 
 [RequireComponent(typeof(PlayerMovement))]
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour
+{
 
     private PlayerStats stats;
 
-    AudioManager audioManager;
+    private AudioManager audioManager;
+    private Animator m_Anim;
 
     [SerializeField] private float m_FallBoundary = -20f;
+    private bool m_Drowning = false;
+    private const float m_DamageAnimShutOnDelay = 2f;
 
     public string deathSoundName = "DeathVoice";
     public string damageSoundName = "Grunt";
-    private bool m_Drowning = false;
+
 
     [SerializeField]
     private StatusIndicator statusIndicator;
 
     public bool Drowning
     {
-        get
-        {
-            return m_Drowning;
-        }
-
+        get { return m_Drowning; }
         set
         {
             if (m_Drowning == value) return;
             m_Drowning = value;
             if (OnDrowning != null)
                 OnDrowning(value);
-
         }
     }
 
@@ -54,12 +53,16 @@ public class Player : MonoBehaviour {
 
         if (statusIndicator == null)
         {
-            Debug.Log("No status indicator on Player");
+            StatusIndicator ind = GameObject.Find("PlayerHP").GetComponent<StatusIndicator>();
+            if (ind != null)
+                statusIndicator = ind;
         }
-        else
-        {
-            statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
-        }
+        
+
+        statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
+
+        if (m_Anim == null)
+            m_Anim = GetComponent<Animator>();
 
         //GameMaster.gm.onToggleUpgrademenu += OnUpgradeMenuToggle;
 
@@ -69,11 +72,21 @@ public class Player : MonoBehaviour {
             Debug.LogError("No audioManager found in Player");
         }
 
-       
+
 
         //GameMaster.InitializePlayerRespawn(this);
         //statusIndicator = Camera.main.GetComponentInChildren<StatusIndicator>();
 
+    }
+
+    private void OnEnable()
+    {
+        GameMaster.ResetDelegate += OnReset;
+    }
+
+    private void OnDisable()
+    {
+        GameMaster.ResetDelegate -= OnReset;
     }
 
     public void DamagePlayer(int damageReceived)
@@ -90,7 +103,7 @@ public class Player : MonoBehaviour {
         }
 
         statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
-
+        StartCoroutine(TriggerDamageAnim());
 
     }
 
@@ -98,7 +111,7 @@ public class Player : MonoBehaviour {
     {
         if (transform.position.y <= m_FallBoundary)
         {
-            DamagePlayer( 10^6);
+            DamagePlayer(10 ^ 6);
         }
 
         if (stats.CurrentOxygen <= 0)
@@ -126,11 +139,24 @@ public class Player : MonoBehaviour {
 
     void OnDrowningCall()
     {
-
         stats.CurrentHealth -= stats.m_DrowningDamage;
         statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
     }
 
+    private IEnumerator TriggerDamageAnim()
+    {
+        m_Anim.SetBool("Hurt", true);
+        yield return (new WaitForSeconds(m_DamageAnimShutOnDelay));
+        m_Anim.SetBool("Hurt", false);
+    }
 
-
+    private void OnReset()
+    {
+        if (statusIndicator == null)
+        {
+            StatusIndicator ind = GameObject.Find("UIOverlay").GetComponentInChildren<StatusIndicator>();
+            if (ind != null)
+                statusIndicator = ind;
+        }
+    }
 }

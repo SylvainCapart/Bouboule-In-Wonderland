@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class OxygenMgt : MonoBehaviour
 {
 
     private PlayerStats stats;
     [SerializeField] private AirBarMgt m_AirBarUI;
-    [SerializeField] private bool m_SwimMode = false;
+    private bool m_SwimMode = false;
+    private bool m_Swimming = false;
 
     // Use this for initialization
     void Start()
@@ -42,13 +44,13 @@ public class OxygenMgt : MonoBehaviour
 
         if (m_SwimMode == true)
         {
-            if (Input.GetButton("Fire1") && (stats.CurrentOxygen > 10))
+            if (Input.GetButton("Fire1") && (stats.CurrentOxygen > 10) && !m_Swimming)
             {
                 CancelInvoke("IncreaseOxygen");
                 if (!IsInvoking("DecreaseOxygen"))
                     InvokeRepeating("DecreaseOxygen", 1f / stats.m_OxygenDecreaseRate, 1f / stats.m_OxygenDecreaseRate);
             }
-            else if (!Input.GetButton("Fire1"))
+            else if (!Input.GetButton("Fire1") || m_Swimming)
             {
                 CancelInvoke("DecreaseOxygen");
 
@@ -92,6 +94,10 @@ public class OxygenMgt : MonoBehaviour
                 CancelInvoke("PassiveOxygenLoss");
             }
         }
+        else if (statusName == "Swimming")
+        {
+            m_Swimming = state;
+        }
     }
 
     void DecreaseOxygen()
@@ -108,13 +114,12 @@ public class OxygenMgt : MonoBehaviour
     {
         stats.CurrentOxygen -= 1;
     }
-
+    public List<ParticleCollisionEvent> collisionEvents;
 
     private void OnParticleCollision(GameObject other)
     {
         if (other.tag == "StreamBubble")
             stats.CurrentOxygen += 3;
 
-        //Debug.Log(other.GetComponent<ParticleSystem.Particle>().remainingLifetime);
     }
 }

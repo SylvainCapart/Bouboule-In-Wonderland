@@ -8,21 +8,28 @@ public class Enemy : MonoBehaviour {
     [System.Serializable]
     public class EnemyStats 
     {
-        private int _currentHealth;
+        public int _currentHealth;
 
-        public int maxHealth = 100;
+        [SerializeField] private int maxHealth;
         public float startPcHealh = 1f;
         public int damage = 40;
+        public float repulsePlayerCoeff = 10f;
 
         public int CurrentHealth
         {
             get { return _currentHealth;}
-            set { _currentHealth = Mathf.Clamp(value, 0, maxHealth);}
+            set { _currentHealth = Mathf.Clamp(value, 0, MaxHealth);}
+        }
+
+        public int MaxHealth
+        {
+            get{return maxHealth;}
+            set{maxHealth = value;}
         }
 
         public void Init()
         {
-            CurrentHealth = (int) (startPcHealh * maxHealth);
+            CurrentHealth = (int) (startPcHealh * MaxHealth);
         }
     }
 
@@ -31,10 +38,11 @@ public class Enemy : MonoBehaviour {
 
     public EnemyStats stats;
 
-    public Transform deathParticles;
+    //public Transform deathParticles;
 
     public float shakeAmountAmt = 0.1f;
     public float shakeLength = 0.1f;
+
 
     [Header("Optional : ")]
     [SerializeField]
@@ -47,15 +55,15 @@ public class Enemy : MonoBehaviour {
 
         if (statusIndicator != null)
         {
-            statusIndicator.SetHealth(stats.CurrentHealth, stats.maxHealth);
+           statusIndicator.SetHealth(stats.CurrentHealth, stats.MaxHealth);
         }
 
-        if (deathParticles == null)
+        /*if (deathParticles == null)
         {
             Debug.Log("No death particles found in enemy");
-        }
+        }*/
 
-        GameMaster.gm.onToggleUpgrademenu += OnUpgradeMenuToggle;
+        //GameMaster.gm.onToggleUpgrademenu += OnUpgradeMenuToggle;
 
     }
 
@@ -69,17 +77,19 @@ public class Enemy : MonoBehaviour {
 
         if (statusIndicator != null)
         {
-            statusIndicator.SetHealth(stats.CurrentHealth, stats.maxHealth);
+            statusIndicator.SetHealth(stats.CurrentHealth, stats.MaxHealth);
         }
     }
 
     private void OnCollisionEnter2D(Collision2D _colInfo)
     {
         Player _player = _colInfo.collider.GetComponent<Player>();
-        if(_player != null)
+        Vector2 repulsiveVector;
+        if (_player != null)
         {
+            repulsiveVector = new Vector2(_colInfo.transform.position.x - this.transform.position.x, _colInfo.transform.position.y - this.transform.position.y);
             _player.DamagePlayer(stats.damage);
-            DamageEnemy(9999999);
+            _player.GetComponent<Rigidbody2D>().AddForce(repulsiveVector * stats.repulsePlayerCoeff, ForceMode2D.Impulse);
         }
     }
 

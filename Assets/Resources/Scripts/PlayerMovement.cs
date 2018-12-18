@@ -28,9 +28,6 @@ public class PlayerMovement : MonoBehaviour
     private bool m_FacingRight = true;
 
 
-
-
-
     private void Start()
     {
         if (m_climbingCollider == null)
