@@ -12,6 +12,7 @@ namespace UnityStandardAssets._2D
         public float lookAheadMoveThreshold = 0.1f;
         public float yPosRestriction = -1;
         public float xPosRestriction = 1.42f;
+        public float zNewPosition = -10f;
 
         private float m_OffsetZ;
         private Vector3 m_LastTargetPosition;
@@ -34,7 +35,7 @@ namespace UnityStandardAssets._2D
             Transform playerTransfom = GameObject.Find("Player").transform;
             if (playerTransfom != null)
                 target = playerTransfom;
-            this.transform.position = new Vector3(target.transform.position.x, target.transform.position.y, -10f);
+            this.transform.position = new Vector3(target.transform.position.x, target.transform.position.y, zNewPosition);
         }
 
         // Update is called once per frame
