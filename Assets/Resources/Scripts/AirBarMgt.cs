@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class AirBarMgt : MonoBehaviour {
@@ -16,19 +17,27 @@ public class AirBarMgt : MonoBehaviour {
 
         
         EnableSpitIcon(PlayerSpit.SpitParticle.FIRE);
-
-
     }
 
     private void OnEnable()
     {
+        GameMaster.ResetDelegate += AirBarReset;
         PlayerSpit.OnSpitModeChange += OnSpitModeChanged;
     }
 
     private void OnDisable()
     {
+        GameMaster.ResetDelegate -= AirBarReset;
         PlayerSpit.OnSpitModeChange -= OnSpitModeChanged;
     }
+
+    private void AirBarReset()
+    {
+        PlayerSpit playerSpit = FindObjectOfType<Player>().GetComponent<PlayerSpit>();
+        if (playerSpit != null)
+            m_PlayerSpit = playerSpit;
+    }
+
 
     public void SetOxygen(int _cur, int _max)
     {

@@ -18,12 +18,13 @@ public class OxygenMgt : MonoBehaviour
 
         if (m_AirBarUI == null)
         {
-            Debug.Log("No airBarUI on Player");
+            AirBarMgt airBarMgt = FindObjectOfType<AirBarMgt>();
+            if (airBarMgt != null)
+                m_AirBarUI = airBarMgt;
         }
-        else
-        {
+
             m_AirBarUI.SetOxygen(stats.CurrentOxygen, stats.m_MaxOxygen);
-        }
+
 
     }
 

@@ -5,12 +5,13 @@ public class WaterShade : MonoBehaviour
 {
     [SerializeField] private Renderer m_SpriteRenderer;
     private Animator m_Anim;
-    public Color m_OriginalColor;
-    public Color m_CurrentColor;
-    public bool m_ShadeRoutineRunning = false;
-    public float m_fadeTime = 1f;
-    public float m_appearTime = 1f;
-    public bool m_SwimMode = false;
+    [SerializeField] private Color m_FullAlphaColor;
+    [SerializeField] private Color m_FadedAlphaColor;
+    private bool m_ShadeFadeRunning = false;
+    private bool m_ShadeAppearRunning = false;
+    [SerializeField] private readonly float m_fadeTime = 1f;
+    [SerializeField] private readonly float m_appearTime = 1f;
+    private bool m_SwimMode = false;
 
     private void Start()
     {
@@ -20,23 +21,26 @@ public class WaterShade : MonoBehaviour
 
         if (m_SpriteRenderer == null)
             m_SpriteRenderer = GetComponentInChildren<Renderer>();
+
         m_SpriteRenderer.transform.parent = this.transform;
-
-        StartCoroutine(ShadeRoutine());
+        m_SpriteRenderer.material.color = m_FadedAlphaColor;
     }
-
-
 
     private void OnEnable()
     {
         CharacterController2D.MovementStatusChange += SwimShader;
-        GameMaster.ResetDelegate += ShaderInactive;
+        GameMaster.ResetDelegate += ResetShade;
     }
 
     private void OnDisable()
     {
         CharacterController2D.MovementStatusChange -= SwimShader;
-        GameMaster.ResetDelegate -= ShaderInactive;
+        GameMaster.ResetDelegate -= ResetShade;
+    }
+
+    private void ResetShade()
+    {
+        m_SpriteRenderer.material.color = m_FadedAlphaColor;
     }
 
     void SwimShader(string statusname, bool state)
@@ -44,68 +48,57 @@ public class WaterShade : MonoBehaviour
         if (statusname == "Swim")
         {
             m_SwimMode = state;
-            if (m_ShadeRoutineRunning != true)
-                StartCoroutine(ShadeRoutine());
-            //m_Anim.SetBool("Fade", !state);
-            //m_Anim.SetBool("Appear", state);
 
-        
+            if (state && !m_ShadeAppearRunning)
+            {
+                if (m_ShadeFadeRunning)
+                {
+                    m_ShadeFadeRunning = false;
+                    StopCoroutine(ShadeFade());
+
+                }
+
+                StartCoroutine(ShadeAppear());
+            }
+            else if (!state && !m_ShadeFadeRunning)
+            {
+                if (m_ShadeAppearRunning)
+                {
+                    m_ShadeAppearRunning = false;
+                    StopCoroutine(ShadeAppear());
+
+                }
+                StartCoroutine(ShadeFade());
+            }
         }
     }
 
-    void ShaderInactive()
+
+    public IEnumerator ShadeFade()
     {
-        //m_Anim.SetBool("Fade", false);
-    }
+        m_ShadeFadeRunning = true;
 
-    public IEnumerator SwitchShutOff(float delay)
-    {
- 
+        float baseAlpha = m_SpriteRenderer.material.color.a;
 
-        yield return new WaitForSeconds(delay);
-
-    }
-
-
-    public IEnumerator ShadeRoutine()
-    {
-        m_CurrentColor = m_SpriteRenderer.material.color;
-        m_ShadeRoutineRunning = true;
-        m_SpriteRenderer.material.color = m_OriginalColor;
-        //In case the text color has its alpha component not set to 255, reinitialize it :
-        //m_OriginalColor.a = 1f;
-        bool loop = true;
-
-        Debug.Log("0 " + m_CurrentColor.a);
-        while (loop)
+        for (float t = 0.0f; t < m_fadeTime && m_ShadeFadeRunning; t += Time.deltaTime)
         {
-            if (m_SwimMode)
-            {
-                for (float t = 0.0f; t < m_appearTime; t += Time.deltaTime)
-                {
-                    m_SpriteRenderer.material.color = new Color(m_OriginalColor.r, m_OriginalColor.g, m_OriginalColor.b, m_OriginalColor.a * (t / m_appearTime));
-                    Debug.Log("1 " + m_SpriteRenderer.material.color.a);
-                    yield return null;
-                }
-                loop = false;
-            }
-            else
-            {
-                for (float t = 0.0f; t < m_fadeTime; t += Time.deltaTime)
-                {
-                    m_SpriteRenderer.material.color = new Color(m_OriginalColor.r, m_OriginalColor.g, m_OriginalColor.b, m_OriginalColor.a * (1 - t / m_fadeTime));
-                    Debug.Log("2 " + m_SpriteRenderer.material.color.a);
-                    yield return null;
-                }
-
-                loop = false;
-            }
+            m_SpriteRenderer.material.color = new Color(m_FullAlphaColor.r, m_FullAlphaColor.g, m_FullAlphaColor.b, (baseAlpha - m_FadedAlphaColor.a) * (1 - t / m_fadeTime) + m_FadedAlphaColor.a);
+            yield return null;
         }
-
-
-        m_ShadeRoutineRunning = false;
-        yield return null;
+        m_ShadeFadeRunning = false;
     }
 
+    public IEnumerator ShadeAppear()
+    {
+        m_ShadeAppearRunning = true;
 
+        float baseAlpha = m_SpriteRenderer.material.color.a;
+
+        for (float t = 0.0f; t < m_appearTime && m_ShadeAppearRunning; t += Time.deltaTime)
+        {
+            m_SpriteRenderer.material.color = new Color(m_FullAlphaColor.r, m_FullAlphaColor.g, m_FullAlphaColor.b, (m_FullAlphaColor.a - baseAlpha) * (t / m_appearTime) + baseAlpha);
+            yield return null;
+        }
+        m_ShadeAppearRunning = false;
+    }
 }

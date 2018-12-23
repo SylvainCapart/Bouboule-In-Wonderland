@@ -6,7 +6,7 @@ public class Sound
     public string name;
     public AudioClip clip;
 
-    private AudioSource source;
+    public AudioSource source;
 
     [Range(0f,1f)]
     public float volume = 0.7f;
@@ -91,13 +91,53 @@ public class AudioManager : MonoBehaviour {
         {
             if (sounds[i].name == _name)
             {
-                sounds[i].Play();
+                if(sounds[i].name == "Coin")
+                {
+                    sounds[i].pitch += Random.Range(-sounds[i].randomPitch / 2f, sounds[i].randomPitch / 2f);
+                }
+                if (!sounds[i].source.isPlaying)
+                    sounds[i].Play();
                 return;
             }
 
         }
         Debug.Log("No sound found in AudioManager with that name : " + _name);
     }
+
+    public void PlaySoundAt(string _name, float start)
+    {
+        for (int i = 0; i < sounds.Length; i++)
+        {
+            if (sounds[i].name == _name)
+            {
+                if (!sounds[i].source.isPlaying)
+                {
+                    sounds[i].source.time = start;
+                    sounds[i].Play();
+                }
+
+                return;
+            }
+
+        }
+        Debug.Log("No sound found in AudioManager with that name : " + _name);
+    }
+
+    public bool IsSoundPlayed(string _name)
+    {
+
+        for (int i = 0; i < sounds.Length; i++)
+        {
+            if (sounds[i].name == _name)
+            {
+                return sounds[i].source.isPlaying;
+            }
+
+        }
+        Debug.Log("No sound found in AudioManager with that name : " + _name);
+        return false;
+    }
+
 
     public void StopSound(string _name)
     {
@@ -112,5 +152,7 @@ public class AudioManager : MonoBehaviour {
         }
         Debug.Log("No sound found in AudioManager with that name : " + _name);
     }
+
+
 
 }

@@ -23,14 +23,16 @@ public class CharacterController2D : MonoBehaviour
     const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
     private float[] k_GroundedRadiusTable = { .1f, .05f, .05f }; // Radius of the overlap circle to determine if grounded
     private float[] k_GroundedRadiusWaterTable = { .02f, .02f, .02f }; // Radius of the overlap circle to determine if grounded
-    [SerializeField] private bool m_Grounded;            // Whether or not the player is grounded.
 
+    [SerializeField] private bool m_Grounded;            // Whether or not the player is grounded.
     private bool m_Rolling = false;             // Wether player is currently rolling or not
     private bool m_Climbing = false;            // Wether player is currently climbing or not
     private bool m_Jump = false;        // Wether player is currently jumping or not
     private bool m_Swim = false;        // Wether player can swim or not
     private bool m_Swimming = false;        // Wether player is currently swimming or not
     private bool m_Charging = false;        // Wether player is currently charging or not
+
+    private bool m_StepAllowed = true;
 
     // event for the status above
     public delegate void OnMovementStatusChange(string statusName, bool state);
@@ -54,14 +56,9 @@ public class CharacterController2D : MonoBehaviour
     [SerializeField] private ParticleSystem m_SparkEffect;
     private float m_MaxSparkParticles = 60f;
     private float m_MaxSparkSimulationSpeed = 3f;
+    private const float EPSILON = 0.01f;
 
-    public bool Grounded
-    {
-        get { return m_Grounded;}
-        set {m_Grounded = value;}
-    }
-
-   
+    private AudioManager audioManager;
 
     void OnGUI()
     {
@@ -69,6 +66,14 @@ public class CharacterController2D : MonoBehaviour
 
     }
 
+    private void Start()
+    {
+        audioManager = AudioManager.instance;
+        if (audioManager == null)
+        {
+            Debug.LogError("No audioManager found in " + this.name);
+        }
+    }
 
     private void Awake()
     {
@@ -79,6 +84,8 @@ public class CharacterController2D : MonoBehaviour
         m_Anim = this.GetComponentInParent<Animator>();
         if (m_Anim == null)
             Debug.LogError(this.name + " : Animator not found");
+
+
 
     }
 
@@ -94,7 +101,8 @@ public class CharacterController2D : MonoBehaviour
 
     private void FixedUpdate()
     {
-        m_Grounded = false;
+
+        Grounded = false;
         Collider2D[] colliders;
 
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
@@ -110,23 +118,30 @@ public class CharacterController2D : MonoBehaviour
             for (int j = 0; j < colliders.Length; j++)
             {
                 if (colliders[j].gameObject != gameObject)
-                    m_Grounded = true;
+                    Grounded = true;
             }
 
         }
 
 
-        if (!m_Grounded && !inAir)
+        if (!Grounded && !inAir)
         {
             inAir = true;
         }
-        m_Anim.SetBool("Ground", m_Grounded);
+        m_Anim.SetBool("Ground", Grounded);
 
-        if (m_Grounded && inAir)
+
+
+
+        if (Grounded && inAir)
         {
-            //audioManager.PlaySound(landingSoundname);
+            audioManager.PlaySound("Landing");
+            //StartCoroutine(StepShutOff(0.4f));
             inAir = false;
         }
+
+
+
 
 
         //Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_whatIsGround);
@@ -168,20 +183,22 @@ public class CharacterController2D : MonoBehaviour
             climb = false;
             roll = false;
             jump = false;
-            charging = false;
-            m_Grounded = false;
+            Charging = false;
+            Grounded = false;
         }
         else
         {
             Swimming = false;
         }
+        // if not grounded, cancel charging
+        Charging &= Grounded;
 
         m_Anim.SetBool("Swim", swim);
 
 
 
         //only control the player if grounded or airControl is turned on
-        if (m_Grounded || m_airControl)
+        if (Grounded || m_airControl)
         {
             // If rolling
             if (roll)
@@ -194,15 +211,11 @@ public class CharacterController2D : MonoBehaviour
                 m_RollCollider.enabled = true;
 
 
-                if (xMove == 0f && yMove == 0f && charging)
+                if (System.Math.Abs(xMove) < EPSILON && System.Math.Abs(yMove) < EPSILON && Charging)
                 {
-
                     RollCharge();
 
                     speedRatio = (m_Anim.speed - 1f) / m_MaxAnimSpeed;
-
-
-
 
                     ParticleSystem.MainModule main = m_SparkEffect.main;
                     main.startSpeed = speedRatio * m_MaxSparkSimulationSpeed;
@@ -214,7 +227,6 @@ public class CharacterController2D : MonoBehaviour
                 else
                 {
                     RollChargeRelease();
-
                 }
 
                 for (int i = 0; i < m_GroundCheckTable.Length; i++)
@@ -279,7 +291,7 @@ public class CharacterController2D : MonoBehaviour
             }
             else if (swim)
             {
-                if (IsPlayerMoving(xMove, yMove) && !m_Grounded)
+                if (IsPlayerMoving(xMove, yMove) && !Grounded)
                 {
                     Swimming = true;
                 }
@@ -321,20 +333,20 @@ public class CharacterController2D : MonoBehaviour
                     FlipScale();
                 }
             }
-            else if(Swim)
+            else if (Swim)
             {
                 transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, GetSwimAngle(xMove, yMove)));
-                
+
                 // If the input is moving the player right and the player is facing left...
                 if (xMove >= 0 && !m_FacingRight && IsPlayerMoving(xMove, yMove))
                 {
-                    
+
                     FlipScale();
                 }
                 // Otherwise if the input is moving the player left and the player is facing right...
                 else if (xMove < 0 && m_FacingRight && IsPlayerMoving(xMove, yMove))
                 {
-                    
+
                     FlipScale();
                 }
             }
@@ -344,11 +356,11 @@ public class CharacterController2D : MonoBehaviour
             }
         }
         // If the player should jump...
-        if (!Swim && ((m_Grounded && jump && m_Anim.GetBool("Ground")) || (jump && climb)))
+        if (!Swim && ((Grounded && jump && m_Anim.GetBool("Ground")) || (jump && climb)))
         {
             // Add a vertical force to the player.
             StartCoroutine(DisableClimbFor(m_JumpDisableClimbingTime));
-            m_Grounded = false;
+            Grounded = false;
             m_Anim.SetBool("Ground", false);
 
             if (climb)
@@ -357,25 +369,41 @@ public class CharacterController2D : MonoBehaviour
                 m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
 
         }
+
+        if (Grounded && !inAir && m_StepAllowed && IsPlayerMovingX(xMove) && !roll)
+        {
+            audioManager.PlaySound("FootStep");
+            StartCoroutine(StepShutOff(0.4f));
+
+        }
+
+        /*if (Rolling && Grounded)
+        {
+            audioManager.PlaySound("Rolling");
+        }
+        else if(!Rolling || !Grounded)
+        {
+            audioManager.StopSound("Rolling");
+        }*/
     }
 
 
     private void FlipScale()
-	{
-		// Switch the way the player is labelled as facing.
-		m_FacingRight = !m_FacingRight;
+    {
+        // Switch the way the player is labelled as facing.
+        m_FacingRight = !m_FacingRight;
 
-		// Multiply the player's x local scale by -1.
-		Vector3 theScale = transform.localScale;
-		theScale.x *= -1;
-		transform.localScale = theScale;
-	}
+        // Multiply the player's x local scale by -1.
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
+    }
 
     private void FlipRotate()
     {
 
-            transform.Rotate(new Vector3(0, 180, 0));
-         //   transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, 0, transform.rotation.z));
+        transform.Rotate(new Vector3(0, 180, 0));
+        //   transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, 0, transform.rotation.z));
         //transform.Rotate Quaternion.Euler(new Vector3(transform.rotation.x, 180, transform.rotation.z));
         // Switch the way the player is labelled as facing.
         m_FacingRight = !m_FacingRight;
@@ -389,21 +417,21 @@ public class CharacterController2D : MonoBehaviour
 
         if (x > moveDetected && y > moveDetected) //up right
             retAngle = 45f;
-        else if (x > moveDetected && y == 0f) // right
+        else if (x > moveDetected && System.Math.Abs(y) < EPSILON) // right
             retAngle = 0f;
         else if (x > moveDetected && y < moveDetected) // bottom right
             retAngle = -45f;
-        else if (x == 0f && y < moveDetected) // bottom
+        else if (System.Math.Abs(x) < EPSILON && y < moveDetected) // bottom
             retAngle = -90f;
         else if (x < moveDetected && y < moveDetected) // bottom left
             retAngle = 45f;
-        else if (x < moveDetected && y == 0f) // left
+        else if (x < moveDetected && System.Math.Abs(y) < EPSILON) // left
             retAngle = 0f;
         else if (x < moveDetected && y > moveDetected) // up left
             retAngle = -45f;
-        else if (x == 0f && y > moveDetected) // up
+        else if (System.Math.Abs(x) < EPSILON && y > moveDetected) // up
             retAngle = 90f;
-        else if (x == 0f && y == 0f) // no move
+        else if (System.Math.Abs(x) < EPSILON && System.Math.Abs(y) < EPSILON) // no move
             retAngle = 0f;
         else
         {
@@ -449,11 +477,14 @@ public class CharacterController2D : MonoBehaviour
             EnableParticleEffect(m_SparkEffect, true);
         else
             EnableParticleEffect(m_SparkEffect, false);
+
+        audioManager.PlaySoundAt("FastRolling", (m_Anim.speed *2f) -0.825f); //hardcoded, to be changed
+
     }
 
     void RollChargeRelease()
     {
-        m_Anim.speed -= 2 * m_IncrementAnimSpeed * Time.deltaTime;
+        m_Anim.speed -= 1 * m_IncrementAnimSpeed * Time.deltaTime;
 
         if (m_Anim.speed <= 1f)
         {
@@ -462,12 +493,14 @@ public class CharacterController2D : MonoBehaviour
 
         }
         EnableParticleEffect(m_SparkEffect, false);
+        audioManager.StopSound("FastRolling");
     }
 
     void RollChargeReset()
     {
         m_Anim.speed = 1f;
         EnableParticleEffect(m_SparkEffect, false);
+        audioManager.StopSound("FastRolling");
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -503,7 +536,7 @@ public class CharacterController2D : MonoBehaviour
 
     float GetSpeedRatio()
     {
-        float speedRatio = (-1.2f * m_Anim.speed + 7.5f) * m_Anim.speed;
+        float speedRatio = (-0.7f * m_Anim.speed + 7.3f) * m_Anim.speed;
         return speedRatio;
     }
 
@@ -517,6 +550,8 @@ public class CharacterController2D : MonoBehaviour
         return (Mathf.Abs(x) > 0.1f);
     }
 
+
+
     public bool Rolling
     {
         get
@@ -526,6 +561,9 @@ public class CharacterController2D : MonoBehaviour
 
         set
         {
+
+
+
             if (m_Rolling == value) return;
             m_Rolling = value;
             if (MovementStatusChange != null)
@@ -594,6 +632,7 @@ public class CharacterController2D : MonoBehaviour
             m_Swimming = value;
             if (MovementStatusChange != null)
                 MovementStatusChange("Swimming", value);
+
         }
     }
 
@@ -606,6 +645,15 @@ public class CharacterController2D : MonoBehaviour
 
         set
         {
+            /*if (m_Charging == true && value == true)
+            {
+                if (!audioManager.IsSoundPlayed("FastRolling"))
+                {
+                    audioManager.StopSound("FastRolling");
+                    audioManager.PlaySoundAt("FastRolling", 4f);
+                }
+
+            }*/
             if (m_Charging == value) return;
             m_Charging = value;
             if (MovementStatusChange != null)
@@ -613,5 +661,27 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
+    public bool Grounded
+    {
+        get
+        {
+            return m_Grounded;
+        }
+
+        set
+        {
+            if (m_Grounded == value) return;
+            m_Grounded = value;
+            if (MovementStatusChange != null)
+                MovementStatusChange("Grounded", value);
+        }
+    }
+
+    public IEnumerator StepShutOff(float delay)
+    {
+        m_StepAllowed = false;
+        yield return (new WaitForSeconds(delay));
+        m_StepAllowed = true;
+    }
 
 }

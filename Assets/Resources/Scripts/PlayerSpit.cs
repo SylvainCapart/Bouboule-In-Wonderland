@@ -6,6 +6,7 @@ public class PlayerSpit : MonoBehaviour
 {
     private Animator m_Anim;
     private PlayerStats stats;
+    private AudioManager audioManager;
 
     [SerializeField] private ParticleSystem[] m_SpitEffects;
 
@@ -13,6 +14,7 @@ public class PlayerSpit : MonoBehaviour
 
     public enum SpitParticle { FIRE, BUBBLE };
     [SerializeField]  private SpitParticle m_SpitStatus = SpitParticle.FIRE;
+    private string[] m_SoundNames = { "Fire", "Bubble" };
     private SpitParticle m_LastSpitStatus = SpitParticle.FIRE;
     private bool m_isSpitting = false;
 
@@ -41,7 +43,16 @@ public class PlayerSpit : MonoBehaviour
         m_Anim = this.GetComponent<Animator>();
         if (m_Anim == null)
             Debug.LogError(this.name + " : Animator not found");
-       
+
+        if (OnSpitModeChange != null)
+            OnSpitModeChange(m_SpitStatus);
+
+        audioManager = AudioManager.instance;
+        if (audioManager == null)
+        {
+            Debug.LogError("No audioManager found in " + this.name);
+        }
+
     }
 
     private void FixedUpdate()
@@ -89,6 +100,7 @@ public class PlayerSpit : MonoBehaviour
                     if (Input.GetButton("Fire1") && (stats.CurrentOxygen > 10))
                     {
                         StartSpit();
+
                     }
                     else if ( (!Input.GetButton("Fire1")) || (stats.CurrentOxygen <= 0) )
                     {
@@ -131,6 +143,7 @@ public class PlayerSpit : MonoBehaviour
         if (!m_isSpitting)
         {
             m_SpitEffects[(int)SpitStatus].Play();
+            audioManager.PlaySound(m_SoundNames[(int)SpitStatus]);
             m_isSpitting = true;
         }
 
@@ -144,7 +157,10 @@ public class PlayerSpit : MonoBehaviour
         for (int i = 0; i < m_SpitEffects.Length; i++)
         {
             m_SpitEffects[i].Stop();
+            audioManager.StopSound(m_SoundNames[i]);
+
         }
+
         m_isSpitting = false;
 
     }

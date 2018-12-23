@@ -118,6 +118,7 @@ public class GameMaster : MonoBehaviour
         //Transform clone = Instantiate(playerPrefab, m_SpawnPoint.position, m_SpawnPoint.rotation);
         GameObject clone = (GameObject)Instantiate(Resources.Load("Prefabs\\Player"));
         clone.transform.position = m_SpawnPoint;
+        clone.name = "Player";
         //Transform spawnClone = Instantiate(spawnPrefab, m_SpawnPoint.position, m_SpawnPoint.rotation);
 
         Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();

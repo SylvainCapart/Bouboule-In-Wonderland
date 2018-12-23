@@ -13,7 +13,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float m_FallBoundary = -20f;
     private bool m_Drowning = false;
-    private const float m_DamageAnimShutOnDelay = 2f;
+    private const float m_DamageAnimShutOnDelay = 0.6f;
+    private bool m_Damagable = true;
 
     public string deathSoundName = "DeathVoice";
     public string damageSoundName = "Grunt";
@@ -64,20 +65,22 @@ public class Player : MonoBehaviour
         if (m_Anim == null)
             m_Anim = GetComponent<Animator>();
 
+
         //GameMaster.gm.onToggleUpgrademenu += OnUpgradeMenuToggle;
+
 
         audioManager = AudioManager.instance;
         if (audioManager == null)
         {
-            Debug.LogError("No audioManager found in Player");
+            Debug.LogError("No audioManager found in " + this.name);
         }
-
 
 
         //GameMaster.InitializePlayerRespawn(this);
         //statusIndicator = Camera.main.GetComponentInChildren<StatusIndicator>();
 
     }
+
 
     private void OnEnable()
     {
@@ -91,19 +94,23 @@ public class Player : MonoBehaviour
 
     public void DamagePlayer(int damageReceived)
     {
-        stats.CurrentHealth -= damageReceived;
-        if (stats.CurrentHealth <= 0)
+        if (m_Damagable == true)
         {
-            //audioManager.PlaySound(deathSoundName);
-            GameMaster.KillPlayer(this);
-        }
-        else
-        {
-            audioManager.PlaySound(damageSoundName);
-        }
+            stats.CurrentHealth -= damageReceived;
+            if (stats.CurrentHealth <= 0)
+            {
+                //audioManager.PlaySound(deathSoundName);
+                GameMaster.KillPlayer(this);
+            }
+            else
+            {
+                audioManager.PlaySound(damageSoundName);
+            }
 
-        statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
-        StartCoroutine(TriggerDamageAnim());
+            statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
+            StartCoroutine(TriggerDamageAnim());
+            StartCoroutine(DamageInShutOff(m_DamageAnimShutOnDelay));
+        }
 
     }
 
@@ -140,6 +147,15 @@ public class Player : MonoBehaviour
     void OnDrowningCall()
     {
         stats.CurrentHealth -= stats.m_DrowningDamage;
+        if (stats.CurrentHealth <= 0)
+        {
+            //audioManager.PlaySound(deathSoundName);
+            GameMaster.KillPlayer(this);
+        }
+        else
+        {
+            audioManager.PlaySound(damageSoundName);
+        }
         statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
     }
 
@@ -150,8 +166,19 @@ public class Player : MonoBehaviour
         m_Anim.SetBool("Hurt", false);
     }
 
+    public IEnumerator DamageInShutOff(float delay)
+    {
+        m_Damagable = false;
+
+        yield return new WaitForSeconds(delay);
+
+        m_Damagable = true;
+    }
+
     private void OnReset()
     {
+
+
         if (statusIndicator == null)
         {
             StatusIndicator ind = GameObject.Find("UIOverlay").GetComponentInChildren<StatusIndicator>();
