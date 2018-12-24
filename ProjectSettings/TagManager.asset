@@ -10,6 +10,9 @@ TagManager:
   - Water
   - Jewel
   - StreamBubble
+  - Ground
+  - FireSource
+  - BurnEffect
   layers:
   - Default
   - TransparentFX
@@ -19,14 +22,14 @@ TagManager:
   - UI
   - 
   - 
-  - 
   - Foreground_Env
+  - Ground
   - Player
   - Vine_Back
   - Background_Env
   - Manual_Water
   - Manual_UI
-  - 
+  - Enemy
   - 
   - 
   - 

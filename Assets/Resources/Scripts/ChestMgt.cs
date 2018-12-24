@@ -11,6 +11,7 @@ public class ChestMgt : MonoBehaviour
     [SerializeField] private float m_CoinsRangeX = 1f;
     [SerializeField] private float m_CoinsRangeY = 1f;
     [SerializeField] private bool[] m_SlotFilled;
+    [SerializeField] private Transform resetButton;
     private const float JEWEL_ANIM_LENGTH = 1f;
     private Animator m_Anim;
 
@@ -25,6 +26,9 @@ public class ChestMgt : MonoBehaviour
         m_Anim = this.GetComponent<Animator>();
         if (m_Anim == null)
             Debug.LogError(this.name + " : Animator not found");
+
+        if (resetButton == null)
+            resetButton = GameObject.Find("UIOverlay").transform.Find("JewelResetButton");
 
     }
 
@@ -44,7 +48,13 @@ public class ChestMgt : MonoBehaviour
             Destroy(collision.gameObject);
 
         }
+
+        if (collision.gameObject.tag == "Player")
+        {
+            resetButton.gameObject.SetActive(true);
+        }
     }
+
     private IEnumerator SlotFilledDelay(bool status, int index)
     {
         bool slotFilled = true;
@@ -73,12 +83,14 @@ public class ChestMgt : MonoBehaviour
                 coinClone = Instantiate(m_CoinPrefab, position, Quaternion.identity);
                 coinClone.transform.parent = GameObject.Find("Coins").transform;
             }
-            
+            resetButton.gameObject.SetActive(false);
             Destroy(explosionClone, m_ExplosionOnDeletePrefab.GetComponent<ParticleSystem>().main.startLifetime.constant + m_ExplosionOnDeletePrefab.GetComponent<ParticleSystem>().main.duration);
             Destroy(this.gameObject);
         }
 
     }
+
+
 
 }
 

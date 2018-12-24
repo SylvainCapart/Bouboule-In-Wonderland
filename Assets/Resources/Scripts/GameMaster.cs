@@ -33,10 +33,6 @@ public class GameMaster : MonoBehaviour
     //[SerializeField]
     //private GameObject upgradeMenu;
 
-    [SerializeField]
-    private int startingMoney;
-    public static int Money;
-
     public delegate void UpgradeMenuCallback(bool active);
     public UpgradeMenuCallback onToggleUpgrademenu;
 
@@ -78,8 +74,6 @@ public class GameMaster : MonoBehaviour
         {
             Debug.LogError("AudioManager missing in GameMaster");
         }
-
-        Money = startingMoney;
         m_SpawnPoint = m_InitSpawnPoint;
 
     }
@@ -160,10 +154,8 @@ public class GameMaster : MonoBehaviour
     public void _KillEnemy(Enemy _enemy)
     {
         //sound
-        audioManager.PlaySound(_enemy.deathSoundName);
+        audioManager.PlaySound(_enemy.m_DeathSoundName);
 
-        // gain money from enemy
-        Money += _enemy.moneyDrop;
         audioManager.PlaySound("Money");
 
         //particles
@@ -171,7 +163,7 @@ public class GameMaster : MonoBehaviour
         //Destroy(clone.gameObject, 5f);
 
         //camerashake
-        cameraShake.Shake(_enemy.shakeAmountAmt, _enemy.shakeLength);
+        cameraShake.Shake(_enemy.m_ShakeAmountAmt, _enemy.m_ShakeLength);
 
         Destroy(_enemy.gameObject);
 

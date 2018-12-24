@@ -3,61 +3,66 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //[RequireComponent(typeof(EnemyAI))]
-public class Enemy : MonoBehaviour {
+public class Enemy : MonoBehaviour
+{
 
-    [System.Serializable]
-    public class EnemyStats 
+    [SerializeField] private int m_CurrentHealth;
+
+    [SerializeField] private int m_MaxHealth;
+    private readonly float m_StartPcHealh = 1f;
+    [SerializeField] private int m_Damage = 40;
+    [SerializeField] private float m_RepulsePlayerCoeff = 10f;
+
+    public float m_ShakeAmountAmt = 0.1f;
+    public float m_ShakeLength = 0.1f;
+
+    public string m_DeathSoundName = "Explosion";
+
+    [SerializeField] private bool m_Burnable;
+    [SerializeField] private bool m_Burning;
+
+    public int CurrentHealth
     {
-        public int _currentHealth;
-
-        [SerializeField] private int maxHealth;
-        public float startPcHealh = 1f;
-        public int damage = 40;
-        public float repulsePlayerCoeff = 10f;
-
-        public int CurrentHealth
-        {
-            get { return _currentHealth;}
-            set { _currentHealth = Mathf.Clamp(value, 0, MaxHealth);}
-        }
-
-        public int MaxHealth
-        {
-            get{return maxHealth;}
-            set{maxHealth = value;}
-        }
-
-        public void Init()
-        {
-            CurrentHealth = (int) (startPcHealh * MaxHealth);
-        }
+        get { return m_CurrentHealth; }
+        set { m_CurrentHealth = Mathf.Clamp(value, 0, MaxHealth); }
     }
 
-    public string deathSoundName = "Explosion";
-    public int moneyDrop = 10;
+    public int MaxHealth
+    {
+        get { return m_MaxHealth; }
+        set { m_MaxHealth = value; }
+    }
 
-    public EnemyStats stats;
 
     //public Transform deathParticles;
 
-    public float shakeAmountAmt = 0.1f;
-    public float shakeLength = 0.1f;
 
+
+    public void Init()
+    {
+        CurrentHealth = (int)(m_StartPcHealh * MaxHealth);
+    }
+
+    [Header("Optional : ")]
+    [SerializeField]
+    private ParticleSystem m_BurnEffect;
 
     [Header("Optional : ")]
     [SerializeField]
     private StatusIndicator statusIndicator;
 
+
     private void Start()
     {
-        stats = new EnemyStats();
-        stats.Init();
+        Init();
 
         if (statusIndicator != null)
         {
-           statusIndicator.SetHealth(stats.CurrentHealth, stats.MaxHealth);
+            statusIndicator.SetHealth(CurrentHealth, MaxHealth);
         }
 
+        if (m_Burnable && m_BurnEffect == null)
+            m_BurnEffect = GameObject.FindGameObjectWithTag("BurnEffect").GetComponent<ParticleSystem>();
         /*if (deathParticles == null)
         {
             Debug.Log("No death particles found in enemy");
@@ -67,17 +72,29 @@ public class Enemy : MonoBehaviour {
 
     }
 
+    /*private void OnEnable()
+    {
+        if (m_Burnable)
+            SourceFire.OnFireHit += Burn;
+    }
+
+    private void OnDisable()
+    {
+        if (m_Burnable)
+            SourceFire.OnFireHit -= Burn;
+    }*/
+
     public void DamageEnemy(int damageReceived)
     {
-        stats.CurrentHealth -= damageReceived;
-        if (stats.CurrentHealth <= 0)
+        CurrentHealth -= damageReceived;
+        if (CurrentHealth <= 0)
         {
             GameMaster.KillEnemy(this);
         }
 
         if (statusIndicator != null)
         {
-            statusIndicator.SetHealth(stats.CurrentHealth, stats.MaxHealth);
+            statusIndicator.SetHealth(CurrentHealth, MaxHealth);
         }
     }
 
@@ -88,8 +105,8 @@ public class Enemy : MonoBehaviour {
         if (_player != null)
         {
             repulsiveVector = new Vector2(_colInfo.transform.position.x - this.transform.position.x, _colInfo.transform.position.y - this.transform.position.y);
-            _player.DamagePlayer(stats.damage);
-            _player.GetComponent<Rigidbody2D>().AddForce(repulsiveVector * stats.repulsePlayerCoeff, ForceMode2D.Impulse);
+            _player.DamagePlayer(m_Damage);
+            _player.GetComponent<Rigidbody2D>().AddForce(repulsiveVector * m_RepulsePlayerCoeff, ForceMode2D.Impulse);
         }
     }
 
@@ -120,9 +137,32 @@ public class Enemy : MonoBehaviour {
             }
                 
         }*/
-         //   _rb.gameObject.SetActive(!active);
+        //   _rb.gameObject.SetActive(!active);
         //GetComponent<Seeker>().enabled = !active;
-       
+
+    }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        if (m_Burnable && other.tag == "FireSource")
+            Burn();
+    }
+
+    private void Burn()
+    {
+        m_Burning = true;
+        //(!m_BurnEffect.isPlaying)
+        //m_BurnEffect.Play();
+        StartCoroutine(BurnCoroutine());
+
+    }
+
+    private IEnumerator BurnCoroutine()
+    {
+        m_BurnEffect.Play();
+
+        yield return (new WaitForSeconds(m_BurnEffect.main.duration));
+        m_Burning = false;
     }
 
 
