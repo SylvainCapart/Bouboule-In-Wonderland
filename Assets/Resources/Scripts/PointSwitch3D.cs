@@ -8,7 +8,6 @@ public class PointSwitch3D : MonoBehaviour {
 
     public Transform[] points;
     private int targetPointIndex = 0;
-    private float horizontalMove = 0f;
     public float moveSpeed = 40f;
     private Rigidbody2D m_Rigidbody2D;
     [Range(0, .5f)][SerializeField] private float m_AxisAdjustment = 0f;

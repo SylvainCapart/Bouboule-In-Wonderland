@@ -30,16 +30,18 @@ public class JewelMgt : MonoBehaviour {
     void Update () {
 
         //m_Speed = GetComponent<Rigidbody2D>().velocity;
-
-        //if (Mathf.Abs(m_Speed.x) > 4f || Mathf.Abs(m_Speed.y) > 6f)
+        bool speedExceeded;
+        speedExceeded = Mathf.Abs(m_Speed.x) > 4f || Mathf.Abs(m_Speed.y) > 4f;
         //  transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.position + Vector3.down, 1f, m_WhatIsGround);
-        //Debug.DrawLine(transform.position, transform.position + Vector3.down*1);
-
-        if (hit.collider != null && hit.transform.gameObject.tag == "Ground")
+        if (speedExceeded)
         {
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.position + Vector3.down, 1f, m_WhatIsGround);
+            //Debug.DrawLine(transform.position, transform.position + Vector3.down*1);
+
+            if (hit.collider != null && hit.transform.gameObject.tag == "Ground")
+            {
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+            }
         }
 
 

@@ -156,8 +156,6 @@ public class GameMaster : MonoBehaviour
         //sound
         audioManager.PlaySound(_enemy.m_DeathSoundName);
 
-        audioManager.PlaySound("Money");
-
         //particles
         //Transform clone = Instantiate(_enemy.deathParticles, _enemy.transform.position, Quaternion.identity);
         //Destroy(clone.gameObject, 5f);

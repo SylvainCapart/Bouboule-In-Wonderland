@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask m_WhatIsVine;                            // A mask determining what is vine to the character     
     [SerializeField] private LayerMask m_WhatIsWater;                            // A mask determining what is water to the character     
 
-    [SerializeField] private float m_SwimShutoffDelay = 0.3f;                            // Deactivate swim after immersion
+
     private bool m_LastSwimStatus = false;
     private bool m_FacingRight = true;
 
@@ -102,10 +102,6 @@ public class PlayerMovement : MonoBehaviour
         m_horizontalMove = Input.GetAxisRaw("Horizontal") * m_speedCoeff;
 
         m_verticalMove = Input.GetAxisRaw("Vertical") * m_speedCoeff;
-        float m_flipAngleY = transform.rotation.y;
-        //Debug.Log(m_horizontalMove + " " + m_verticalMove);
-
-
 
 
         if (Input.GetButtonDown("Roll"))

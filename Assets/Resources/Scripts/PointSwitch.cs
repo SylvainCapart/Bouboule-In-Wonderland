@@ -4,12 +4,12 @@ public class PointSwitch : MonoBehaviour {
 
     public Transform[] points;
     private int targetPointIndex = 0;
-    private float horizontalMove = 0f;
     public float moveSpeed = 40f;
     private Rigidbody2D m_Rigidbody2D;
     private Vector3 velocity = Vector3.zero;
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;  // How much to smooth out the movement
-    private bool m_FacingRight = false;  
+    private bool m_FacingRight = false;
+    private const float EPSILON = 0.01f;
 
 
     private void Start()
@@ -30,7 +30,7 @@ public class PointSwitch : MonoBehaviour {
     private void FixedUpdate()
     {
         float horizontalMove;
-        if (points[targetPointIndex].position.x != this.transform.position.x)
+        if (System.Math.Abs(points[targetPointIndex].position.x - this.transform.position.x) > EPSILON)
         {
             horizontalMove = ((points[targetPointIndex].position.x - this.transform.position.x) / Mathf.Abs(points[targetPointIndex].position.x - this.transform.position.x));
         }

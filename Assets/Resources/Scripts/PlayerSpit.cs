@@ -10,7 +10,6 @@ public class PlayerSpit : MonoBehaviour
 
     [SerializeField] private ParticleSystem[] m_SpitEffects;
 
-    private float lastDirection = 1f;
 
     public enum SpitParticle { FIRE, BUBBLE };
     [SerializeField]  private SpitParticle m_SpitStatus = SpitParticle.FIRE;
@@ -53,11 +52,6 @@ public class PlayerSpit : MonoBehaviour
             Debug.LogError("No audioManager found in " + this.name);
         }
 
-    }
-
-    private void FixedUpdate()
-    {
-        bool m_button = Input.GetButton("Fire1");
     }
     
 

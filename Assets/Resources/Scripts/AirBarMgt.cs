@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class AirBarMgt : MonoBehaviour {
 
     [SerializeField] private RectTransform m_OxygenBarRect;
-    [SerializeField] private PlayerSpit m_PlayerSpit;
+
     [SerializeField] private GameObject[] m_IconArray;
     [SerializeField] private Sprite[] m_BarImageArray;
     [SerializeField] private Image m_BarImageSlot;
@@ -21,22 +21,16 @@ public class AirBarMgt : MonoBehaviour {
 
     private void OnEnable()
     {
-        GameMaster.ResetDelegate += AirBarReset;
+        //GameMaster.ResetDelegate += AirBarReset;
         PlayerSpit.OnSpitModeChange += OnSpitModeChanged;
     }
 
     private void OnDisable()
     {
-        GameMaster.ResetDelegate -= AirBarReset;
+        //GameMaster.ResetDelegate -= AirBarReset;
         PlayerSpit.OnSpitModeChange -= OnSpitModeChanged;
     }
 
-    private void AirBarReset()
-    {
-        PlayerSpit playerSpit = FindObjectOfType<Player>().GetComponent<PlayerSpit>();
-        if (playerSpit != null)
-            m_PlayerSpit = playerSpit;
-    }
 
 
     public void SetOxygen(int _cur, int _max)

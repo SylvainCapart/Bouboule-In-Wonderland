@@ -5,6 +5,7 @@ using UnityEngine;
 //[RequireComponent(typeof(EnemyAI))]
 public class Enemy : MonoBehaviour
 {
+    public enum Mode { IDLE, PATROL, TARGET };
 
     [SerializeField] private int m_CurrentHealth;
 
@@ -19,7 +20,6 @@ public class Enemy : MonoBehaviour
     public string m_DeathSoundName = "Explosion";
 
     [SerializeField] private bool m_Burnable;
-    [SerializeField] private bool m_Burning;
 
     public int CurrentHealth
     {
@@ -150,10 +150,10 @@ public class Enemy : MonoBehaviour
 
     private void Burn()
     {
-        m_Burning = true;
-        //(!m_BurnEffect.isPlaying)
-        //m_BurnEffect.Play();
-        StartCoroutine(BurnCoroutine());
+
+        m_BurnEffect.Play();
+        DamageEnemy(3);
+        //StartCoroutine(BurnCoroutine());
 
     }
 
@@ -162,7 +162,7 @@ public class Enemy : MonoBehaviour
         m_BurnEffect.Play();
 
         yield return (new WaitForSeconds(m_BurnEffect.main.duration));
-        m_Burning = false;
+
     }
 
 

@@ -10,6 +10,8 @@ public class BubbleKill : MonoBehaviour
     {
         ps = GetComponent<ParticleSystem>();
         particles = new ParticleSystem.Particle[ps.main.maxParticles];
+        if (waterlevel == null)
+            waterlevel = FindObjectOfType<WaterLevel>();
     }
 
     private void Update()

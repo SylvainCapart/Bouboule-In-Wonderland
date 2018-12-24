@@ -14,6 +14,7 @@ public class ChestMgt : MonoBehaviour
     [SerializeField] private Transform resetButton;
     private const float JEWEL_ANIM_LENGTH = 1f;
     private Animator m_Anim;
+    [SerializeField] private CameraShake cameraShake;
 
     private void Start()
     {
@@ -29,6 +30,9 @@ public class ChestMgt : MonoBehaviour
 
         if (resetButton == null)
             resetButton = GameObject.Find("UIOverlay").transform.Find("JewelResetButton");
+
+        if (cameraShake == null)
+            cameraShake = FindObjectOfType<CameraShake>();
 
     }
 
@@ -83,6 +87,7 @@ public class ChestMgt : MonoBehaviour
                 coinClone = Instantiate(m_CoinPrefab, position, Quaternion.identity);
                 coinClone.transform.parent = GameObject.Find("Coins").transform;
             }
+            cameraShake.Shake(1f, 1f);
             resetButton.gameObject.SetActive(false);
             Destroy(explosionClone, m_ExplosionOnDeletePrefab.GetComponent<ParticleSystem>().main.startLifetime.constant + m_ExplosionOnDeletePrefab.GetComponent<ParticleSystem>().main.duration);
             Destroy(this.gameObject);
