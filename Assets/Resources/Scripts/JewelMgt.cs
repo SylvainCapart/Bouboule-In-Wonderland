@@ -29,11 +29,11 @@ public class JewelMgt : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
-        //m_Speed = GetComponent<Rigidbody2D>().velocity;
-        bool speedExceeded;
-        speedExceeded = Mathf.Abs(m_Speed.x) > 4f || Mathf.Abs(m_Speed.y) > 4f;
+       //m_Speed = GetComponent<Rigidbody2D>().velocity;
+        //bool speedExceeded;
+        //speedExceeded = Mathf.Abs(m_Speed.x) > 1f || Mathf.Abs(m_Speed.y) > 1f;
         //  transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-        if (speedExceeded)
+        if (true)
         {
             RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.position + Vector3.down, 1f, m_WhatIsGround);
             //Debug.DrawLine(transform.position, transform.position + Vector3.down*1);

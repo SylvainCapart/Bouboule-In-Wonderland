@@ -391,6 +391,8 @@ public class CharacterController2D : MonoBehaviour
     }
 
 
+
+
     private void FlipScale()
     {
         // Switch the way the player is labelled as facing.
@@ -410,6 +412,13 @@ public class CharacterController2D : MonoBehaviour
         //transform.Rotate Quaternion.Euler(new Vector3(transform.rotation.x, 180, transform.rotation.z));
         // Switch the way the player is labelled as facing.
         m_FacingRight = !m_FacingRight;
+
+    }
+
+
+
+    private void GroundSecurityCheck()
+    {
 
     }
 
@@ -526,8 +535,8 @@ public class CharacterController2D : MonoBehaviour
                 }
             }
         }
-
     }
+
 
     public void OnDrowningHandler(bool drowning)
     {
@@ -539,7 +548,7 @@ public class CharacterController2D : MonoBehaviour
 
     float GetSpeedRatio()
     {
-        float speedRatio = (-0.7f * m_Anim.speed + 7.3f) * m_Anim.speed;
+        float speedRatio = (-0.7f * m_Anim.speed + 6.3f) * m_Anim.speed;
         return speedRatio;
     }
 

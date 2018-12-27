@@ -2,7 +2,20 @@
 
 public class PlayerStats : MonoBehaviour
 {
-    public static PlayerStats instance;
+    private static PlayerStats instance;
+
+    public static PlayerStats Instance
+    {
+        get
+        {
+            return instance;
+        }
+        set
+        {
+            instance = value;
+        }
+
+    }
 
     [SerializeField] private int m_CurrentHealth;
     [SerializeField] private int m_CurrentOxygen;
@@ -29,13 +42,25 @@ public class PlayerStats : MonoBehaviour
         set { m_CurrentOxygen = Mathf.Clamp(value, 0, m_MaxOxygen); }
     }
 
+    public float DrowningDamageRate
+    {
+        get
+        {
+            return m_DrowningDamageRate;
+        }
+
+        set
+        {
+            m_DrowningDamageRate = value;
+        }
+    }
 
 
     public void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
 
         CurrentHealth = (int)(m_StartPcHealh * m_MaxHealth);

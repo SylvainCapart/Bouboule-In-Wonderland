@@ -11,7 +11,7 @@ public class WaterShade : MonoBehaviour
     private bool m_ShadeAppearRunning = false;
     [SerializeField] private readonly float m_fadeTime = 1f;
     [SerializeField] private readonly float m_appearTime = 1f;
-    private bool m_SwimMode = false;
+
 
     private void Start()
     {
@@ -47,8 +47,6 @@ public class WaterShade : MonoBehaviour
     {
         if (statusname == "Swim")
         {
-            m_SwimMode = state;
-
             if (state && !m_ShadeAppearRunning)
             {
                 if (m_ShadeFadeRunning)

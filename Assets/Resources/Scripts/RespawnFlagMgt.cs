@@ -2,20 +2,38 @@
 
 public class RespawnFlagMgt : MonoBehaviour {
 
-    private bool m_FlagTriggered = false;
+    public bool m_FlagTriggered = false;
     private Animator m_Anim;
     private BoxCollider2D m_Box2D;
 
-    public bool FlagTriggered
+    public enum FlagState { RED, GREEN };
+    [SerializeField] private FlagState m_State;
+
+
+    public FlagState State
     {
         get
         {
-            return m_FlagTriggered;
+            return m_State;
         }
 
         set
         {
-            m_FlagTriggered = value;
+            if (m_State == value) return;
+            switch(value)
+            {
+                case FlagState.RED:
+                    m_FlagTriggered = false;
+                    m_Anim.SetBool("FlagTriggered", false);
+                    break;
+                case FlagState.GREEN:
+                    m_FlagTriggered = true;
+                    m_Anim.SetBool("FlagTriggered", true);
+                    break;
+                default: // do nothing
+                    break;
+            }
+            m_State = value;
         }
     }
 
@@ -34,11 +52,15 @@ public class RespawnFlagMgt : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        m_FlagTriggered = true;
-        m_Anim.SetBool("FlagTriggered", true);
-        m_Box2D.enabled = false;
-        GameMaster.SpawnPoint = this.transform.position;
+        GameMaster.gm.ResetFlagsExcept(gameObject);
+        State = FlagState.GREEN;
+        GameMaster.gm.SpawnPoint = this.gameObject;
+        //GameMaster.gm.LastRespawnMgt = this;
     }
+
+
+
+
 
 
 }

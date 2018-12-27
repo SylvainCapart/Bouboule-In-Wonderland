@@ -41,7 +41,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        stats = PlayerStats.instance;
+        stats = PlayerStats.Instance;
 
         stats.CurrentHealth = stats.m_MaxHealth;
 
@@ -118,13 +118,13 @@ public class Player : MonoBehaviour
     {
         if (transform.position.y <= m_FallBoundary)
         {
-            DamagePlayer(10 ^ 6);
+            DamagePlayer(100000);
         }
 
         if (stats.CurrentOxygen <= 0)
         {
             if (!IsInvoking("OnDrowningCall"))
-                InvokeRepeating("OnDrowningCall", 1f / stats.m_DrowningDamageRate, 1f / stats.m_DrowningDamageRate);
+                InvokeRepeating("OnDrowningCall", 1f / stats.DrowningDamageRate, 1f / stats.DrowningDamageRate);
             Drowning = true;
         }
         else

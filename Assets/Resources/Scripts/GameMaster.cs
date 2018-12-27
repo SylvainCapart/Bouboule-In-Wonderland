@@ -7,15 +7,11 @@ public class GameMaster : MonoBehaviour
 
     public static GameMaster gm;
 
-    private static int m_RemainingLives;
-
-    [SerializeField]
-    private int maxLives = 3;
-
     
     public Transform playerPrefab;
-    private static Vector3 m_SpawnPoint;
-    [SerializeField] private Vector3 m_InitSpawnPoint;
+    private GameObject m_SpawnPoint;
+    [SerializeField] private GameObject[] m_SpawnArray;
+
     public float spawnDelay = 0.5f;
     public bool isRespawning = false;
     //public Transform spawnPrefab;
@@ -41,20 +37,23 @@ public class GameMaster : MonoBehaviour
     public delegate void OnResetDelegate();
     public static event OnResetDelegate ResetDelegate;
 
+
+
     /*[SerializeField]
     private WaveSpawner waveSpawner;*/
 
-    public static int RemainingLives
+
+    public GameObject SpawnPoint
     {
-        get {return m_RemainingLives;}
-        set {m_RemainingLives = value;}
+        get {return gm.m_SpawnPoint;}
+        set {gm.m_SpawnPoint = value;}
     }
 
-    public static Vector3 SpawnPoint
+    /*public RespawnFlagMgt LastRespawnMgt
     {
-        get {return m_SpawnPoint; }
-        set {m_SpawnPoint = value;}
-    }
+        get{return gm.m_LastRespawnMgt;}
+        set{ gm.m_LastRespawnMgt = value;}
+    }*/
 
     public void EndGame()
     {
@@ -64,7 +63,6 @@ public class GameMaster : MonoBehaviour
 
     private void Start()
     {
-        m_RemainingLives = maxLives;
         if (cameraShake == null)
         {
             Debug.LogError("No camera shake found in Gamemaster");
@@ -74,7 +72,14 @@ public class GameMaster : MonoBehaviour
         {
             Debug.LogError("AudioManager missing in GameMaster");
         }
-        m_SpawnPoint = m_InitSpawnPoint;
+
+        m_SpawnArray = GameObject.FindGameObjectsWithTag("Flag");
+        if (m_SpawnArray.Length > 1)
+        {
+            m_SpawnPoint = m_SpawnArray[0];
+            m_SpawnPoint.GetComponent<RespawnFlagMgt>().State = RespawnFlagMgt.FlagState.GREEN;
+        }
+
 
     }
 
@@ -111,7 +116,7 @@ public class GameMaster : MonoBehaviour
         //audioManager.PlaySound(spawnSoundName);
         //Transform clone = Instantiate(playerPrefab, m_SpawnPoint.position, m_SpawnPoint.rotation);
         GameObject clone = (GameObject)Instantiate(Resources.Load("Prefabs\\Player"));
-        clone.transform.position = m_SpawnPoint;
+        clone.transform.position = m_SpawnPoint.transform.position + new Vector3(0f,0.5f,0f);
         clone.name = "Player";
         //Transform spawnClone = Instantiate(spawnPrefab, m_SpawnPoint.position, m_SpawnPoint.rotation);
 
@@ -132,16 +137,6 @@ public class GameMaster : MonoBehaviour
             Destroy(player.gameObject);
         else return;
 
-        m_RemainingLives -= 1;
-
-        if (m_RemainingLives <= 0)
-        {
-            //gm.EndGame();
-        }
-        else
-        {
-           // gm.StartCoroutine(gm.RespawnPlayer());
-        }
         gm.StartCoroutine(gm.RespawnPlayer());
     }
 
@@ -168,9 +163,18 @@ public class GameMaster : MonoBehaviour
     }
     public static void InitializePlayerRespawn(Player player)
     {
-        m_SpawnPoint = player.gameObject.transform.position;
+        gm.m_SpawnPoint = player.gameObject;
     }
 
+    public void ResetFlagsExcept(GameObject gameObj)
+    {
+        for (int i = 0; i < m_SpawnArray.Length; i++)
+        {
+            if (m_SpawnArray[i].GetComponent<RespawnFlagMgt>().State == RespawnFlagMgt.FlagState.GREEN
+            && m_SpawnArray[i] != gameObj)
+                m_SpawnArray[i].GetComponent<RespawnFlagMgt>().State = RespawnFlagMgt.FlagState.RED;
+        }
+    }
 
 
 }

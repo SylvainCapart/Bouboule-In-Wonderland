@@ -12,7 +12,7 @@ public class OxygenMgt : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        stats = PlayerStats.instance;
+        stats = PlayerStats.Instance;
 
         stats.CurrentOxygen = stats.m_MaxOxygen;
 

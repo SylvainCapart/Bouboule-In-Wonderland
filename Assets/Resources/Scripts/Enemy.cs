@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Pathfinding;
 using UnityEngine;
 
 //[RequireComponent(typeof(EnemyAI))]
@@ -12,7 +13,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int m_MaxHealth;
     private readonly float m_StartPcHealh = 1f;
     [SerializeField] private int m_Damage = 40;
-    [SerializeField] private float m_RepulsePlayerCoeff = 10f;
+    //[SerializeField] private float m_RepulsePlayerCoeff = 10f;
 
     public float m_ShakeAmountAmt = 0.1f;
     public float m_ShakeLength = 0.1f;
@@ -33,7 +34,6 @@ public class Enemy : MonoBehaviour
         set { m_MaxHealth = value; }
     }
 
-
     //public Transform deathParticles;
 
 
@@ -50,7 +50,6 @@ public class Enemy : MonoBehaviour
     [Header("Optional : ")]
     [SerializeField]
     private StatusIndicator statusIndicator;
-
 
     private void Start()
     {
@@ -101,14 +100,21 @@ public class Enemy : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D _colInfo)
     {
         Player _player = _colInfo.collider.GetComponent<Player>();
-        Vector2 repulsiveVector;
+        //Vector2 repulsiveVector;
         if (_player != null)
         {
-            repulsiveVector = new Vector2(_colInfo.transform.position.x - this.transform.position.x, _colInfo.transform.position.y - this.transform.position.y);
+            //repulsiveVector = new Vector2((_colInfo.transform.position.x - this.transform.position.x), _colInfo.transform.position.y - this.transform.position.y);
             _player.DamagePlayer(m_Damage);
-            _player.GetComponent<Rigidbody2D>().AddForce(repulsiveVector * m_RepulsePlayerCoeff, ForceMode2D.Impulse);
+            //_player.GetComponent<Rigidbody2D>().AddForce(repulsiveVector * m_RepulsePlayerCoeff, ForceMode2D.Impulse);
         }
     }
+
+
+    private void FixedUpdate()
+    {
+        
+    }
+
 
     void OnUpgradeMenuToggle(bool active)
     {
@@ -144,7 +150,7 @@ public class Enemy : MonoBehaviour
 
     private void OnParticleCollision(GameObject other)
     {
-        if (m_Burnable && other.tag == "FireSource")
+        if (m_Burnable && other.tag == "FireSource" && other.transform.parent.tag == "Player")
             Burn();
     }
 
@@ -152,7 +158,7 @@ public class Enemy : MonoBehaviour
     {
 
         m_BurnEffect.Play();
-        DamageEnemy(3);
+        DamageEnemy(1);
         //StartCoroutine(BurnCoroutine());
 
     }

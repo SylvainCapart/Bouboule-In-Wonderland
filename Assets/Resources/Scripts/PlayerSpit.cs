@@ -37,7 +37,7 @@ public class PlayerSpit : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        stats = PlayerStats.instance;
+        stats = PlayerStats.Instance;
 
         m_Anim = this.GetComponent<Animator>();
         if (m_Anim == null)
