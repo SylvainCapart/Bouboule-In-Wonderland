@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool m_Climb = false;
 
     [SerializeField] private Collider2D m_climbingCollider;                // A collider that detects objects where climbing is possible
-    [SerializeField] private Collider2D m_swimmingTrigger;
+    [SerializeField] private Collider2D m_swimmingCollider;
     [SerializeField] private LayerMask m_WhatIsVine;                            // A mask determining what is vine to the character     
     [SerializeField] private LayerMask m_WhatIsWater;                            // A mask determining what is water to the character     
 
@@ -39,7 +39,6 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Collider2D[] colliders;
 
         if (m_climbingCollider.IsTouchingLayers(m_WhatIsVine))
         {
@@ -53,12 +52,6 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-        colliders = Physics2D.OverlapCircleAll(this.transform.position, 0.01f, m_WhatIsWater);
-
-        for (int i = 0; i < colliders.Length; i++)
-        {
-            // Debug.Log("colliders : " + colliders[i].name);
-        }
 
 
         //Get the mouse position on the screen and send a raycast into the game world from that position.
@@ -92,13 +85,6 @@ public class PlayerMovement : MonoBehaviour
 
     */
 
-
-
-        //if (m_swimmingTrigger.IsTouchingLayers(m_WhatIsWater))
-
-        
-
-
         m_horizontalMove = Input.GetAxisRaw("Horizontal") * m_speedCoeff;
 
         m_verticalMove = Input.GetAxisRaw("Vertical") * m_speedCoeff;
@@ -120,14 +106,14 @@ public class PlayerMovement : MonoBehaviour
             m_Jump = true;
         }
 
-
-        //m_Swim = !m_Swim;
         if (!m_Swim && m_LastSwimStatus)
         {
             m_Jump = true;
             m_verticalMove = 30;
         }
         m_LastSwimStatus = m_Swim;
+
+
 
     }
 
@@ -136,26 +122,15 @@ public class PlayerMovement : MonoBehaviour
         // Move our character
         controller.Move(m_horizontalMove * Time.fixedDeltaTime, m_verticalMove * Time.fixedDeltaTime, m_Jump, m_Roll, m_Charging, m_Climb, m_Swim);
         m_Jump = false;
-
-
     }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        //Debug.LogError("other name : " + other.gameObject.name);
-        if (other.gameObject.tag == "Water" && this.transform.position.y < other.gameObject.GetComponentInChildren<WaterLevel>().WaterLevelPosition.position.y)
-        {
-            
-            //Debug.Log("SWIM : NEAZAZAZA :  STAY");
-            m_Swim = true;
-        }
-    }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.tag == "Water" ) //&& m_swimmingTrigger.IsTouchingLayers(m_WhatIsWater))
+
+        if (other.gameObject.tag == "Water" )
         {
-            if (this.transform.position.y > other.gameObject.GetComponentInChildren<WaterLevel>().WaterLevelPosition.position.y)
+            if (this.transform.position.y > other.bounds.center.y + other.bounds.extents.y)
             {
                 m_Swim = false;
                 transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
@@ -165,51 +140,6 @@ public class PlayerMovement : MonoBehaviour
                 m_Swim = true;
             }
         }
-    }
-
-    IEnumerator DisableSwimFor(float deactivateTime)
-    {
-        m_swimmingTrigger.enabled = false;
-        yield return (new WaitForSeconds(deactivateTime));
-        m_swimmingTrigger.enabled = true;
-    }
-
-    float GetSwimAngle(float x, float y)
-    {
-        float moveDetected = 0.0f;
-        float retAngle = 0f;
-
-        if (x > moveDetected && y > moveDetected) //up right
-            retAngle = 45f;
-        else if (x > moveDetected && y == 0f) // right
-            retAngle = 0f;
-        else if (x > moveDetected && y < moveDetected) // bottom right
-            retAngle = -45f;
-        else if (x == 0f && y < moveDetected) // bottom
-        {
-            retAngle = -90f;
-        }
-        else if (x < moveDetected && y < moveDetected) // bottom left
-            retAngle = 45f;
-        else if (x < moveDetected && y == 0f) // left
-            retAngle = 0f;
-        else if (x < moveDetected && y > moveDetected) // up left
-            retAngle = -45f;
-        else if (x == 0f && y > moveDetected) // up
-        {
-            retAngle = 90f;
-        }
-        else if (x == 0f && y == 0f) // no move
-            retAngle = 0f;
-        else
-        {
-            retAngle = 0f;
-            Debug.LogError("angle not possible");
-        }
-
-        
-
-        return retAngle;
     }
 
     private void FlipScale()
@@ -222,11 +152,5 @@ public class PlayerMovement : MonoBehaviour
 		theScale.x *= -1;
 		transform.localScale = theScale;
 	}
-
-
-    bool IsPlayerMoving(float x, float y)
-    {
-        return (Mathf.Abs(x) > 0.1f || Mathf.Abs(y) > 0.1f);
-    }
 
 }

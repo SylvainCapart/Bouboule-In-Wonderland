@@ -356,7 +356,7 @@ public class CharacterController2D : MonoBehaviour
             }
         }
         // If the player should jump...
-        if (!Swim && ((Grounded && jump && m_Anim.GetBool("Ground")) || (jump && climb)))
+        if (!Swim && ((Grounded && jump && m_Anim.GetBool("Ground")) || (jump && climb) ))
         {
             // Add a vertical force to the player.
             StartCoroutine(DisableClimbFor(m_JumpDisableClimbingTime));

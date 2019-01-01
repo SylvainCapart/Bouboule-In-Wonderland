@@ -87,7 +87,7 @@ public class ChestMgt : MonoBehaviour
                 coinClone = Instantiate(m_CoinPrefab, position, Quaternion.identity);
                 coinClone.transform.parent = GameObject.Find("Coins").transform;
             }
-            cameraShake.Shake(1f, 1f);
+            cameraShake.Shake(0.4f, 0.4f);
             resetButton.gameObject.SetActive(false);
             Destroy(explosionClone, m_ExplosionOnDeletePrefab.GetComponent<ParticleSystem>().main.startLifetime.constant + m_ExplosionOnDeletePrefab.GetComponent<ParticleSystem>().main.duration);
             Destroy(this.gameObject);

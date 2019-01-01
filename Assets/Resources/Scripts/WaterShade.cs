@@ -15,19 +15,16 @@ public class WaterShade : MonoBehaviour
 
     private void Start()
     {
-        m_Anim = this.GetComponent<Animator>();
-        if (m_Anim == null)
-            Debug.LogError(this.name + " : Animator not found");
-
         if (m_SpriteRenderer == null)
             m_SpriteRenderer = GetComponentInChildren<Renderer>();
 
-        m_SpriteRenderer.transform.parent = this.transform;
+
         m_SpriteRenderer.material.color = m_FadedAlphaColor;
     }
 
     private void OnEnable()
     {
+        //m_SpriteRenderer.transform.parent = this.transform;
         CharacterController2D.MovementStatusChange += SwimShader;
         GameMaster.ResetDelegate += ResetShade;
     }

@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1583167412}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.70710677}
+  m_LocalRotation: {x: -0.0000001324082, y: 0.70710665, z: -0.00000013240826, w: 0.70710695}
   m_LocalPosition: {x: 0.98, y: -0.62, z: -0.03}
   m_LocalScale: {x: 1.3333334, y: 1.3333334, z: 1}
   m_Children: []
   m_Father: {fileID: 2096247554467151076}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 90.00001, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 89.99999, z: -0.000015258789}
 --- !u!198 &1583167415
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -40,7 +40,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1583167412}
   serializedVersion: 6
-  lengthInSec: 5
+  lengthInSec: 1
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -3500,7 +3500,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 0
+    enabled: 1
     serializedVersion: 3
     type: 1
     collisionMode: 1
@@ -3678,7 +3678,7 @@ ParticleSystem:
     radiusScale: 0.21
     collidesWith:
       serializedVersion: 2
-      m_Bits: 33335
+      m_Bits: 1591
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -4722,7 +4722,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096247552966980637}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.03, y: 6.17, z: 0}
+  m_LocalPosition: {x: -6.81, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2096247553585829505}
@@ -4787,7 +4787,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096247553976158678}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.18, y: 5.15, z: 0}
+  m_LocalPosition: {x: -5.69, y: 3.02, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2096247553585829505}
@@ -4817,7 +4817,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096247554002042514}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.15, y: 7.06, z: 0}
+  m_LocalPosition: {x: -4.72, y: 1.23, z: 0}
   m_LocalScale: {x: 3.7015, y: 3.7015, z: 3.7015}
   m_Children: []
   m_Father: {fileID: 2096247553585829505}
@@ -9545,7 +9545,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096247554141685983}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.86, y: 9.79, z: 0}
+  m_LocalPosition: {x: -5.04, y: 3.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2096247553585829505}
@@ -9587,7 +9587,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096247554467151077}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.09, y: 6.96, z: 0}
+  m_LocalPosition: {x: -4.44, y: 4.58, z: 0}
   m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_Children:
   - {fileID: 2096247554022409081}
@@ -9671,7 +9671,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096247554467151077}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -9682,7 +9682,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!70 &2096247554467151085
 CapsuleCollider2D:
@@ -9763,8 +9763,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02de174d4a5ab4de6bdf7dab5a455fb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FireTriggerDistance: 2.5
   m_State: 0
+  m_AiLerpScript: {fileID: 2056394226}
+  m_AISetter: {fileID: 2056394225}
+  m_ModeEnabled: 0000000000
+  m_Target:
+    targettransform: {fileID: 0}
+    targetdata:
+      targetname: 
+      targettag: 
+      detectiondistance: 0
+      giveupdistance: 0
+      priority: 0
+  m_TargetsArray:
+  - targetname: Player
+    targettag: Player
+    detectiondistance: 6
+    giveupdistance: 15
+    priority: 5
+  m_DetectCoIsRunning: 0
+  m_FireTriggerDistance: 2.5
+  m_TargetFireClose: 0
+  m_PatrolPoints:
+  - {fileID: 2096247554002042513}
+  - {fileID: 2096247553976158677}
+  - {fileID: 2096247554141685982}
+  - {fileID: 2096247552966980636}
+  moveSpeed: 40
+  m_AxisAdjustment: 0
+  m_MovementSmoothing: 0.05
+  m_isObjectFlying: 1
+  m_Randomize: 1
+  m_validChoices: 
+  m_WhatIsTarget:
+    serializedVersion: 2
+    m_Bits: 1536
 --- !u!114 &2096247554467151083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9772,7 +9805,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096247554467151077}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ce0813fe3f513d41b02aa3d7f357585, type: 3}
   m_Name: 
@@ -9837,7 +9870,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096247554467151077}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 847a14d4dc9cc43679ab34fc78e0182f, type: 3}
   m_Name: 
@@ -9845,8 +9878,8 @@ MonoBehaviour:
   version: 2
   repathRate: 0.3
   canSearch: 1
-  canMove: 1
-  speed: 3
+  canMove: 0
+  speed: 3.5
   orientation: 1
   enableRotation: 0
   rotationSpeed: 1

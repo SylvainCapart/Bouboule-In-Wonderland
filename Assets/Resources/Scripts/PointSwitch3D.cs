@@ -49,11 +49,6 @@ public class PointSwitch3D : MonoBehaviour {
         }
     }
 
-    private void Update()
-    {
-
-    }
-
     private void FixedUpdate()
     {
         float horizontalMove = 0f;

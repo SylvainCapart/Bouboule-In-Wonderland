@@ -8,13 +8,15 @@ public class Player : MonoBehaviour
 
     private PlayerStats stats;
 
-    private AudioManager audioManager;
+    private AudioManager m_AudioManager;
     private Animator m_Anim;
 
     [SerializeField] private float m_FallBoundary = -20f;
     private bool m_Drowning = false;
     private const float m_DamageAnimShutOnDelay = 0.6f;
     private bool m_Damagable = true;
+    [SerializeField] private bool m_Burnable;
+
 
     public string deathSoundName = "DeathVoice";
     public string damageSoundName = "Grunt";
@@ -69,8 +71,8 @@ public class Player : MonoBehaviour
         //GameMaster.gm.onToggleUpgrademenu += OnUpgradeMenuToggle;
 
 
-        audioManager = AudioManager.instance;
-        if (audioManager == null)
+        m_AudioManager = AudioManager.instance;
+        if (m_AudioManager == null)
         {
             Debug.LogError("No audioManager found in " + this.name);
         }
@@ -85,11 +87,13 @@ public class Player : MonoBehaviour
     private void OnEnable()
     {
         GameMaster.ResetDelegate += OnReset;
+        CharacterController2D.MovementStatusChange += OnSwim;
     }
 
     private void OnDisable()
     {
         GameMaster.ResetDelegate -= OnReset;
+        CharacterController2D.MovementStatusChange += OnSwim;
     }
 
     public void DamagePlayer(int damageReceived)
@@ -104,12 +108,32 @@ public class Player : MonoBehaviour
             }
             else
             {
-                audioManager.PlaySound(damageSoundName);
+                m_AudioManager.PlaySound(damageSoundName);
             }
 
             statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
             StartCoroutine(TriggerDamageAnim());
             StartCoroutine(DamageInShutOff(m_DamageAnimShutOnDelay));
+        }
+
+    }
+
+    public void BurnPlayer(int damageReceived)
+    {
+        if (m_Burnable == true)
+        {
+            StartCoroutine(BurnInShutOff(stats.m_BurnDmgTakenShutOff));
+            stats.CurrentHealth -= damageReceived;
+            if (stats.CurrentHealth <= 0)
+            {
+                GameMaster.KillPlayer(this);
+            }
+            else
+            {
+                m_AudioManager.PlaySound(damageSoundName);
+            }
+
+            statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
         }
 
     }
@@ -154,7 +178,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            audioManager.PlaySound(damageSoundName);
+            m_AudioManager.PlaySound(damageSoundName);
         }
         statusIndicator.SetHealth(stats.CurrentHealth, stats.m_MaxHealth);
     }
@@ -175,6 +199,15 @@ public class Player : MonoBehaviour
         m_Damagable = true;
     }
 
+    public IEnumerator BurnInShutOff(float delay)
+    {
+        m_Burnable = false;
+
+        yield return new WaitForSeconds(delay);
+
+        m_Burnable = true;
+    }
+
     private void OnReset()
     {
 
@@ -186,4 +219,25 @@ public class Player : MonoBehaviour
                 statusIndicator = ind;
         }
     }
+
+    private void OnSwim(string statusName, bool state)
+    {
+        if(statusName == "Swim")
+        {
+            if (state)
+                m_Burnable = false;
+            else
+                m_Burnable = true;
+        }
+    }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        if (m_Burnable && other.tag == "FireSource")
+            BurnPlayer(stats.m_BurnDmgTaken);
+    }
+
+
+
+
 }

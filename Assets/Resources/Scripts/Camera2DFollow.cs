@@ -13,6 +13,7 @@ namespace UnityStandardAssets._2D
         public float yPosRestriction = -1;
         public float xPosRestriction = 1.42f;
         public float zNewPosition = -10f;
+        public bool m_ResetParentAtStart = false;
 
         private float m_OffsetZ;
         private Vector3 m_LastTargetPosition;
@@ -26,7 +27,8 @@ namespace UnityStandardAssets._2D
 
             m_LastTargetPosition = target.position;
             m_OffsetZ = (transform.position - target.position).z;
-            transform.parent = null;
+            if (m_ResetParentAtStart)
+                transform.parent = null;
         }
 
         private void Awake()
