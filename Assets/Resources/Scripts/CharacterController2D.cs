@@ -25,12 +25,12 @@ public class CharacterController2D : MonoBehaviour
     private float[] k_GroundedRadiusWaterTable = { .02f, .02f, .02f }; // Radius of the overlap circle to determine if grounded
 
     [SerializeField] private bool m_Grounded;            // Whether or not the player is grounded.
-    private bool m_Rolling = false;             // Wether player is currently rolling or not
-    private bool m_Climbing = false;            // Wether player is currently climbing or not
-    private bool m_Jump = false;        // Wether player is currently jumping or not
-    private bool m_Swim = false;        // Wether player can swim or not
-    private bool m_Swimming = false;        // Wether player is currently swimming or not
-    private bool m_Charging = false;        // Wether player is currently charging or not
+    public bool m_Rolling = false;             // Wether player is currently rolling or not
+    public bool m_Climbing = false;            // Wether player is currently climbing or not
+    public bool m_Jump = false;        // Wether player is currently jumping or not
+    public bool m_Swim = false;        // Wether player can swim or not
+    public bool m_Swimming = false;        // Wether player is currently swimming or not
+    public bool m_Charging = false;        // Wether player is currently charging or not
 
     private bool m_StepAllowed = true;
 
@@ -60,11 +60,11 @@ public class CharacterController2D : MonoBehaviour
 
     private AudioManager audioManager;
 
-    void OnGUI()
+    /*void OnGUI()
     {
         GUI.Label(new Rect(0, 0, 100, 100), "" + (int)(1.0f / Time.smoothDeltaTime));
 
-    }
+    }*/
 
     private void Start()
     {
@@ -399,9 +399,9 @@ public class CharacterController2D : MonoBehaviour
         m_FacingRight = !m_FacingRight;
 
         // Multiply the player's x local scale by -1.
-        Vector3 theScale = transform.localScale;
-        theScale.x *= -1;
-        transform.localScale = theScale;
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
     }
 
     private void FlipRotate()

@@ -15,13 +15,13 @@ public class JewelMgt : MonoBehaviour {
 
         m_RespawnPos = this.transform.position;
 
-        GameObject waterMap = GameObject.Find("Tilemap_Water");
+        /*GameObject waterMap = GameObject.Find("Tilemap_Water");
         if (waterMap != null)
             m_RespawnLimitY = waterMap.GetComponentInChildren<WaterLevel>().WaterLevelPosition.position.y;
         else
         {
             Debug.LogError(this.gameObject.name + " : tilemap_water could not be found");
-        }
+        }*/
 
         
     }
@@ -29,30 +29,21 @@ public class JewelMgt : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
-       //m_Speed = GetComponent<Rigidbody2D>().velocity;
-        //bool speedExceeded;
-        //speedExceeded = Mathf.Abs(m_Speed.x) > 1f || Mathf.Abs(m_Speed.y) > 1f;
-        //  transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-        if (true)
+        m_Speed = GetComponent<Rigidbody2D>().velocity;
+        bool speedExceeded;
+
+        speedExceeded = Mathf.Abs(m_Speed.y) > 4f;
+
+        //  This speed check was done to avoid a collision bug when the jewel was falling at high speed, causing it to enter in the ground
+        if (speedExceeded)
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.position + Vector3.down, 1f, m_WhatIsGround);
-            //Debug.DrawLine(transform.position, transform.position + Vector3.down*1);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.down, 1f, m_WhatIsGround);
 
             if (hit.collider != null && hit.transform.gameObject.tag == "Ground")
             {
                 transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
             }
         }
-
-
-
-        if (this.transform.position.y < m_RespawnLimitY )
-        {
-            Respawn();
-            
-        }
-
-
     }
 
     public void Respawn()
@@ -64,5 +55,10 @@ public class JewelMgt : MonoBehaviour {
         this.GetComponent<Rigidbody2D>().Sleep();
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Water")
+            Respawn();
+    }
 
 }

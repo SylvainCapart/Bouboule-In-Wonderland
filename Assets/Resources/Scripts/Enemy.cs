@@ -11,9 +11,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int m_CurrentHealth;
 
     [SerializeField] private int m_MaxHealth;
-    private readonly float m_StartPcHealh = 1f;
+    [SerializeField] private float m_StartPcHealh = 1f;
     [SerializeField] private int m_Damage = 40;
-    //[SerializeField] private float m_RepulsePlayerCoeff = 10f;
+    [SerializeField] private float m_HealthRegenRate = 0.2f;
+    [SerializeField] private int m_HealthRegenAmount = 10;
 
     public float m_ShakeAmountAmt = 0.1f;
     public float m_ShakeLength = 0.1f;
@@ -152,6 +153,25 @@ public class Enemy : MonoBehaviour
     {
         if (m_Burnable && other.tag == "FireSource" && other.transform.parent.tag == "Player")
             Burn();
+    }
+
+    void RegenHealth()
+    {
+        CurrentHealth += m_HealthRegenAmount;
+    }
+
+    public void SetRegenHealthStatus(bool status)
+    {
+        if (status)
+        {
+            if (!IsInvoking("RegenHealth"))
+                InvokeRepeating("RegenHealth", 1f / m_HealthRegenRate, 1f / m_HealthRegenRate);
+        }
+        else
+        {
+            if (IsInvoking("RegenHealth"))
+                CancelInvoke("RegenHealth");
+        }
     }
 
     private void Burn()

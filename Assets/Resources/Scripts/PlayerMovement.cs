@@ -28,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     private bool m_FacingRight = true;
 
 
+
     private void Start()
     {
         if (m_climbingCollider == null)
@@ -152,5 +153,6 @@ public class PlayerMovement : MonoBehaviour
 		theScale.x *= -1;
 		transform.localScale = theScale;
 	}
+
 
 }

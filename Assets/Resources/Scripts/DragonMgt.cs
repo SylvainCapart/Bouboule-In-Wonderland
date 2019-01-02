@@ -8,18 +8,23 @@ using Random = UnityEngine.Random;
 public class DragonMgt : MonoBehaviour
 {
     private AudioManager m_AudioManager;
+    public bool DebugMode;
 
     /* ---- DRAGON BEHAVIOR ---- */
 
     public enum DragonState { PATROL, TARGET, SLEEP, SURPRISED, GIVEUP };
     [SerializeField] private DragonState m_State;
+    private DragonState m_LastState;
     [SerializeField] private AILerp m_AiLerpScript;
     [SerializeField] private AIDestinationSetter m_AISetter;
-    [SerializeField] private bool[] m_ModeEnabled;
+     public bool[] m_ModeEnabled;
+    private Enemy m_Enemy;
+    private ExpressionMgt m_ExpressionManager;
     private const int m_ModeNb = 5;
 
+
     /* ----------------------------- */
-    
+
     /* ---- MODE TARGET ---- */
 
     // target related
@@ -28,8 +33,6 @@ public class DragonMgt : MonoBehaviour
     {
         public string targetname;
         public string targettag;
-        public float detectiondistance;
-        public float giveupdistance;
         public int priority;
     };
 
@@ -42,14 +45,12 @@ public class DragonMgt : MonoBehaviour
 
     [SerializeField] private Target m_Target;
     [SerializeField] private TargetData[] m_TargetsArray;
-    [SerializeField] private bool m_DetectCoIsRunning;
-    private bool m_ShutOffDetect = false;
-
+    [SerializeField] private float m_GiveUpDistance = 15f;
 
     // spit fire related
     private ParticleSystem m_FireSource;
-    [SerializeField] private float m_FireTriggerDistance = 1.5f;
-    [SerializeField] private bool m_TargetFireClose;
+    private float m_FireTriggerDistance = 1.5f;
+    private bool m_TargetFireClose;
 
     // orientation
     private bool m_FacingRight = true;
@@ -60,18 +61,11 @@ public class DragonMgt : MonoBehaviour
 
     /* ---- MODE PATROL ---- */
 
-   
+
     public Transform[] m_PatrolPoints;
-    private int patrolPointIndex = 0;
-    public float moveSpeed = 40f;
-    private Rigidbody2D m_Rigidbody2D;
-    [Range(0, .5f)] [SerializeField] private float m_AxisAdjustment = 0f;
-    private Vector3 velocity = Vector3.zero;
-    [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;  // How much to smooth out the movement
-    //private bool m_FacingRight = false;
-    [SerializeField] private bool m_isObjectFlying = false;
+    private int m_PatrolPointIndex = 0;
     public bool m_Randomize;
-    [SerializeField] private int[] m_validChoices;
+    private int[] m_validChoices;
     [SerializeField] private LayerMask m_WhatIsTarget;
 
 
@@ -80,8 +74,15 @@ public class DragonMgt : MonoBehaviour
 
     /* ---- MODE SLEEP ---- */
 
+    private Transform m_StartPosition;
 
 
+    /* ----------------------------- */
+
+    /* ---- MODE SURPRISED ---- */
+
+    [SerializeField] private float m_SurprisedDelay = 3f;
+    private bool m_IsSurprisedCoRunning;
 
     /* ----------------------------- */
 
@@ -114,25 +115,55 @@ public class DragonMgt : MonoBehaviour
             switch (value)
             {
                 case DragonState.PATROL:
-                    m_AISetter.target = m_PatrolPoints[0];
-                    StartCoroutine(ShutOffDetection());
+                    TargetClose = false;
+                    m_AiLerpScript.canMove = true;
+                    m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.NONE);
                     break;
-                case DragonState.TARGET:
-                    //m_AISetter.target = m_Target.targettransform;
 
+                case DragonState.TARGET:
+                    m_AiLerpScript.canMove = true;
+                    m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.NONE);
+                    m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.EXCLAMATION);
                     break;
+
                 case DragonState.SLEEP:
+                    if (m_LastState != DragonState.SLEEP)
+                        m_AiLerpScript.canMove = true;
+                    m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.NONE);
+                    m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.SLEEP);
                     break;
+
+                case DragonState.SURPRISED:
+                    m_AiLerpScript.canMove = false;
+                    m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.NONE);
+                    m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.QUESTION);
+                    break;
+
+                case DragonState.GIVEUP:
+                    TargetClose = false;
+                    m_AiLerpScript.canMove = true;
+                    break;
+
                 default:
-                    Debug.Log("Unknown state in " + this.name);
+                    if (DebugMode)
+                        Debug.Log("Unknown state in " + this.name);
                     break;
             }
+            if (m_IsSurprisedCoRunning == true)
+                StopCoroutine(SurprisedModeCo());
+            m_LastState = m_State;
             m_State = value;
 
         }
     }
 
-
+    public Target GetTarget
+    {
+        get
+        {
+            return m_Target;
+        }
+    }
 
     private void Start()
     {
@@ -140,8 +171,17 @@ public class DragonMgt : MonoBehaviour
         m_AudioManager = AudioManager.instance;
         if (m_AudioManager == null)
         {
-            Debug.LogError("No audioManager found in " + this.name);
+            if (DebugMode)
+                Debug.LogError("No audioManager found in " + this.name);
         }
+        if (m_AiLerpScript == null)
+            m_AiLerpScript = GetComponent<AILerp>();
+        if (m_AISetter == null)
+            m_AISetter = GetComponent<AIDestinationSetter>();
+        if (m_ExpressionManager == null)
+            m_ExpressionManager = GetComponentInChildren<ExpressionMgt>();
+        if (m_Enemy == null)
+            m_Enemy = GetComponent<Enemy>();
 
 
         m_ModeEnabled = new bool[m_ModeNb];
@@ -167,48 +207,39 @@ public class DragonMgt : MonoBehaviour
 
         if (m_TargetsArray.Length < 1)
         {
-            Debug.Log(this.name + " will not follow any target, possible target array is empty. Mode TARGET disabled");
+            if (DebugMode)
+                Debug.Log(this.name + " will not follow any target, possible target array is empty. Mode TARGET disabled");
             m_ModeEnabled[(int)DragonState.TARGET] = false;
         }
 
-
-        if (m_PatrolPoints.Length >= 2)
-        {
-            m_ModeEnabled[(int)DragonState.PATROL] = true;
-            m_ModeEnabled[(int)DragonState.SLEEP] = false;
-        }
-        else if (m_PatrolPoints.Length < 2 && m_PatrolPoints.Length >= 1)
+        if (m_PatrolPoints.Length <= 1)
         {
             m_ModeEnabled[(int)DragonState.PATROL] = false;
             m_ModeEnabled[(int)DragonState.SLEEP] = true;
+            m_LastState = DragonState.SLEEP;
+
+            if (m_PatrolPoints.Length < 1)
+                m_StartPosition = transform.parent;
+            else
+                m_StartPosition = m_PatrolPoints[0];
+
         }
-        else
+        else if (m_PatrolPoints.Length >= 2)
         {
-            Debug.LogError(this.name + " : not enough patrol point to enable SLEEP mode");
+            m_ModeEnabled[(int)DragonState.PATROL] = true;
+            m_ModeEnabled[(int)DragonState.SLEEP] = false;
+            m_LastState = DragonState.PATROL;
+            m_StartPosition = m_PatrolPoints[0];
         }
 
-        if (m_AiLerpScript == null)
-            m_AiLerpScript = GetComponent<AILerp>();
-        if (m_AISetter == null)
-            m_AISetter = GetComponent<AIDestinationSetter>();
-            
-        State = m_ModeEnabled[(int)DragonState.PATROL] == true ? DragonState.PATROL : DragonState.SLEEP;
+        State = (m_ModeEnabled[(int)DragonState.PATROL] == true) ? DragonState.PATROL : DragonState.SLEEP;
 
 
-
-
-        m_Rigidbody2D = GetComponent<Rigidbody2D>();
-        if (m_Rigidbody2D == null)
-            Debug.LogError(this.name + " : RB not found");
-
-        if (m_Rigidbody2D != null)
-        {
-            m_Rigidbody2D.gravityScale = 0f;
-        }
 
         if (m_Randomize && m_PatrolPoints.Length < 3)
         {
-            Debug.Log("Not enough points to randomize path");
+            if (DebugMode)
+                Debug.Log("Not enough points to randomize path");
         }
 
         if (m_Randomize)
@@ -220,34 +251,12 @@ public class DragonMgt : MonoBehaviour
             }
         }
 
-    }
 
-    private void OnEnable()
-    {
-
-    }
-
-    private void OnDisable()
-    {
 
     }
 
     private void Update()
     {
-        if (m_Target.targettransform != null)
-        {
-            if (!m_FacingRight && m_Target.targettransform.position.x - this.transform.position.x > 0)
-            {
-                FlipScale();
-            }
-            else if (m_FacingRight && m_Target.targettransform.position.x - this.transform.position.x < 0)
-            {
-                FlipScale();
-            }
-        }
-
-
-
         switch (State)
         {
             case DragonState.PATROL:
@@ -257,78 +266,68 @@ public class DragonMgt : MonoBehaviour
                 TargetMode();
                 break;
             case DragonState.SLEEP:
+                SleepMode();
+                break;
+            case DragonState.SURPRISED:
+                SurprisedMode();
+                break;
+            case DragonState.GIVEUP:
+                GiveUpMode();
                 break;
             default:
-                Debug.Log("Unknown state in " + this.name);
+                if (DebugMode)
+                    Debug.Log("Unknown state in " + this.name);
                 break;
         }
 
-
-
-    }
-
-    private void FixedUpdate()
-    {
-
+        if (m_Target.targettransform != null)
+        {
+            if (!m_FacingRight && m_Target.targettransform.position.x - this.transform.position.x > 0)
+            {
+                FlipRotate();
+            }
+            else if (m_FacingRight && m_Target.targettransform.position.x - this.transform.position.x < 0)
+            {
+                FlipRotate();
+            }
+        }
     }
 
     void PatrolMode()
     {
         int lastIndex;
 
-        /*if (m_isObjectFlying || Mathf.Abs(m_PatrolPoints[patrolPointIndex].position.x - this.transform.position.x) > m_AxisAdjustment)
-       {
-           horizontalMove = ((m_PatrolPoints[patrolPointIndex].position.x - this.transform.position.x) / Mathf.Abs(m_PatrolPoints[patrolPointIndex].position.x - this.transform.position.x));
-       }
+        m_Enemy.SetRegenHealthStatus(false);
 
-       if (m_isObjectFlying || Mathf.Abs(m_PatrolPoints[patrolPointIndex].position.y - this.transform.position.y) > m_AxisAdjustment)
-       {
-           verticalMove = ((m_PatrolPoints[patrolPointIndex].position.y - this.transform.position.y) / Mathf.Abs(m_PatrolPoints[patrolPointIndex].position.y - this.transform.position.y));
-       }*/
-        if (m_Target.targettransform != m_PatrolPoints[patrolPointIndex])
+        if (m_Target.targettransform != m_PatrolPoints[m_PatrolPointIndex])
         {
-            m_AISetter.target = m_PatrolPoints[patrolPointIndex];
-            m_Target.targettransform = m_PatrolPoints[patrolPointIndex];
+            m_AISetter.target = m_PatrolPoints[m_PatrolPointIndex];
+            m_Target.targettransform = m_PatrolPoints[m_PatrolPointIndex];
             m_Target.targetdata.priority = 0;
-            m_Target.targetdata.detectiondistance = 0f;
-            m_Target.targetdata.giveupdistance = 100f;
             m_Target.targetdata.targetname = "Dummy";
             m_Target.targetdata.targettag = "Dummy";
         }
 
-
-        //Vector2 checkDistance = new Vector2(Vector2.Distance(points[patrolPointIndex].position, this.transform.position), 0);
-
-
-        if (Vector2.Distance(m_PatrolPoints[patrolPointIndex].position, this.transform.position) < 0.3f)
+        if (Vector2.Distance(m_PatrolPoints[m_PatrolPointIndex].position, this.transform.position) < 0.3f)
         {
             if (m_Randomize)
             {
-                lastIndex = patrolPointIndex;
-                patrolPointIndex = GetRandomTagetIndex();
-                m_validChoices[GetValueIndex(patrolPointIndex)] = lastIndex;
+                lastIndex = m_PatrolPointIndex;
+                m_PatrolPointIndex = GetRandomTagetIndex();
+                m_validChoices[GetValueIndex(m_PatrolPointIndex)] = lastIndex;
 
             }
             else
             {
-                if (patrolPointIndex >= m_PatrolPoints.Length - 1)
+                if (m_PatrolPointIndex >= m_PatrolPoints.Length - 1)
                 {
-                    patrolPointIndex = 0;
+                    m_PatrolPointIndex = 0;
 
                 }
                 else
                 {
-                    ++patrolPointIndex;
+                    ++m_PatrolPointIndex;
                 }
-            }
-
-        }
-
-        if (!m_DetectCoIsRunning && !m_ShutOffDetect)
-        {
-            for (int i = 0; i < m_TargetsArray.Length; i++)
-            {
-                StartCoroutine(DetectTargetCo(m_TargetsArray[i].targetname, m_TargetsArray[i].targettag, m_TargetsArray[i].detectiondistance, m_TargetsArray[i].giveupdistance, m_TargetsArray[i].priority));
             }
 
         }
@@ -337,8 +336,7 @@ public class DragonMgt : MonoBehaviour
 
     void TargetMode()
     {
-        if (Vector3.Distance(transform.position, transform.parent.position) >= m_Target.targetdata.giveupdistance)
-            State = DragonState.PATROL;
+        m_Enemy.SetRegenHealthStatus(false);
 
         if (m_Target.targettransform != null)
             TargetClose = Vector3.Distance(transform.position, m_Target.targettransform.position) <= m_FireTriggerDistance;
@@ -349,43 +347,115 @@ public class DragonMgt : MonoBehaviour
             difference.Normalize();
             float rotX = -Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
 
-
             m_FireSource.transform.rotation = Quaternion.Euler(rotX, 90, 0);
         }
         else if (m_Target.targettransform == null && m_FireSource.isPlaying)
         {
             SpitFire(false);
         }
+
+        if (Vector3.Distance(transform.position, transform.parent.position) >= m_GiveUpDistance)
+        {
+            SetTargetState(m_StartPosition, 0, DragonState.GIVEUP);
+        }
+
     }
 
     void SleepMode()
     {
+        m_Enemy.SetRegenHealthStatus(false);
+
+        m_AISetter.target = m_StartPosition;
+        m_Target.targettransform = m_StartPosition;
+
+    }
+
+    void SurprisedMode()
+    {
+        m_Enemy.SetRegenHealthStatus(false);
+
+        if (!m_IsSurprisedCoRunning)
+            StartCoroutine(SurprisedModeCo());
+    }
+
+    void GiveUpMode()
+    {
+        m_Enemy.SetRegenHealthStatus(true);
+
+        if (Vector2.Distance(transform.position, m_StartPosition.position) <= 0.2f)
+        {
+            if (m_ModeEnabled[(int)DragonState.SLEEP] == true)
+                SetTargetState(transform.parent.transform, 0, DragonState.SLEEP);
+            else
+                SetTargetState(transform.parent.transform, 0, DragonState.PATROL);
+        }
 
     }
 
     private void FlipScale()
     {
+        // unparent expressionmanager then reparent it after scaling
+        //m_ExpressionManager.transform.parent = null;
 
         m_FacingRight = !m_FacingRight;
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
 
+        //m_ExpressionManager.transform.parent = transform;
+    }
 
-        Vector3 theScale = transform.localScale;
-        theScale.x *= -1;
-        transform.localScale = theScale;
+    private void FlipRotate()
+    {
+
+        transform.Rotate(new Vector3(0, 180, 0));
+        //   transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, 0, transform.rotation.z));
+        //transform.Rotate Quaternion.Euler(new Vector3(transform.rotation.x, 180, transform.rotation.z));
+        // Switch the way the player is labelled as facing.
+        m_FacingRight = !m_FacingRight;
+
+        Vector3 scale = m_ExpressionManager.transform.localScale;
+        scale.x *= -1;
+        m_ExpressionManager.transform.localScale = scale;
+
+    }
+
+    public void SetTargetState(Transform targettransform, int priority, DragonState state)
+    {
+        if (State != state)
+        {
+            m_AISetter.target = targettransform.transform;
+            m_Target.targettransform = targettransform.transform;
+
+            m_Target.targetdata.priority = priority;
+
+            State = state;
+        }
     }
 
 
-    private void SetTarget(GameObject targetobj, float detectiondistance, float giveupdistance, int priority)
+    public void SetTarget(GameObject targetobj, int priority)
+    {
+        if (State != DragonState.TARGET)
+        {
+            m_AISetter.target = targetobj.transform;
+            m_Target.targettransform = targetobj.transform;
+
+            m_Target.targetdata.priority = priority;
+
+            State = DragonState.TARGET;
+        }
+
+    }
+
+    public void SetPreTarget(GameObject targetobj, int priority)
     {
         m_AISetter.target = targetobj.transform;
         m_Target.targettransform = targetobj.transform;
-        m_Target.targetdata.detectiondistance = detectiondistance;
-        m_Target.targetdata.giveupdistance = giveupdistance;
-        m_Target.targetdata.priority = priority;
-        m_Target.targetdata.targettag = targetobj.tag;
-        m_Target.targetdata.targetname = targetobj.name;
-        State = DragonState.TARGET;
 
+        m_Target.targetdata.priority = priority;
+
+        State = DragonState.SURPRISED;
     }
 
     private void UnsetTarget(GameObject targetobj, float detectiondistance, float giveupdistance, int priority)
@@ -410,67 +480,58 @@ public class DragonMgt : MonoBehaviour
 
     }
 
-    private IEnumerator DetectTargetCo(string targetname, string targettag, float detectiondistance, float giveupdistance, int priority)
-    {
-        m_DetectCoIsRunning = true;
-        DetectTarget(targetname, targettag, detectiondistance, giveupdistance, priority);
-        yield return new WaitForSeconds(0.1f);
+    /* private void DetectTarget(string targetname, string targettag, float detectiondistance, float giveupdistance, int priority)
+     {
+         GameObject[] potentialtargets = GameObject.FindGameObjectsWithTag(targettag);
+         GameObject target = null;
 
-        m_DetectCoIsRunning = false;
-    }
+         if (potentialtargets.Length >= 1)
+         {
+             for (int i = 0; i < potentialtargets.Length; i++)
+             {
+                 if (potentialtargets[i].name == targetname)
+                 {
+                     if (target != null)
+                         Debug.Log("More than one target found with name : " + targetname + " in tags : " + targettag);
+                     target = potentialtargets[i];
+                 }
 
-    private void DetectTarget(string targetname, string targettag, float detectiondistance, float giveupdistance, int priority)
-    {
-        GameObject[] potentialtargets = GameObject.FindGameObjectsWithTag(targettag);
-        GameObject target = null;
+             }
+             if (target == null)
+             {
+                 Debug.Log("No target found with name : " + targetname + " in tags : " + targettag);
+                 return;
+             }
+         }
+         else
+         {
+             Debug.Log("No target found with tag : " + targettag);
+             return;
+         }
 
-        if (potentialtargets.Length >= 1)
-        {
-            for (int i = 0; i < potentialtargets.Length; i++)
-            {
-                if (potentialtargets[i].name == targetname)
-                {
-                    if (target != null)
-                        Debug.LogError("More than one target found with name : " + targetname + " in tags : " + targettag);
-                    target = potentialtargets[i];
-                }
+         if (Vector3.Distance(transform.position, target.transform.position) <= detectiondistance )
+         {
+             RaycastHit2D hit = Physics2D.Raycast(this.transform.position, target.transform.position - this.transform.position, detectiondistance, m_WhatIsTarget);
+             //if (hit)
+               //  Debug.Log("hit : " + hit.transform.gameObject.name + " " + hit.transform.gameObject.tag);
+             //Debug.DrawLine(this.transform.position, target.transform.position - this.transform.position, Color.red);
 
-            }
-            if (target == null)
-            {
-                Debug.LogError("No target found with name : " + targetname + " in tags : " + targettag);
-                return;
-            }
-        }
-        else
-        {
-            Debug.LogError("No target found with tag : " + targettag);
-            return;
-        }
+             if (m_Target.targettransform != null)
+             {
+                 if (priority >= m_Target.targetdata.priority && hit.collider != null && hit.collider.gameObject.name == targetname)
+                     SetTarget(target, detectiondistance, giveupdistance, priority);
+             }
+             else
+                 SetTarget(target, detectiondistance, giveupdistance, priority);
+         }
+     }*/
 
-        if (Vector3.Distance(transform.position, target.transform.position) <= detectiondistance )
-        {
-            RaycastHit2D hit = Physics2D.Raycast(this.transform.position, target.transform.position - this.transform.position, detectiondistance, m_WhatIsTarget);
-            //if (hit)
-              //  Debug.Log("hit : " + hit.transform.gameObject.name + " " + hit.transform.gameObject.tag);
-            //Debug.DrawLine(this.transform.position, target.transform.position - this.transform.position, Color.red);
-
-            if (m_Target.targettransform != null)
-            {
-                if (priority >= m_Target.targetdata.priority && hit.collider != null && hit.collider.gameObject.name == targetname)
-                    SetTarget(target, detectiondistance, giveupdistance, priority);
-            }
-            else
-                SetTarget(target, detectiondistance, giveupdistance, priority);
-        }
-    }
-
-    private IEnumerator ShutOffDetection()
+    /*private IEnumerator ShutOffDetection()
     {
         m_ShutOffDetect = true;
         yield return new WaitForSeconds(3f);
         m_ShutOffDetect = false;
-    }
+    }*/
 
     private int GetRandomTagetIndex()
     {
@@ -487,4 +548,18 @@ public class DragonMgt : MonoBehaviour
         }
         return 0;
     }
+
+    private IEnumerator SurprisedModeCo()
+    {
+        m_IsSurprisedCoRunning = true;
+        m_ModeEnabled[(int)DragonState.SURPRISED] = false;
+
+
+        yield return new WaitForSeconds(m_SurprisedDelay);
+        m_IsSurprisedCoRunning = false;
+        State = m_LastState;
+        yield return new WaitForSeconds(0.5f);
+        m_ModeEnabled[(int)DragonState.SURPRISED] = true;
+    }
+
 }
