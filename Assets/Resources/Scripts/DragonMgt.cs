@@ -17,10 +17,11 @@ public class DragonMgt : MonoBehaviour
     private DragonState m_LastState;
     [SerializeField] private AILerp m_AiLerpScript;
     [SerializeField] private AIDestinationSetter m_AISetter;
-     public bool[] m_ModeEnabled;
+    public bool[] m_ModeEnabled;
     private Enemy m_Enemy;
     private ExpressionMgt m_ExpressionManager;
     private const int m_ModeNb = 5;
+    public bool m_IsPlayerSwimming;
 
 
     /* ----------------------------- */
@@ -40,7 +41,8 @@ public class DragonMgt : MonoBehaviour
     public class Target
     {
         public Transform targettransform;
-        public TargetData targetdata;
+        public int targetpriority;
+
     };
 
     [SerializeField] private Target m_Target;
@@ -82,7 +84,7 @@ public class DragonMgt : MonoBehaviour
     /* ---- MODE SURPRISED ---- */
 
     [SerializeField] private float m_SurprisedDelay = 3f;
-    private bool m_IsSurprisedCoRunning;
+    [SerializeField] private bool m_IsSurprisedCoRunning;
 
     /* ----------------------------- */
 
@@ -117,25 +119,25 @@ public class DragonMgt : MonoBehaviour
                 case DragonState.PATROL:
                     TargetClose = false;
                     m_AiLerpScript.canMove = true;
-                    m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.NONE);
+                    //m_ExpressionManager.CancelExpression();
                     break;
 
                 case DragonState.TARGET:
                     m_AiLerpScript.canMove = true;
-                    m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.NONE);
+                    //m_ExpressionManager.CancelExpression();
                     m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.EXCLAMATION);
                     break;
 
                 case DragonState.SLEEP:
                     if (m_LastState != DragonState.SLEEP)
                         m_AiLerpScript.canMove = true;
-                    m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.NONE);
+                    m_ExpressionManager.CancelExpression();
                     m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.SLEEP);
                     break;
 
                 case DragonState.SURPRISED:
                     m_AiLerpScript.canMove = false;
-                    m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.NONE);
+                    m_ExpressionManager.CancelExpression();
                     m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.QUESTION);
                     break;
 
@@ -150,12 +152,17 @@ public class DragonMgt : MonoBehaviour
                     break;
             }
             if (m_IsSurprisedCoRunning == true)
+            {
                 StopCoroutine(SurprisedModeCo());
+                m_IsSurprisedCoRunning = false;
+            }
+
             m_LastState = m_State;
             m_State = value;
 
         }
     }
+
 
     public Target GetTarget
     {
@@ -165,9 +172,13 @@ public class DragonMgt : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    { 
+        CharacterController2D.OnSwimChangeRaw -= OnPlayerSwim;
+    }
+
     private void Start()
     {
-
         m_AudioManager = AudioManager.instance;
         if (m_AudioManager == null)
         {
@@ -183,6 +194,7 @@ public class DragonMgt : MonoBehaviour
         if (m_Enemy == null)
             m_Enemy = GetComponent<Enemy>();
 
+        CharacterController2D.OnSwimChangeRaw += OnPlayerSwim;
 
         m_ModeEnabled = new bool[m_ModeNb];
 
@@ -253,6 +265,7 @@ public class DragonMgt : MonoBehaviour
 
 
 
+
     }
 
     private void Update()
@@ -280,7 +293,7 @@ public class DragonMgt : MonoBehaviour
                 break;
         }
 
-        if (m_Target.targettransform != null)
+        if (m_Target.targettransform != null && State != DragonState.SLEEP && State != DragonState.SURPRISED)
         {
             if (!m_FacingRight && m_Target.targettransform.position.x - this.transform.position.x > 0)
             {
@@ -291,6 +304,7 @@ public class DragonMgt : MonoBehaviour
                 FlipRotate();
             }
         }
+
     }
 
     void PatrolMode()
@@ -303,9 +317,8 @@ public class DragonMgt : MonoBehaviour
         {
             m_AISetter.target = m_PatrolPoints[m_PatrolPointIndex];
             m_Target.targettransform = m_PatrolPoints[m_PatrolPointIndex];
-            m_Target.targetdata.priority = 0;
-            m_Target.targetdata.targetname = "Dummy";
-            m_Target.targetdata.targettag = "Dummy";
+            m_Target.targetpriority = 0;
+
         }
 
         if (Vector2.Distance(m_PatrolPoints[m_PatrolPointIndex].position, this.transform.position) < 0.3f)
@@ -354,10 +367,13 @@ public class DragonMgt : MonoBehaviour
             SpitFire(false);
         }
 
-        if (Vector3.Distance(transform.position, transform.parent.position) >= m_GiveUpDistance)
+        if (Vector3.Distance(transform.position, m_StartPosition.position) >= m_GiveUpDistance)
         {
             SetTargetState(m_StartPosition, 0, DragonState.GIVEUP);
         }
+
+        if (m_IsPlayerSwimming)
+            SetTargetState(m_StartPosition, 0, DragonState.GIVEUP);
 
     }
 
@@ -381,9 +397,11 @@ public class DragonMgt : MonoBehaviour
     void GiveUpMode()
     {
         m_Enemy.SetRegenHealthStatus(true);
+        m_ModeEnabled[(int)DragonState.TARGET] = false;
 
         if (Vector2.Distance(transform.position, m_StartPosition.position) <= 0.2f)
         {
+            m_ModeEnabled[(int)DragonState.TARGET] = true;
             if (m_ModeEnabled[(int)DragonState.SLEEP] == true)
                 SetTargetState(transform.parent.transform, 0, DragonState.SLEEP);
             else
@@ -409,14 +427,15 @@ public class DragonMgt : MonoBehaviour
     {
 
         transform.Rotate(new Vector3(0, 180, 0));
+        m_ExpressionManager.transform.Rotate(new Vector3(0, 180, 0));
         //   transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, 0, transform.rotation.z));
         //transform.Rotate Quaternion.Euler(new Vector3(transform.rotation.x, 180, transform.rotation.z));
         // Switch the way the player is labelled as facing.
         m_FacingRight = !m_FacingRight;
 
-        Vector3 scale = m_ExpressionManager.transform.localScale;
+        /*Vector3 scale = m_ExpressionManager.transform.localScale;
         scale.x *= -1;
-        m_ExpressionManager.transform.localScale = scale;
+        m_ExpressionManager.transform.localScale = scale;*/
 
     }
 
@@ -427,42 +446,42 @@ public class DragonMgt : MonoBehaviour
             m_AISetter.target = targettransform.transform;
             m_Target.targettransform = targettransform.transform;
 
-            m_Target.targetdata.priority = priority;
+            m_Target.targetpriority = priority;
 
             State = state;
         }
     }
 
 
-    public void SetTarget(GameObject targetobj, int priority)
-    {
-        if (State != DragonState.TARGET)
-        {
-            m_AISetter.target = targetobj.transform;
-            m_Target.targettransform = targetobj.transform;
+    /* public void SetTarget(GameObject targetobj, int priority)
+     {
+         if (State != DragonState.TARGET)
+         {
+             m_AISetter.target = targetobj.transform;
+             m_Target.targettransform = targetobj.transform;
 
-            m_Target.targetdata.priority = priority;
+             m_Target.targetdata.priority = priority;
 
-            State = DragonState.TARGET;
-        }
+             State = DragonState.TARGET;
+         }
 
-    }
+     }
 
-    public void SetPreTarget(GameObject targetobj, int priority)
-    {
-        m_AISetter.target = targetobj.transform;
-        m_Target.targettransform = targetobj.transform;
+     public void SetPreTarget(GameObject targetobj, int priority)
+     {
+         m_AISetter.target = targetobj.transform;
+         m_Target.targettransform = targetobj.transform;
 
-        m_Target.targetdata.priority = priority;
+         m_Target.targetdata.priority = priority;
 
-        State = DragonState.SURPRISED;
-    }
+         State = DragonState.SURPRISED;
+     }
 
-    private void UnsetTarget(GameObject targetobj, float detectiondistance, float giveupdistance, int priority)
-    {
-        m_Target.targettransform = null;
-        State = DragonState.TARGET;
-    }
+     private void UnsetTarget(GameObject targetobj, float detectiondistance, float giveupdistance, int priority)
+     {
+         m_Target.targettransform = null;
+         State = DragonState.TARGET;
+     }*/
 
     private void SpitFire(bool fire)
     {
@@ -552,14 +571,16 @@ public class DragonMgt : MonoBehaviour
     private IEnumerator SurprisedModeCo()
     {
         m_IsSurprisedCoRunning = true;
-        m_ModeEnabled[(int)DragonState.SURPRISED] = false;
-
 
         yield return new WaitForSeconds(m_SurprisedDelay);
-        m_IsSurprisedCoRunning = false;
+
         State = m_LastState;
-        yield return new WaitForSeconds(0.5f);
-        m_ModeEnabled[(int)DragonState.SURPRISED] = true;
+        m_IsSurprisedCoRunning = false;
     }
 
+    private void OnPlayerSwim(bool state)
+    {
+        m_IsPlayerSwimming = state;
+
+    }
 }

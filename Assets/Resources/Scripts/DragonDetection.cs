@@ -13,7 +13,6 @@ public class DragonDetection : MonoBehaviour
             m_DragonMgt = GetComponentInParent<DragonMgt>();
     }
 
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (m_DragonMgt.State != DragonMgt.DragonState.TARGET && m_DragonMgt.State != DragonMgt.DragonState.GIVEUP)
@@ -28,8 +27,10 @@ public class DragonDetection : MonoBehaviour
 
                         if (m_DragonMgt.GetTarget != null)
                         {
-                            if (m_TargetsArray[i].priority >= m_DragonMgt.GetTarget.targetdata.priority && hit.collider != null && hit.collider.gameObject.name == collision.name)
+                            if (m_TargetsArray[i].priority >= m_DragonMgt.GetTarget.targetpriority && hit.collider != null && hit.collider.gameObject.name == collision.name)
                             {
+                                if (hit.collider.gameObject.name == "Player" && m_DragonMgt.m_IsPlayerSwimming) return;
+
                                 m_DragonMgt.SetTargetState(collision.transform, m_TargetsArray[i].priority, DragonMgt.DragonState.TARGET);
                             }
                         }
@@ -53,8 +54,10 @@ public class DragonDetection : MonoBehaviour
 
                         if (m_DragonMgt.GetTarget != null)
                         {
-                            if (m_TargetsArray[i].priority >= m_DragonMgt.GetTarget.targetdata.priority && hit.collider != null && hit.collider.gameObject.name == collision.name)
+                            if (m_TargetsArray[i].priority >= m_DragonMgt.GetTarget.targetpriority && hit.collider != null && hit.collider.gameObject.name == collision.name)
                             {
+                                if (hit.collider.gameObject.name == "Player" && m_DragonMgt.m_IsPlayerSwimming) return;
+
                                 m_DragonMgt.SetTargetState(collision.transform, m_TargetsArray[i].priority, DragonMgt.DragonState.TARGET);
                             }
                         }

@@ -38,6 +38,9 @@ public class CharacterController2D : MonoBehaviour
     public delegate void OnMovementStatusChange(string statusName, bool state);
     public static event OnMovementStatusChange MovementStatusChange;
 
+    public delegate void OnSwimChangeDelegate (bool state);
+    public static event OnSwimChangeDelegate OnSwimChangeRaw;
+
     const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
     private Rigidbody2D m_Rigidbody2D;
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
@@ -60,11 +63,11 @@ public class CharacterController2D : MonoBehaviour
 
     private AudioManager audioManager;
 
-    /*void OnGUI()
+    void OnGUI()
     {
         GUI.Label(new Rect(0, 0, 100, 100), "" + (int)(1.0f / Time.smoothDeltaTime));
 
-    }*/
+    }
 
     private void Start()
     {
@@ -624,6 +627,8 @@ public class CharacterController2D : MonoBehaviour
 
         set
         {
+            if (OnSwimChangeRaw != null)
+                OnSwimChangeRaw(value);
             if (m_Swim == value) return;
             m_Swim = value;
             if (MovementStatusChange != null)
@@ -657,15 +662,6 @@ public class CharacterController2D : MonoBehaviour
 
         set
         {
-            /*if (m_Charging == true && value == true)
-            {
-                if (!audioManager.IsSoundPlayed("FastRolling"))
-                {
-                    audioManager.StopSound("FastRolling");
-                    audioManager.PlaySoundAt("FastRolling", 4f);
-                }
-
-            }*/
             if (m_Charging == value) return;
             m_Charging = value;
             if (MovementStatusChange != null)

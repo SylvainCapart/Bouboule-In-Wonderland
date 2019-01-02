@@ -15,7 +15,7 @@ public class DragonPredetection : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (m_DragonMgt.State != DragonMgt.DragonState.TARGET && m_DragonMgt.State != DragonMgt.DragonState.GIVEUP)
+        if (m_DragonMgt.State != DragonMgt.DragonState.TARGET && m_DragonMgt.State != DragonMgt.DragonState.GIVEUP && m_DragonMgt.State != DragonMgt.DragonState.SURPRISED)
         {
             if (m_TargetsArray.Length >= 1)
             {
@@ -24,13 +24,14 @@ public class DragonPredetection : MonoBehaviour
                     if (collision.tag == m_TargetsArray[i].targettag && collision.name == m_TargetsArray[i].targetname)
                     {
                         RaycastHit2D hit = Physics2D.Raycast(this.transform.position, collision.gameObject.transform.position - this.transform.position, 50f, m_WhatIsTarget);
-
+                        Debug.DrawLine(this.transform.position, collision.gameObject.transform.position);
                         if (m_DragonMgt.GetTarget != null)
                         {
-                            if (m_TargetsArray[i].priority >= m_DragonMgt.GetTarget.targetdata.priority && hit.collider != null && hit.collider.gameObject.name == collision.name)
+                            if (m_TargetsArray[i].priority >= m_DragonMgt.GetTarget.targetpriority && hit.collider != null && hit.collider.gameObject.name == collision.name )
                             {
-                                if (m_DragonMgt.m_ModeEnabled[(int)DragonMgt.DragonState.SURPRISED] == true)
-                                    m_DragonMgt.SetTargetState(collision.transform, m_TargetsArray[i].priority, DragonMgt.DragonState.SURPRISED);
+                                if (hit.collider.gameObject.name == "Player" && m_DragonMgt.m_IsPlayerSwimming) return;
+
+                                m_DragonMgt.SetTargetState(collision.transform, m_TargetsArray[i].priority, DragonMgt.DragonState.SURPRISED);
                             }
                         }
                     }
