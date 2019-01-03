@@ -15,6 +15,7 @@ TagManager:
   - BurnEffect
   - Flag
   - Bubble
+  - FireSourceGreen
   layers:
   - Default
   - TransparentFX

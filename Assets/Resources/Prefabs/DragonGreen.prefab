@@ -24,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3954884336025356137}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 30.27, y: 2.97, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -47,7 +47,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActivableObjectsArray:
   - {fileID: 3954884337438502093}
-  m_ActivationDistance: 12
 --- !u!1 &3954884336085275473
 GameObject:
   m_ObjectHideFlags: 0
@@ -4759,7 +4758,7 @@ GameObject:
   - component: {fileID: 3954884336357945268}
   m_Layer: 10
   m_Name: MouthFire
-  m_TagString: FireSource
+  m_TagString: FireSourceGreen
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8432,8 +8431,8 @@ ParticleSystem:
     collidesWithDynamic: 1
     interiorCollisions: 0
   TriggerModule:
-    enabled: 0
-    collisionShape0: {fileID: 3954884336361090338}
+    enabled: 1
+    collisionShape0: {fileID: 0}
     collisionShape1: {fileID: 0}
     collisionShape2: {fileID: 0}
     collisionShape3: {fileID: 0}
@@ -8443,7 +8442,7 @@ ParticleSystem:
     outside: 0
     enter: 1
     exit: 0
-    radiusScale: 10
+    radiusScale: 1
   SubModule:
     serializedVersion: 2
     enabled: 0
@@ -9598,7 +9597,9 @@ PolygonCollider2D:
     - - {x: 1.9231513, y: 5.5637474}
       - {x: -1.7284448, y: 5.6247444}
       - {x: -4.2454705, y: 3.827085}
+      - {x: -1.7330484, y: -0.07408746}
       - {x: -0.58444154, y: -0.12066778}
+      - {x: -1.7621217, y: -0.25207934}
       - {x: -3.745628, y: -4.458579}
       - {x: -1.8266332, y: -6.1440926}
       - {x: 1.6112716, y: -6.0572042}
@@ -9953,7 +9954,9 @@ PolygonCollider2D:
     - - {x: 2.1471026, y: 6.715499}
       - {x: -1.9843893, y: 6.776496}
       - {x: -4.910243, y: 4.535081}
-      - {x: -0.58444154, y: -0.12066778}
+      - {x: -1.8887491, y: 0.046554565}
+      - {x: -0.36628312, y: 0.02477169}
+      - {x: -1.8892374, y: -0.12503529}
       - {x: -4.236239, y: -5.1704907}
       - {x: -1.9879975, y: -7.031596}
       - {x: 1.9608946, y: -6.998496}
@@ -10109,7 +10112,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3954884337438502093}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.37, y: -0.82, z: 0}
+  m_LocalPosition: {x: 1.79, y: -3.84, z: 0}
   m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_Children:
   - {fileID: 3954884336085275472}
@@ -10428,7 +10431,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3954884337485328032}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.54, y: -1.01, z: 0}
+  m_LocalPosition: {x: -1.8, y: -1.75, z: 0}
   m_LocalScale: {x: 3.7015, y: 3.7015, z: 3.7015}
   m_Children: []
   m_Father: {fileID: 3954884337319741744}

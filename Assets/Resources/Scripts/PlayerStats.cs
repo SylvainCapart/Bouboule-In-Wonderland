@@ -30,6 +30,7 @@ public class PlayerStats : MonoBehaviour
     public int m_DrowningDamage = 25;
     public float m_HealthRegenRate = 2f;
     public int m_BurnDmgTaken = 1;
+    public int m_BurnDmgTakenGreen = 2;
     public float m_BurnDmgTakenShutOff = 0.1f;
 
     public int CurrentHealth

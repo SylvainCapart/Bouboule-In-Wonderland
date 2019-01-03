@@ -3,7 +3,7 @@
 public class CameraGameObjectEnable : MonoBehaviour
 {
     [SerializeField] private GameObject[] m_ActivableObjectsArray;
-    [SerializeField] private float m_ActivationDistance = 12f;
+    private float m_ActivationDistance = 10f;
 
 
     private void Awake()

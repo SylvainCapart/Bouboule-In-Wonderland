@@ -233,8 +233,14 @@ public class Player : MonoBehaviour
 
     private void OnParticleCollision(GameObject other)
     {
-        if (m_Burnable && other.tag == "FireSource")
-            BurnPlayer(stats.m_BurnDmgTaken);
+        if (m_Burnable)
+        {
+            if (other.tag == "FireSource")
+                BurnPlayer(stats.m_BurnDmgTaken);
+            else if (other.tag == "FireSourceGreen")
+                BurnPlayer(stats.m_BurnDmgTakenGreen);
+        }
+
     }
 
 

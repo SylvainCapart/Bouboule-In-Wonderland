@@ -151,7 +151,7 @@ public class Enemy : MonoBehaviour
 
     private void OnParticleCollision(GameObject other)
     {
-        if (m_Burnable && other.tag == "FireSource" && other.transform.parent.tag == "Player")
+        if (m_Burnable && (other.tag == "FireSource" || other.tag == "FireSourceGreen" ) && other.transform.parent.tag == "Player")
             Burn();
     }
 

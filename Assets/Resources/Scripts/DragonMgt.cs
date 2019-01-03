@@ -184,7 +184,7 @@ public class DragonMgt : MonoBehaviour
     }
 
     private void OnDestroy()
-    { 
+    {
         CharacterController2D.OnSwimChangeRaw -= OnPlayerSwim;
         SpitFire(false);
         Destroy(transform.parent.gameObject);
@@ -220,7 +220,7 @@ public class DragonMgt : MonoBehaviour
             ParticleSystem[] parts = GetComponentsInChildren<ParticleSystem>();
             for (int i = 0; i < parts.Length; i++)
             {
-                if (parts[i].tag == "FireSource")
+                if (parts[i].tag == "FireSource" || parts[i].tag == "FireSourceGreen")
                 {
                     m_FireSource = parts[i];
                     break;
@@ -261,9 +261,6 @@ public class DragonMgt : MonoBehaviour
             m_StartPosition = m_PatrolPoints[0];
         }
 
-        State = (m_ModeEnabled[(int)DragonState.PATROL] == true) ? DragonState.PATROL : DragonState.SLEEP;
-
-
 
         if (m_Randomize && m_PatrolPoints.Length < 3)
         {
@@ -279,6 +276,11 @@ public class DragonMgt : MonoBehaviour
                 m_validChoices[i] = i + 1;
             }
         }
+    }
+
+    private void Start()
+    {
+        State = (m_ModeEnabled[(int)DragonState.PATROL] == true) ? DragonState.PATROL : DragonState.SLEEP;
     }
 
     private void Update()
@@ -386,10 +388,19 @@ public class DragonMgt : MonoBehaviour
             SpitFire(false);
         }
 
-        if (Vector3.Distance(m_Target.targettransform.position, m_StartPosition.position) >= m_GiveUpDistance)
+
+        if (m_Target.targettransform != null)
+        {
+            if (Vector3.Distance(m_Target.targettransform.position, m_StartPosition.position) >= m_GiveUpDistance)
+            {
+                SetTargetState(m_StartPosition, 0, DragonState.GIVEUP);
+            }
+        }
+        else
         {
             SetTargetState(m_StartPosition, 0, DragonState.GIVEUP);
         }
+
 
         if (m_IsPlayerSwimming)
             SetTargetState(m_StartPosition, 0, DragonState.GIVEUP);
@@ -398,7 +409,7 @@ public class DragonMgt : MonoBehaviour
 
     void SleepMode()
     {
-        m_Enemy.SetRegenHealthStatus(true);
+        m_Enemy.SetRegenHealthStatus(false);
 
 
 
@@ -525,12 +536,11 @@ public class DragonMgt : MonoBehaviour
         if (fire != false)
         {
             m_FireSource.Play();
-            if (!m_AudioManager.IsSoundPlayed("DragonFire"))
+            if (m_AudioManager != null)
             {
-                if (m_AudioManager != null)
+                if (!m_AudioManager.IsSoundPlayed("DragonFire"))
                     m_AudioManager.PlaySound("DragonFire");
             }
-
         }
         else
         {
@@ -614,5 +624,11 @@ public class DragonMgt : MonoBehaviour
     {
         m_IsPlayerSwimming = state;
 
+    }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        if (State == DragonState.SLEEP && (other.tag == "FireSource" || other.tag == "FireSourceGreen") && other.transform.parent.tag == "Player")
+            FlipRotate();
     }
 }
