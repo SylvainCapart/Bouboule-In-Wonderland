@@ -39,16 +39,22 @@ public class RespawnFlagMgt : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        m_Anim = this.GetComponentInParent<Animator>();
+
         if (m_Anim == null)
-            Debug.LogError(this.name + " : Animator not found");
+            m_Anim = this.GetComponentInParent<Animator>();
 
         m_Box2D = this.GetComponentInParent<BoxCollider2D>();
         if (m_Box2D == null)
             Debug.LogError(this.name + " : BoxCollider2D not found");
 
     }
-	
+
+    private void Awake()
+    {
+        if (m_Anim == null)
+            m_Anim = this.GetComponentInParent<Animator>();
+    }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

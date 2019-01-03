@@ -43,6 +43,7 @@ public class Sound
 
     public void Stop()
     {
+        if (source != null)
         source.Stop();
     }
 

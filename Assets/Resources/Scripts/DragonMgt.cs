@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 public class DragonMgt : MonoBehaviour
 {
     private AudioManager m_AudioManager;
+    private Animator m_Anim;
     public bool DebugMode;
 
     /* ---- DRAGON BEHAVIOR ---- */
@@ -46,12 +47,21 @@ public class DragonMgt : MonoBehaviour
     };
 
     [SerializeField] private Target m_Target;
-    [SerializeField] private TargetData[] m_TargetsArray;
+    public TargetData[] m_TargetsArray;
+    public LayerMask m_WhatIsTarget;
     [SerializeField] private float m_GiveUpDistance = 15f;
+    [SerializeField] private bool m_CanMoveInTargetMode = true;
+
+    // Detection
+    [SerializeField] private GameObject m_PatrolDetection;
+    [SerializeField] private GameObject m_PatrolPredetection;
+
+    [SerializeField] private GameObject m_SleepDetection;
+    [SerializeField] private GameObject m_SleepPredetection;
 
     // spit fire related
     private ParticleSystem m_FireSource;
-    private float m_FireTriggerDistance = 1.5f;
+    [SerializeField] private float m_FireTriggerDistance = 1.5f;
     private bool m_TargetFireClose;
 
     // orientation
@@ -68,7 +78,7 @@ public class DragonMgt : MonoBehaviour
     private int m_PatrolPointIndex = 0;
     public bool m_Randomize;
     private int[] m_validChoices;
-    [SerializeField] private LayerMask m_WhatIsTarget;
+
 
 
 
@@ -84,7 +94,8 @@ public class DragonMgt : MonoBehaviour
     /* ---- MODE SURPRISED ---- */
 
     [SerializeField] private float m_SurprisedDelay = 3f;
-    [SerializeField] private bool m_IsSurprisedCoRunning;
+    private bool m_IsSurprisedDelayInit;
+    private float m_InitSurprisedTime;
 
     /* ----------------------------- */
 
@@ -119,12 +130,12 @@ public class DragonMgt : MonoBehaviour
                 case DragonState.PATROL:
                     TargetClose = false;
                     m_AiLerpScript.canMove = true;
-                    //m_ExpressionManager.CancelExpression();
+                    m_ExpressionManager.CancelExpression();
                     break;
 
                 case DragonState.TARGET:
-                    m_AiLerpScript.canMove = true;
-                    //m_ExpressionManager.CancelExpression();
+                    m_AiLerpScript.canMove = m_CanMoveInTargetMode;
+                    m_ExpressionManager.CancelExpression();
                     m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.EXCLAMATION);
                     break;
 
@@ -133,6 +144,7 @@ public class DragonMgt : MonoBehaviour
                         m_AiLerpScript.canMove = true;
                     m_ExpressionManager.CancelExpression();
                     m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.SLEEP);
+                    m_Anim.SetBool("Sleep", true);
                     break;
 
                 case DragonState.SURPRISED:
@@ -144,6 +156,7 @@ public class DragonMgt : MonoBehaviour
                 case DragonState.GIVEUP:
                     TargetClose = false;
                     m_AiLerpScript.canMove = true;
+                    m_ExpressionManager.CancelExpression();
                     break;
 
                 default:
@@ -151,11 +164,9 @@ public class DragonMgt : MonoBehaviour
                         Debug.Log("Unknown state in " + this.name);
                     break;
             }
-            if (m_IsSurprisedCoRunning == true)
-            {
-                StopCoroutine(SurprisedModeCo());
-                m_IsSurprisedCoRunning = false;
-            }
+
+            if (value != DragonState.SLEEP)
+                m_Anim.SetBool("Sleep", false);
 
             m_LastState = m_State;
             m_State = value;
@@ -172,12 +183,16 @@ public class DragonMgt : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     { 
         CharacterController2D.OnSwimChangeRaw -= OnPlayerSwim;
+        SpitFire(false);
+        Destroy(transform.parent.gameObject);
     }
 
-    private void Start()
+
+
+    private void Awake()
     {
         m_AudioManager = AudioManager.instance;
         if (m_AudioManager == null)
@@ -193,6 +208,8 @@ public class DragonMgt : MonoBehaviour
             m_ExpressionManager = GetComponentInChildren<ExpressionMgt>();
         if (m_Enemy == null)
             m_Enemy = GetComponent<Enemy>();
+        if (m_Anim == null)
+            m_Anim = GetComponent<Animator>();
 
         CharacterController2D.OnSwimChangeRaw += OnPlayerSwim;
 
@@ -262,10 +279,6 @@ public class DragonMgt : MonoBehaviour
                 m_validChoices[i] = i + 1;
             }
         }
-
-
-
-
     }
 
     private void Update()
@@ -311,6 +324,11 @@ public class DragonMgt : MonoBehaviour
     {
         int lastIndex;
 
+        m_PatrolDetection.SetActive(true);
+        m_PatrolPredetection.SetActive(true);
+        m_SleepDetection.SetActive(false);
+        m_SleepPredetection.SetActive(false);
+
         m_Enemy.SetRegenHealthStatus(false);
 
         if (m_Target.targettransform != m_PatrolPoints[m_PatrolPointIndex])
@@ -350,6 +368,7 @@ public class DragonMgt : MonoBehaviour
     void TargetMode()
     {
         m_Enemy.SetRegenHealthStatus(false);
+        m_IsSurprisedDelayInit = false;
 
         if (m_Target.targettransform != null)
             TargetClose = Vector3.Distance(transform.position, m_Target.targettransform.position) <= m_FireTriggerDistance;
@@ -367,7 +386,7 @@ public class DragonMgt : MonoBehaviour
             SpitFire(false);
         }
 
-        if (Vector3.Distance(transform.position, m_StartPosition.position) >= m_GiveUpDistance)
+        if (Vector3.Distance(m_Target.targettransform.position, m_StartPosition.position) >= m_GiveUpDistance)
         {
             SetTargetState(m_StartPosition, 0, DragonState.GIVEUP);
         }
@@ -379,7 +398,14 @@ public class DragonMgt : MonoBehaviour
 
     void SleepMode()
     {
-        m_Enemy.SetRegenHealthStatus(false);
+        m_Enemy.SetRegenHealthStatus(true);
+
+
+
+        m_PatrolDetection.SetActive(false);
+        m_PatrolPredetection.SetActive(false);
+        m_SleepDetection.SetActive(true);
+        m_SleepPredetection.SetActive(true);
 
         m_AISetter.target = m_StartPosition;
         m_Target.targettransform = m_StartPosition;
@@ -390,8 +416,19 @@ public class DragonMgt : MonoBehaviour
     {
         m_Enemy.SetRegenHealthStatus(false);
 
-        if (!m_IsSurprisedCoRunning)
-            StartCoroutine(SurprisedModeCo());
+        if (!m_IsSurprisedDelayInit)
+        {
+            m_InitSurprisedTime = Time.time;
+            m_IsSurprisedDelayInit = true;
+        }
+
+
+        if (Time.time - m_InitSurprisedTime > m_SurprisedDelay)
+        {
+            State = m_LastState;
+            m_IsSurprisedDelayInit = false;
+        }
+
     }
 
     void GiveUpMode()
@@ -489,12 +526,17 @@ public class DragonMgt : MonoBehaviour
         {
             m_FireSource.Play();
             if (!m_AudioManager.IsSoundPlayed("DragonFire"))
-                m_AudioManager.PlaySound("DragonFire");
+            {
+                if (m_AudioManager != null)
+                    m_AudioManager.PlaySound("DragonFire");
+            }
+
         }
         else
         {
             m_FireSource.Stop();
-            m_AudioManager.StopSound("DragonFire");
+            if (m_AudioManager != null)
+                m_AudioManager.StopSound("DragonFire");
         }
 
     }
@@ -566,16 +608,6 @@ public class DragonMgt : MonoBehaviour
 
         }
         return 0;
-    }
-
-    private IEnumerator SurprisedModeCo()
-    {
-        m_IsSurprisedCoRunning = true;
-
-        yield return new WaitForSeconds(m_SurprisedDelay);
-
-        State = m_LastState;
-        m_IsSurprisedCoRunning = false;
     }
 
     private void OnPlayerSwim(bool state)
