@@ -5,6 +5,7 @@ using UnityEngine;
 public class Parallaxing : MonoBehaviour {
 
     public Transform[] backgrounds; // array of backgrounds
+    public float[] m_InitialBackgroundZpos; // array of backgrounds
     private float[] parallaxScales; // proportions of the camera's movement to move the backgrounds by
     public float smoothing = 1f;    // how smooth the parralax is going to be
 
@@ -27,7 +28,13 @@ public class Parallaxing : MonoBehaviour {
         // assigning corresponding parallax scales
         for (int i = 0; i < backgrounds.Length; i++)
         {
+
+            backgrounds[i].position = new Vector3(cam.position.x, backgrounds[i].position.y, m_InitialBackgroundZpos[i]);
+
             parallaxScales[i] = backgrounds[i].position.z * -1;
+
+
+
         }
     }
 	
