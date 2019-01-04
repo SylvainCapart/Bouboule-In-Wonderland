@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7366334700631574527}
   m_Layer: 0
   m_Name: DragonBlack
-  m_TagString: Enemy
+  m_TagString: Dragon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1265097911452840143}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 31.77, y: 4.57, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -48,7 +48,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActivableObjectsArray:
   - {fileID: 1265097912866003819}
-  m_ActivationDistance: 12
 --- !u!1 &1265097911527466231
 GameObject:
   m_ObjectHideFlags: 0
@@ -4757,9 +4756,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1265097911751990570}
   - component: {fileID: 1265097911751990571}
-  - component: {fileID: 907996297124177515}
+  - component: {fileID: 3796897461933121984}
   m_Layer: 15
-  m_Name: PatrolPredetection
+  m_Name: PredetectionTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4815,7 +4814,7 @@ PolygonCollider2D:
       - {x: 6.7116966, y: -2.6886344}
       - {x: 6.6989403, y: 1.1346474}
       - {x: 5.2895184, y: 4.7750435}
---- !u!114 &907996297124177515
+--- !u!114 &3796897461933121984
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4824,10 +4823,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1265097911751990568}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44905c6249c9d466bb3d4a71507f1f33, type: 3}
+  m_Script: {fileID: 11500000, guid: e666d323970724f479ce260d7aa1d6d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_DragonMgt: {fileID: 1265097912866003818}
+  m_EnemyAI: {fileID: 1265097912866003818}
 --- !u!1 &1265097911800125456
 GameObject:
   m_ObjectHideFlags: 0
@@ -9556,87 +9555,6 @@ Transform:
   m_Father: {fileID: 1265097913009405590}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1265097912177625399
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1265097912177625398}
-  - component: {fileID: 1265097912177625393}
-  - component: {fileID: 907996297124177513}
-  m_Layer: 15
-  m_Name: SleepDetection
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1265097912177625398
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1265097912177625399}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1265097912785784226}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!60 &1265097912177625393
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1265097912177625399}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.18, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.5703125, y: 1.3359375}
-    newSize: {x: 2.01, y: 1.72}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 1.5981653, y: 3.678823}
-      - {x: -1.3709588, y: 3.73982}
-      - {x: -3.2705102, y: 2.7546287}
-      - {x: -0.58444154, y: -0.12066778}
-      - {x: -3.063151, y: -3.6461105}
-      - {x: -1.7616346, y: -4.6491537}
-      - {x: 1.0912936, y: -4.69226}
-      - {x: 2.717311, y: -3.8947093}
-      - {x: 3.875148, y: -2.5243812}
-      - {x: 3.8877313, y: 0.35973486}
-      - {x: 3.3212538, y: 2.382276}
---- !u!114 &907996297124177513
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1265097912177625399}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c50aa99418a3e431f9ee7f131f0d00b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_DragonMgt: {fileID: 1265097912866003818}
 --- !u!1 &1265097912374080359
 GameObject:
   m_ObjectHideFlags: 0
@@ -9721,9 +9639,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1265097912388285188}
   - component: {fileID: 1265097912388285189}
-  - component: {fileID: 907996297124177514}
+  - component: {fileID: 4222453862105952607}
   m_Layer: 15
-  m_Name: PatrolDetection
+  m_Name: DetectionTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9779,7 +9697,7 @@ PolygonCollider2D:
       - {x: 5.6625705, y: -2.3618877}
       - {x: 5.675161, y: 0.81471634}
       - {x: 4.3937097, y: 4.007211}
---- !u!114 &907996297124177514
+--- !u!114 &4222453862105952607
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9788,10 +9706,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1265097912388285194}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c50aa99418a3e431f9ee7f131f0d00b7, type: 3}
+  m_Script: {fileID: 11500000, guid: 1db70e938f86142f8ad552b74281836a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_DragonMgt: {fileID: 1265097912866003818}
+  m_EnemyAI: {fileID: 1265097912866003818}
 --- !u!1 &1265097912785784227
 GameObject:
   m_ObjectHideFlags: 0
@@ -9821,8 +9739,6 @@ Transform:
   m_Children:
   - {fileID: 1265097911751990570}
   - {fileID: 1265097912388285188}
-  - {fileID: 1265097912995141458}
-  - {fileID: 1265097912177625398}
   m_Father: {fileID: 1265097911788591748}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9850,7 +9766,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1265097912843622662}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.16, y: -0.72, z: 0}
+  m_LocalPosition: {x: 1.23, y: -1.38, z: 0}
   m_LocalScale: {x: 3.7015, y: 3.7015, z: 3.7015}
   m_Children: []
   m_Father: {fileID: 1265097913009405590}
@@ -9876,9 +9792,11 @@ GameObject:
   - component: {fileID: 1265097912866003813}
   - component: {fileID: 1265097912866003812}
   - component: {fileID: 1265097912866003815}
+  - component: {fileID: 5977762850166089511}
+  - component: {fileID: 4305731288666928956}
   m_Layer: 15
   m_Name: DragonBody
-  m_TagString: Enemy
+  m_TagString: Dragon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10069,15 +9987,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1265097912866003819}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02de174d4a5ab4de6bdf7dab5a455fb4, type: 3}
+  m_Script: {fileID: 11500000, guid: 5fb22892073ba49248092a35ea1cc1de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   DebugMode: 0
   m_State: 0
   m_AiLerpScript: {fileID: 1265097912866003812}
   m_AISetter: {fileID: 1265097912866003813}
-  m_ModeEnabled: 0000000000
-  m_IsPlayerSwimming: 0
+  m_ModeEnabled: 
   m_Target:
     targettransform: {fileID: 0}
     targetpriority: 0
@@ -10088,16 +10005,20 @@ MonoBehaviour:
   m_WhatIsTarget:
     serializedVersion: 2
     m_Bits: 1536
-  m_GiveUpDistance: 30
+  m_GiveUpDistance: 28
   m_CanMoveInTargetMode: 1
-  m_PatrolDetection: {fileID: 1265097912388285194}
-  m_PatrolPredetection: {fileID: 1265097911751990568}
-  m_SleepDetection: {fileID: 1265097912177625399}
-  m_SleepPredetection: {fileID: 1265097912995141456}
-  m_FireTriggerDistance: 1.5
+  m_TargetSpeed: 2.7
+  m_Detection: {fileID: 1265097912388285194}
+  m_Predetection: {fileID: 1265097911751990568}
+  m_IsPlayerSwimming: 0
+  m_UndetectIfPlayerSwimIs: 1
+  m_SleepScaleTrigger: 0.847
+  m_SpecificGiveup: {fileID: 0}
   m_PatrolPoints:
   - {fileID: 1265097912843622657}
-  m_Randomize: 1
+  m_Randomize: 0
+  m_PatrolSpeed: 2
+  m_SleepRight: 0
   m_SurprisedDelay: 3
 --- !u!114 &1265097912866003814
 MonoBehaviour:
@@ -10157,7 +10078,7 @@ MonoBehaviour:
   repathRate: 0.3
   canSearch: 1
   canMove: 1
-  speed: 2.7
+  speed: 2
   orientation: 1
   enableRotation: 0
   rotationSpeed: 1
@@ -10186,87 +10107,32 @@ MonoBehaviour:
   bezierTangentLength: 0.4
   offset: 0.2
   factor: 0.1
---- !u!1 &1265097912995141456
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1265097912995141458}
-  - component: {fileID: 1265097912995141459}
-  - component: {fileID: 907996297124177512}
-  m_Layer: 15
-  m_Name: SleepPredetection
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1265097912995141458
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1265097912995141456}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1265097912785784226}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!60 &1265097912995141459
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1265097912995141456}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.18, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.5703125, y: 1.3359375}
-    newSize: {x: 2.01, y: 1.72}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 1.8221159, y: 4.8630743}
-      - {x: -1.5944059, y: 4.9240713}
-      - {x: -4.0327783, y: 3.5276222}
-      - {x: -0.58444154, y: -0.12066778}
-      - {x: -3.5212681, y: -4.19553}
-      - {x: -1.7930067, y: -5.4716606}
-      - {x: 1.408417, y: -5.5035567}
-      - {x: 3.3565016, y: -4.508544}
-      - {x: 4.924261, y: -2.4611435}
-      - {x: 4.944011, y: 0.5821699}
-      - {x: 4.1195636, y: 3.2476058}
---- !u!114 &907996297124177512
+--- !u!114 &5977762850166089511
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1265097912995141456}
+  m_GameObject: {fileID: 1265097912866003819}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44905c6249c9d466bb3d4a71507f1f33, type: 3}
+  m_Script: {fileID: 11500000, guid: b833de1fb3b6c4b4aa83a591b845ea40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_DragonMgt: {fileID: 1265097912866003818}
+  m_FireTriggerDistance: 1.5
+--- !u!114 &4305731288666928956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265097912866003819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53edfa26a9ebe44d9aabbc16e44c47a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EnemyAI: {fileID: 0}
 --- !u!1 &1265097913002535217
 GameObject:
   m_ObjectHideFlags: 0

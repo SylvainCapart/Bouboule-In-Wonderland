@@ -13450,6 +13450,7 @@ GameObject:
   - component: {fileID: 6875745950079424549}
   - component: {fileID: 6875745950079424548}
   - component: {fileID: 518222674}
+  - component: {fileID: 7257583226074050606}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -13564,7 +13565,7 @@ MonoBehaviour:
   m_Charging: 0
   m_Swim: 0
   m_Climb: 0
-  m_climbingCollider: {fileID: 6875745950079424547}
+  m_climbingCollider: {fileID: 7830283761609821654}
   m_swimmingCollider: {fileID: 6875745950079424547}
   m_WhatIsVine:
     serializedVersion: 2
@@ -13602,7 +13603,7 @@ MonoBehaviour:
   - {fileID: 6875745950079424547}
   - {fileID: 6875745950079424546}
   m_RollCollider: {fileID: 6875745950079424548}
-  m_climbingTrigger: {fileID: 6875745950079424547}
+  m_climbingTrigger: {fileID: 7830283761609821654}
   m_RollMovableTags:
   - Jewel
   m_Grounded: 0
@@ -13771,6 +13772,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: feaceb66451b7434f8ac84d29f6d2904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7257583226074050606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6875745950079424537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be99a69ea5be84625a3f10f2b786cd02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6875745950113844891

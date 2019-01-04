@@ -23,7 +23,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask m_WhatIsVine;                            // A mask determining what is vine to the character     
     [SerializeField] private LayerMask m_WhatIsWater;                            // A mask determining what is water to the character     
 
-
     private bool m_LastSwimStatus = false;
     private bool m_FacingRight = true;
 
@@ -137,6 +136,18 @@ public class PlayerMovement : MonoBehaviour
                 transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
             }  
             else
+            {
+                m_Swim = true;
+            }
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D other)
+    {
+
+        if (other.gameObject.tag == "Water")
+        {
+            if (this.transform.position.y < other.bounds.center.y + other.bounds.extents.y)
             {
                 m_Swim = true;
             }

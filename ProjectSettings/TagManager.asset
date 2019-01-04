@@ -16,6 +16,9 @@ TagManager:
   - Flag
   - Bubble
   - FireSourceGreen
+  - Dragon
+  - Fish
+  - Alga
   layers:
   - Default
   - TransparentFX

@@ -1,14 +1,14 @@
 fileFormatVersion: 2
-guid: c5f94d1198e9f7643a7abcc8216a1838
+guid: 8812a761fd05140518ce628bbbe95f04
 TextureImporter:
   fileIDToRecycleName:
-    21300000: dragon_blue_parts_01_0
-    21300002: dragon_blue_parts_01_1
-    21300004: dragon_blue_parts_01_2
-    21300006: dragon_blue_parts_01_3
-    21300008: dragon_blue_parts_01_4
-    21300010: dragon_blue_parts_01_5
-    21300012: dragon_blue_parts_01_6
+    21300000: fish_black_parts_01_0
+    21300002: fish_black_parts_01_1
+    21300004: fish_black_parts_01_2
+    21300006: fish_black_parts_01_3
+    21300008: fish_black_parts_01_4
+    21300010: fish_black_parts_01_5
+    21300012: fish_black_parts_01_6
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -87,22 +87,11 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    androidETC2FallbackOverride: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: dragon_blue_parts_01_0
+      name: fish_black_parts_01_0
       rect:
         serializedVersion: 2
         x: 179
@@ -110,19 +99,19 @@ TextureImporter:
         width: 170
         height: 132
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 323fbb14d918345aaacbfd96d13a876c
+      spriteID: bec76a574c61f4af4a0f4fca068549d2
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dragon_blue_parts_01_1
+      name: fish_black_parts_01_1
       rect:
         serializedVersion: 2
         x: 364
@@ -130,19 +119,19 @@ TextureImporter:
         width: 65
         height: 45
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dcbb22a115d4b4de89a79db25136bd58
+      spriteID: f7fda7473bf264c718a7dde9d1648338
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dragon_blue_parts_01_2
+      name: fish_black_parts_01_2
       rect:
         serializedVersion: 2
         x: 466
@@ -150,19 +139,19 @@ TextureImporter:
         width: 17
         height: 23
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 28de382d8d12c4795ad09a7b0c0301ba
+      spriteID: ec9d8aff3c49e4bf78d2c05eedcbe6e7
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dragon_blue_parts_01_3
+      name: fish_black_parts_01_3
       rect:
         serializedVersion: 2
         x: 46
@@ -170,19 +159,19 @@ TextureImporter:
         width: 89
         height: 132
       alignment: 9
-      pivot: {x: 0.9945104, y: 0.5082331}
+      pivot: {x: 0.97619545, y: 0.5123491}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cfdfe0cfd31f14f2696d81cf5dc1d694
+      spriteID: eddfe1f4ef5d249d694256dca3430458
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dragon_blue_parts_01_4
+      name: fish_black_parts_01_4
       rect:
         serializedVersion: 2
         x: 468
@@ -190,19 +179,19 @@ TextureImporter:
         width: 20
         height: 13
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4c9d383c5e9734c1b8ca17376d18707d
+      spriteID: fd91a5f8c1b8e4e8eac10266773223d3
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dragon_blue_parts_01_5
+      name: fish_black_parts_01_5
       rect:
         serializedVersion: 2
         x: 206
@@ -216,13 +205,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1fcd69b16aae24895a25cc673c7471d3
+      spriteID: 1acdcd06dcf71489c8e23bdae6c7387b
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dragon_blue_parts_01_6
+      name: fish_black_parts_01_6
       rect:
         serializedVersion: 2
         x: 388
@@ -230,13 +219,13 @@ TextureImporter:
         width: 74
         height: 78
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 544306447928e418a846e03c651d17a1
+      spriteID: bae4d0b804eb2432798daec834295bc7
       vertices: []
       indices: 
       edges: []
@@ -244,7 +233,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: e82baec260d301d468e3c0a0a1e926c5
+    spriteID: b400f7ab480184c1aa614c1961eced68
     vertices: []
     indices: 
     edges: []

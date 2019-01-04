@@ -7,7 +7,7 @@ public class GameMaster : MonoBehaviour
 
     public static GameMaster gm;
 
-    
+
     public Transform playerPrefab;
     private GameObject m_SpawnPoint;
     [SerializeField] private GameObject[] m_SpawnArray;
@@ -45,8 +45,8 @@ public class GameMaster : MonoBehaviour
 
     public GameObject SpawnPoint
     {
-        get {return gm.m_SpawnPoint;}
-        set {gm.m_SpawnPoint = value;}
+        get { return gm.m_SpawnPoint; }
+        set { gm.m_SpawnPoint = value; }
     }
 
     /*public RespawnFlagMgt LastRespawnMgt
@@ -108,7 +108,7 @@ public class GameMaster : MonoBehaviour
     public IEnumerator RespawnPlayer()
     {
         isRespawning = true;
-        
+
         //audioManager.PlaySound(respawnCountdownSoundName);
 
         yield return new WaitForSeconds(spawnDelay);
@@ -116,8 +116,9 @@ public class GameMaster : MonoBehaviour
         //audioManager.PlaySound(spawnSoundName);
         //Transform clone = Instantiate(playerPrefab, m_SpawnPoint.position, m_SpawnPoint.rotation);
         GameObject clone = (GameObject)Instantiate(Resources.Load("Prefabs\\Player"));
-        clone.transform.position = m_SpawnPoint.transform.position + new Vector3(0f,0.5f,0f);
+        clone.transform.position = m_SpawnPoint.transform.position + new Vector3(0f, 0.5f, 0f);
         clone.name = "Player";
+
         //Transform spawnClone = Instantiate(spawnPrefab, m_SpawnPoint.position, m_SpawnPoint.rotation);
 
         Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
@@ -145,11 +146,12 @@ public class GameMaster : MonoBehaviour
 
         gm._KillEnemy(enemy);
     }
-    
+
     public void _KillEnemy(Enemy _enemy)
     {
         //sound
-        audioManager.PlaySound(_enemy.m_DeathSoundName);
+        if (_enemy.m_DeathSoundName != "")
+            audioManager.PlaySound(_enemy.m_DeathSoundName);
 
         //particles
         //Transform clone = Instantiate(_enemy.deathParticles, _enemy.transform.position, Quaternion.identity);
