@@ -46,22 +46,105 @@ MonoBehaviour:
   sounds:
   - name: Grunt
     clip: {fileID: 8300000, guid: 0ff4c549b311aed4ab83a7bfd2486ecb, type: 3}
-    volume: 0.326
+    source: {fileID: 0}
+    volume: 0.098
     pitch: 1.004
     randomVolume: 0
     randomPitch: 0
     loop: 0
-  - name: 
-    clip: {fileID: 0}
-    volume: 0.443
-    pitch: 0
+  - name: Music
+    clip: {fileID: 8300000, guid: 54e617d3d1b354c52a9f9f29647ac4b0, type: 3}
+    source: {fileID: 0}
+    volume: 0
+    pitch: 0.993
+    randomVolume: 0
+    randomPitch: 0
+    loop: 1
+  - name: Fire
+    clip: {fileID: 8300000, guid: 8ea40eae2347f4db590e1b3654b5308b, type: 3}
+    source: {fileID: 0}
+    volume: 0.099
+    pitch: 0.826
+    randomVolume: 0
+    randomPitch: 0
+    loop: 1
+  - name: DragonFire
+    clip: {fileID: 8300000, guid: 8ea40eae2347f4db590e1b3654b5308b, type: 3}
+    source: {fileID: 0}
+    volume: 0.029
+    pitch: 0.605
+    randomVolume: 0
+    randomPitch: 0
+    loop: 1
+  - name: Bubble
+    clip: {fileID: 8300000, guid: bfd474cac2ada42528169483a84c434d, type: 3}
+    source: {fileID: 0}
+    volume: 0.282
+    pitch: 0.943
+    randomVolume: 0
+    randomPitch: 0
+    loop: 1
+  - name: Landing
+    clip: {fileID: 8300000, guid: 81de1a3d23c793d48b28ad403f04fe85, type: 3}
+    source: {fileID: 0}
+    volume: 0.131
+    pitch: 0.581
     randomVolume: 0
     randomPitch: 0
     loop: 0
-  - name: 
-    clip: {fileID: 0}
-    volume: 0
-    pitch: 0
+  - name: Coin
+    clip: {fileID: 8300000, guid: 1943c5c3cbcd0694ab425cf340f5ded1, type: 3}
+    source: {fileID: 0}
+    volume: 0.181
+    pitch: 1.361
+    randomVolume: 0
+    randomPitch: 0.032
+    loop: 0
+  - name: FootStep
+    clip: {fileID: 8300000, guid: e2d908539effb4ecbb7c2b0bd76aa986, type: 3}
+    source: {fileID: 0}
+    volume: 0.405
+    pitch: 1.01
+    randomVolume: 0
+    randomPitch: 0
+    loop: 0
+  - name: Rolling
+    clip: {fileID: 8300000, guid: 8f2bbd576c194451d979497d628e3677, type: 3}
+    source: {fileID: 0}
+    volume: 0.107
+    pitch: 1.01
+    randomVolume: 0
+    randomPitch: 0
+    loop: 1
+  - name: FastRolling
+    clip: {fileID: 8300000, guid: 654a175e28b58404b947ad1d60d5f2a9, type: 3}
+    source: {fileID: 0}
+    volume: 0.107
+    pitch: 1.01
+    randomVolume: 0
+    randomPitch: 0
+    loop: 0
+  - name: Swimming
+    clip: {fileID: 8300000, guid: 81fbf8a4446f24545ad73f7149336023, type: 3}
+    source: {fileID: 0}
+    volume: 0.142
+    pitch: 1.01
+    randomVolume: 0
+    randomPitch: 0
+    loop: 0
+  - name: DeathVoice
+    clip: {fileID: 8300000, guid: 5656aa5f4e166f24c847053390a985bc, type: 3}
+    source: {fileID: 0}
+    volume: 0.181
+    pitch: 1.01
+    randomVolume: 0
+    randomPitch: 0
+    loop: 0
+  - name: DragonDie
+    clip: {fileID: 8300000, guid: 74e2eed0349294fc48e39e0af13aed52, type: 3}
+    source: {fileID: 0}
+    volume: 0.043
+    pitch: 1.01
     randomVolume: 0
     randomPitch: 0
     loop: 0

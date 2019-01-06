@@ -22,8 +22,7 @@ public class Player : MonoBehaviour
     public string damageSoundName = "Grunt";
 
 
-    [SerializeField]
-    private StatusIndicator statusIndicator;
+    public StatusIndicator statusIndicator;
 
     public bool Drowning
     {
@@ -56,7 +55,7 @@ public class Player : MonoBehaviour
 
         if (statusIndicator == null)
         {
-            StatusIndicator ind = GameObject.Find("PlayerHP").GetComponent<StatusIndicator>();
+            StatusIndicator ind = GameObject.Find("PlayerHP").GetComponentInChildren<StatusIndicator>();
             if (ind != null)
                 statusIndicator = ind;
         }
@@ -103,7 +102,7 @@ public class Player : MonoBehaviour
             stats.CurrentHealth -= damageReceived;
             if (stats.CurrentHealth <= 0)
             {
-                //audioManager.PlaySound(deathSoundName);
+                m_AudioManager.PlaySound(deathSoundName);
                 GameMaster.KillPlayer(this);
             }
             else
@@ -208,10 +207,10 @@ public class Player : MonoBehaviour
         m_Burnable = true;
     }
 
+
+
     private void OnReset()
     {
-
-
         if (statusIndicator == null)
         {
             StatusIndicator ind = GameObject.Find("UIOverlay").GetComponentInChildren<StatusIndicator>();

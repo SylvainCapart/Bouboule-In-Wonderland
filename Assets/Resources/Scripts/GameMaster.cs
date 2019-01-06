@@ -57,7 +57,7 @@ public class GameMaster : MonoBehaviour
 
     public void EndGame()
     {
-        audioManager.PlaySound(gameOverSoundName);
+        //audioManager.PlaySound(gameOverSoundName);
         //gameOverUI.gameObject.SetActive(true);
     }
 
@@ -74,7 +74,7 @@ public class GameMaster : MonoBehaviour
         }
 
         m_SpawnArray = GameObject.FindGameObjectsWithTag("Flag");
-        if (m_SpawnArray.Length > 1)
+        if (m_SpawnArray.Length >= 1)
         {
             m_SpawnPoint = m_SpawnArray[0];
             m_SpawnPoint.GetComponent<RespawnFlagMgt>().State = RespawnFlagMgt.FlagState.GREEN;
@@ -127,15 +127,18 @@ public class GameMaster : MonoBehaviour
         gm.StartCoroutine(cameraFollow.DampingShutOff(0.1f));
 
         //Destroy(spawnClone.gameObject, 3f);
-
+        ResetDelegate(); // called a second time to relink the statusindicator in the new player instance
         isRespawning = false;
-        ResetDelegate();
+
     }
 
     public static void KillPlayer(Player player)
     {
         if (player.gameObject != null)
+        {
             Destroy(player.gameObject);
+            //ResetDelegate(); // called a first time to deactivate the audiosource linked to the player's audiolistener that is to be destroyed
+        }
         else return;
 
         gm.StartCoroutine(gm.RespawnPlayer());

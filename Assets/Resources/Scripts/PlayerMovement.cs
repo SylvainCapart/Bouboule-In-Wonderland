@@ -51,9 +51,7 @@ public class PlayerMovement : MonoBehaviour
             m_Climb = false;
 
         }
-
-
-
+        Debug.Log(GetComponent<Rigidbody2D>().velocity);
         //Get the mouse position on the screen and send a raycast into the game world from that position.
         //Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         //RaycastHit2D hit = Physics2D.Raycast(this.transform.position, this.transform.position, detect, m_WhatIsWater);
@@ -152,6 +150,8 @@ public class PlayerMovement : MonoBehaviour
                 m_Swim = true;
             }
         }
+
+
     }
 
     private void FlipScale()
