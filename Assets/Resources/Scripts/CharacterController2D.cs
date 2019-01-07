@@ -500,7 +500,7 @@ public class CharacterController2D : MonoBehaviour
 
     void RollChargeRelease()
     {
-        m_Anim.speed -= 1 * m_IncrementAnimSpeed * Time.deltaTime;
+        m_Anim.speed -= 1.9f * m_IncrementAnimSpeed * Time.deltaTime;
 
         if (m_Anim.speed <= 1f)
         {
