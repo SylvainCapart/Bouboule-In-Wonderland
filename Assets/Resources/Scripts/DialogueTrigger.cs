@@ -6,6 +6,7 @@ public class DialogueTrigger : MonoBehaviour {
 
     public Dialogue dialogue;
 
+
     public void TriggerDialogue()
     {
         FindObjectOfType<DialogueMgt>().StartDialogue(dialogue);
@@ -13,7 +14,7 @@ public class DialogueTrigger : MonoBehaviour {
 
     public void Start()
     {
-        StartCoroutine(AutoTriggerDialogue());
+        //StartCoroutine(AutoTriggerDialogue());
     }
 
     private IEnumerator AutoTriggerDialogue()
@@ -22,4 +23,16 @@ public class DialogueTrigger : MonoBehaviour {
         FindObjectOfType<DialogueMgt>().StartDialogue(dialogue);
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Player")
+        {
+            if (!dialogue.triggered)
+            {
+                dialogue.triggered = true;
+                TriggerDialogue();
+            }
+        }
+
+    }
 }

@@ -16,6 +16,9 @@ public class PlayerSpit : MonoBehaviour
     private string[] m_SoundNames = { "Fire", "Bubble" };
     private SpitParticle m_LastSpitStatus = SpitParticle.FIRE;
     private bool m_isSpitting = false;
+    public bool m_isSpittingAllowed = false;
+
+    private const float EPSILON = 0.01f;
 
     public delegate void OnVariableChangeDelegate(SpitParticle spitmode);
     public static event OnVariableChangeDelegate OnSpitModeChange;
@@ -58,6 +61,7 @@ public class PlayerSpit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (m_isSpittingAllowed == false) return;
 
         bool swimming = GetComponentInParent<CharacterController2D>().Swimming;
         bool swim = GetComponentInParent<CharacterController2D>().Swim;
@@ -70,7 +74,7 @@ public class PlayerSpit : MonoBehaviour
         float rotZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
         float swimOffset = 0f;
 
-        if (this.transform.parent.transform.localScale.x == -1)
+        if (System.Math.Abs(this.transform.parent.transform.localScale.x - -1) < EPSILON)
             swimOffset = 180f;
         else
             swimOffset = 0f;

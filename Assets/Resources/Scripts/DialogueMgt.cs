@@ -6,21 +6,27 @@ using UnityEngine.UI;
 public class DialogueMgt : MonoBehaviour {
 
     private Queue<string> sentences;
-    public Text nameText;
+    [Header("Optional : ")] public Text nameText;
     public Text dialogueText;
     public Animator animator;
     [SerializeField]
-    private int clickNumber;
-
+    private int m_ClickNumber;
+    private bool m_DialogueActivated;
+    [SerializeField] private GameObject m_ContinueButton;
     private bool dialogueReactivated;
 
+    private PlayerMovement m_PlayerMov;
 
 
     // Use this for initialization
     void Start () {
-        Debug.Log("test");
+
         sentences = new Queue<string>();
         dialogueReactivated = false;
+        if (m_ContinueButton == null)
+            Debug.LogError(name + " : continue button is missing");
+
+        m_PlayerMov = FindObjectOfType<PlayerMovement>();
 
     }
 
@@ -28,7 +34,7 @@ public class DialogueMgt : MonoBehaviour {
     {
         if(!dialogueReactivated)
         {
-            ActivateDialogue();
+            //ActivateDialogue();
             //GameObject.Find("ContinueText").GetComponent<TextBlinker>().Awake();
             dialogueReactivated = true;
         }
@@ -37,10 +43,14 @@ public class DialogueMgt : MonoBehaviour {
 
     public void StartDialogue(Dialogue dialogue)
     {
-        clickNumber = 0;
-        animator.SetBool("isOpen", true);
+        m_DialogueActivated = true;
+        m_ClickNumber = 0;
+        animator.SetBool("PanelOpen", true);
+        m_PlayerMov.m_IsMovementAllowed = false;
 
-        nameText.text = dialogue.name;
+        if (nameText != null)
+            nameText.text = dialogue.name;
+
         sentences.Clear();
 
         foreach(string sentence in dialogue.sentences)
@@ -57,7 +67,13 @@ public class DialogueMgt : MonoBehaviour {
             EndDialogue();
             return;
         }
-        ++clickNumber;
+        ++m_ClickNumber;
+
+        if (m_ClickNumber == 0)
+        {
+            //
+        }
+
         string sentence = sentences.Dequeue();
         dialogueText.text = sentence;
 
@@ -85,20 +101,26 @@ public class DialogueMgt : MonoBehaviour {
 
     void DeactivateDialogue()
     {
-        GameObject.Find("ContinueButton").gameObject.SetActive(false);
-        animator.SetBool("isOpen", false);
+
+        //if (Input.GetButtonDown("Fire1") && m_DialogueActivated)
+        // {
+        m_ContinueButton.SetActive(false);
+        m_DialogueActivated = false;
+        animator.SetBool("PanelOpen", false);
+       //}
+        //GameObject.Find("ContinueButton").gameObject.SetActive(false);
+
     }
 
     void ActivateDialogue()
     {
-        GameObject.Find("DialogueBox").transform.Find("ContinueButton").gameObject.SetActive(true);
-
+        //GameObject.Find("DialogueBox").transform.Find("ContinueButton").gameObject.SetActive(true);
+        //if (Input.GetButtonDown("Fire1") && !m_DialogueActivated)
+        //{
+        m_ContinueButton.SetActive(true);
+        m_DialogueActivated = true;
+        animator.SetBool("PanelOpen", true);
+        //}
     }
-
-    public void incrementSquirrelsDestroyed()
-    {
-
-    }
-
 
 }

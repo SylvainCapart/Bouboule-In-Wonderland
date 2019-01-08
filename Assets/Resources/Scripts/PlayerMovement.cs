@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
 
     public CharacterController2D controller;
+    public bool m_IsMovementAllowed = true;
 
     private float m_speedCoeff = 40f;
 
@@ -51,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
             m_Climb = false;
 
         }
-        Debug.Log(GetComponent<Rigidbody2D>().velocity);
+
         //Get the mouse position on the screen and send a raycast into the game world from that position.
         //Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         //RaycastHit2D hit = Physics2D.Raycast(this.transform.position, this.transform.position, detect, m_WhatIsWater);
@@ -118,7 +119,12 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         // Move our character
-        controller.Move(m_horizontalMove * Time.fixedDeltaTime, m_verticalMove * Time.fixedDeltaTime, m_Jump, m_Roll, m_Charging, m_Climb, m_Swim);
+        if (m_IsMovementAllowed)
+            controller.Move(m_horizontalMove * Time.fixedDeltaTime, m_verticalMove * Time.fixedDeltaTime, m_Jump, m_Roll, m_Charging, m_Climb, m_Swim);
+        else
+        {
+            controller.Move(0, 0, false, false, false, false, false);
+        }
         m_Jump = false;
     }
 
