@@ -8,21 +8,23 @@ public class DialogueMgt : MonoBehaviour {
     private Queue<string> sentences;
     [Header("Optional : ")] public Text nameText;
     public Text dialogueText;
-    public Animator animator;
-    [SerializeField]
-    private int m_ClickNumber;
+    [SerializeField] private Animator m_DialogueBoxAnim;
+    [SerializeField] private Animator m_SceneAnim;
     private bool m_DialogueActivated;
     [SerializeField] private GameObject m_ContinueButton;
-    private bool dialogueReactivated;
+    //private bool dialogueReactivated;
+    [SerializeField] private int[] m_SceneIndex; // for n dialogue sentences, a scene at sentence x should have index n - x
 
     private PlayerMovement m_PlayerMov;
+    private Coroutine m_TypeSentenceCo;
+
 
 
     // Use this for initialization
     void Start () {
 
         sentences = new Queue<string>();
-        dialogueReactivated = false;
+
         if (m_ContinueButton == null)
             Debug.LogError(name + " : continue button is missing");
 
@@ -32,20 +34,19 @@ public class DialogueMgt : MonoBehaviour {
 
     private void Update()
     {
-        if(!dialogueReactivated)
+       /* if(!dialogueReactivated)
         {
             //ActivateDialogue();
             //GameObject.Find("ContinueText").GetComponent<TextBlinker>().Awake();
             dialogueReactivated = true;
-        }
+        }*/
     }
 
 
     public void StartDialogue(Dialogue dialogue)
     {
         m_DialogueActivated = true;
-        m_ClickNumber = 0;
-        animator.SetBool("PanelOpen", true);
+        m_DialogueBoxAnim.SetBool("PanelOpen", true);
         m_PlayerMov.m_IsMovementAllowed = false;
 
         if (nameText != null)
@@ -62,23 +63,43 @@ public class DialogueMgt : MonoBehaviour {
 
     public void DisplayNextSentence()
     {
+
+        Debug.Log(sentences.Count);
+
         if (sentences.Count == 0)
         {
             EndDialogue();
             return;
         }
-        ++m_ClickNumber;
 
-        if (m_ClickNumber == 0)
+        for (int i = 0; i < m_SceneIndex.Length; i++)
         {
-            //
+            if (sentences.Count == m_SceneIndex[i])
+            {
+                Debug.Log(sentences.Count.ToString());
+                m_SceneAnim.SetBool(sentences.Count.ToString(), true);
+            }
+        }
+
+        if (sentences.Count == 26)
+        {
+            StartCoroutine(ShutOffContinueButton(1f));
         }
 
         string sentence = sentences.Dequeue();
         dialogueText.text = sentence;
 
-        StopAllCoroutines();
-        StartCoroutine(TypeSentence(sentence));
+
+        //StopAllCoroutines();
+        if (m_TypeSentenceCo != null)
+            StopCoroutine(m_TypeSentenceCo);
+
+        m_DialogueBoxAnim.SetBool("ArrowBlink", false);
+
+        m_TypeSentenceCo = StartCoroutine(TypeSentence(sentence));
+
+
+
 
     }
 
@@ -91,11 +112,14 @@ public class DialogueMgt : MonoBehaviour {
             dialogueText.text += letter;
             yield return null;
         }
+        if (m_DialogueActivated == true)
+            m_DialogueBoxAnim.SetBool("ArrowBlink", true);
     }
 
     void EndDialogue()
     {
-        Debug.Log("End Dialogue");
+        m_PlayerMov.m_IsMovementAllowed = true;
+        DeactivateDialogue();
 
     }
 
@@ -104,10 +128,11 @@ public class DialogueMgt : MonoBehaviour {
 
         //if (Input.GetButtonDown("Fire1") && m_DialogueActivated)
         // {
-        m_ContinueButton.SetActive(false);
         m_DialogueActivated = false;
-        animator.SetBool("PanelOpen", false);
-       //}
+        m_ContinueButton.SetActive(false);
+        m_DialogueBoxAnim.SetBool("PanelOpen", false);
+        m_DialogueBoxAnim.SetBool("ArrowBlink", false);
+        //}
         //GameObject.Find("ContinueButton").gameObject.SetActive(false);
 
     }
@@ -117,10 +142,21 @@ public class DialogueMgt : MonoBehaviour {
         //GameObject.Find("DialogueBox").transform.Find("ContinueButton").gameObject.SetActive(true);
         //if (Input.GetButtonDown("Fire1") && !m_DialogueActivated)
         //{
-        m_ContinueButton.SetActive(true);
         m_DialogueActivated = true;
-        animator.SetBool("PanelOpen", true);
+        m_ContinueButton.SetActive(true);
+        m_DialogueBoxAnim.SetBool("PanelOpen", true);
+        m_DialogueBoxAnim.SetBool("ArrowBlink", true);
         //}
+    }
+
+    private IEnumerator ShutOffContinueButton(float delay)
+    {
+        m_DialogueActivated = false;
+        m_ContinueButton.SetActive(false);
+        yield return new WaitForSeconds(delay);
+        m_DialogueActivated = true;
+        m_ContinueButton.SetActive(true);
+        m_DialogueBoxAnim.SetBool("ArrowBlink", true);
     }
 
 }

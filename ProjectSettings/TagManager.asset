@@ -19,6 +19,7 @@ TagManager:
   - Dragon
   - Fish
   - Alga
+  - BlackSorcerer
   layers:
   - Default
   - TransparentFX
