@@ -20,6 +20,9 @@ TagManager:
   - Fish
   - Alga
   - BlackSorcerer
+  - Sausage
+  - Chest
+  - CoinCounter
   layers:
   - Default
   - TransparentFX

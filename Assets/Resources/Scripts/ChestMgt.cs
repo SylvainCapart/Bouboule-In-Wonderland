@@ -7,7 +7,7 @@ public class ChestMgt : MonoBehaviour
     private const string m_JewelStr = "Jewel";
     [SerializeField] private GameObject m_ExplosionOnDeletePrefab;
     [SerializeField] private GameObject m_CoinPrefab;
-    [SerializeField] private int m_CoinsMax = 10;
+    public int m_CoinsMax = 10;
     [SerializeField] private float m_CoinsRangeX = 1f;
     [SerializeField] private float m_CoinsRangeY = 1f;
     [SerializeField] private bool[] m_SlotFilled;
@@ -15,6 +15,7 @@ public class ChestMgt : MonoBehaviour
     private const float JEWEL_ANIM_LENGTH = 1f;
     private Animator m_Anim;
     [SerializeField] private CameraShake cameraShake;
+    private AudioManager m_AudioManager;
 
     private void Start()
     {
@@ -33,6 +34,8 @@ public class ChestMgt : MonoBehaviour
 
         if (cameraShake == null)
             cameraShake = FindObjectOfType<CameraShake>();
+
+        m_AudioManager = FindObjectOfType<AudioManager>();
 
     }
 
@@ -87,7 +90,8 @@ public class ChestMgt : MonoBehaviour
                 coinClone = Instantiate(m_CoinPrefab, position, Quaternion.identity);
                 coinClone.transform.parent = GameObject.Find("Coins").transform;
             }
-            cameraShake.Shake(0.4f, 0.4f);
+            m_AudioManager.PlaySound("Explosion");
+            cameraShake.Shake(0.2f, 0.4f);
             resetButton.gameObject.SetActive(false);
             Destroy(explosionClone, m_ExplosionOnDeletePrefab.GetComponent<ParticleSystem>().main.startLifetime.constant + m_ExplosionOnDeletePrefab.GetComponent<ParticleSystem>().main.duration);
             Destroy(this.gameObject);

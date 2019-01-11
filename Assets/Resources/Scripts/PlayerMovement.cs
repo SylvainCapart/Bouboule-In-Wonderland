@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
 
     public CharacterController2D controller;
-    public bool m_IsMovementAllowed = true;
+    private bool m_IsMovementAllowed = true;
 
     private float m_speedCoeff = 40f;
 
@@ -27,7 +27,30 @@ public class PlayerMovement : MonoBehaviour
     private bool m_LastSwimStatus = false;
     private bool m_FacingRight = true;
 
+    public bool IsMovementAllowed
+    {
+        get
+        {
+            return m_IsMovementAllowed;
+        }
 
+        set
+        {
+            if (m_IsMovementAllowed == value) return;
+            if (value == false)
+            {
+                m_Jump = false;
+                m_Roll = false;
+                m_Charging = false;
+                m_Swim = false;
+                m_Climb = false;
+                m_horizontalMove = 0f;
+                m_verticalMove = 0f;
+            }
+            m_IsMovementAllowed = value;
+
+        }
+    }
 
     private void Start()
     {
@@ -40,6 +63,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsMovementAllowed) return;
 
         if (m_climbingCollider.IsTouchingLayers(m_WhatIsVine))
         {
@@ -52,37 +76,6 @@ public class PlayerMovement : MonoBehaviour
             m_Climb = false;
 
         }
-
-        //Get the mouse position on the screen and send a raycast into the game world from that position.
-        //Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //RaycastHit2D hit = Physics2D.Raycast(this.transform.position, this.transform.position, detect, m_WhatIsWater);
-        //Debug.DrawLine(this.transform.position, worldPoint, Color.red);
-        //Debug.Log("end : " + Input.mousePosition);
-        //If something was hit, the RaycastHit2D.collider will not be null.
-
-        /*
-        
-        if (m_Swim)
-        {
-
-
-            //m_flipAngleY = 
-
-            transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, GetSwimAngle(m_horizontalMove, m_verticalMove)));
-            // If the input is moving the player right and the player is facing left...
-            if (m_horizontalMove >= 0 && !m_FacingRight && IsPlayerMoving(m_horizontalMove, m_verticalMove))
-            {
-                FlipScale();
-            }
-            // Otherwise if the input is moving the player left and the player is facing right...
-            else if (m_horizontalMove < 0 && m_FacingRight && IsPlayerMoving(m_horizontalMove, m_verticalMove))
-            {
-                FlipScale();
-            }
-
-        }
-
-    */
 
         m_horizontalMove = Input.GetAxisRaw("Horizontal") * m_speedCoeff;
 
@@ -119,13 +112,14 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         // Move our character
-        if (m_IsMovementAllowed)
-            controller.Move(m_horizontalMove * Time.fixedDeltaTime, m_verticalMove * Time.fixedDeltaTime, m_Jump, m_Roll, m_Charging, m_Climb, m_Swim);
-        else
-        {
-            controller.Move(0, 0, false, false, false, false, false);
-        }
+        controller.Move(m_horizontalMove * Time.fixedDeltaTime, m_verticalMove * Time.fixedDeltaTime, m_Jump, m_Roll, m_Charging, m_Climb, m_Swim);
+
         m_Jump = false;
+    }
+
+    public void RollPlayer(bool roll)
+    {
+        m_Roll = roll;
     }
 
 

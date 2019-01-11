@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 [System.Serializable]
 public class Sound
@@ -22,10 +23,7 @@ public class Sound
 
     public bool loop = false;
 
-
-
-
-
+    [HideInInspector] public bool playedOnce;
 
     public void SetSource(AudioSource _source)
     {
@@ -139,6 +137,36 @@ public class AudioManager : MonoBehaviour {
         return false;
     }
 
+    public AudioSource GetSource(string _name)
+    {
+        AudioSource source = null;
+        for (int i = 0; i < sounds.Length; i++)
+        {
+            if (sounds[i].name == _name)
+            {
+                return sounds[i].source;
+            }
+        }
+        Debug.Log("No sound found in AudioManager with that name : " + _name);
+        return source;
+
+    }
+
+    public Sound GetSound(string _name)
+    {
+        Sound source = null;
+        for (int i = 0; i < sounds.Length; i++)
+        {
+            if (sounds[i].name == _name)
+            {
+                return sounds[i];
+            }
+        }
+        Debug.Log("No sound found in AudioManager with that name : " + _name);
+        return source;
+
+    }
+
 
     public void StopSound(string _name)
     {
@@ -154,6 +182,45 @@ public class AudioManager : MonoBehaviour {
         Debug.Log("No sound found in AudioManager with that name : " + _name);
     }
 
+    public void CrossFade(string soundToFade, string soundToPlay, float fadeDelay, float appearDelay, float targetVolume)
+    {
+        Sound source1 = GetSound(soundToFade);
+        if (source1 == null)
+        {
+            Debug.Log("No sound found in AudioManager with that name : " + soundToFade);
+            return;
+        }
+        Sound source2 = GetSound(soundToPlay);
+        if (source2 == null)
+        {
+            Debug.Log("No sound found in AudioManager with that name : " + soundToPlay);
+            return;
+        }
+        StartCoroutine(CrossFade(source1, source2, fadeDelay, appearDelay, targetVolume));
+
+    }
+
+    public IEnumerator CrossFade(Sound soundToFade, Sound soundToPlay, float fadeDelay, float appearDelay, float targetVolume)
+    {
+
+        float initialVolume = soundToFade.source.volume;
+        
+        soundToPlay.volume = 0f;
+        soundToPlay.Play();
+        Debug.Log("initial : " + initialVolume + " and targ " + targetVolume);
+
+        for (float t = 0.0f; t < fadeDelay ; t += Time.deltaTime)
+        {
+            soundToFade.source.volume = initialVolume * (1 - t/ fadeDelay) ;
+            soundToPlay.source.volume = targetVolume * t / appearDelay;
+
+            yield return null;
+        }
+        soundToFade.Stop();
+        yield return null;
+    }
+
+    
 
 
 }

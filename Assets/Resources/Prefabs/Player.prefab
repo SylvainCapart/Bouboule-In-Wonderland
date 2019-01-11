@@ -23073,6 +23073,7 @@ GameObject:
   - component: {fileID: 554}
   - component: {fileID: 581}
   - component: {fileID: 596}
+  - component: {fileID: 726066586}
   m_Layer: 10
   m_Name: MouthFire
   m_TagString: FireSource
@@ -23088,7 +23089,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 531}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.12, y: -0.16, z: -0.18}
+  m_LocalPosition: {x: 0.032, y: 0.01, z: -0.18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 555}
@@ -26740,7 +26741,7 @@ ParticleSystem:
     radiusScale: 0.21
     collidesWith:
       serializedVersion: 2
-      m_Bits: 33335
+      m_Bits: 33297
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -26755,11 +26756,11 @@ ParticleSystem:
     collisionShape3: {fileID: 0}
     collisionShape4: {fileID: 0}
     collisionShape5: {fileID: 0}
-    inside: 1
+    inside: 0
     outside: 0
-    enter: 1
+    enter: 0
     exit: 0
-    radiusScale: 10
+    radiusScale: 1
   SubModule:
     serializedVersion: 2
     enabled: 0
@@ -27760,6 +27761,22 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &726066586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7b990e29a37e4d309243c2f16ea53af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FireTriggered: 0
+  m_ObjectToEnable:
+  - {fileID: 0}
+  m_SausageCollider: {fileID: 0}
 --- !u!1 &532
 GameObject:
   m_ObjectHideFlags: 0

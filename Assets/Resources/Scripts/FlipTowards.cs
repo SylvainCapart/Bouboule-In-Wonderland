@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class FlipTowards : MonoBehaviour
 {
-    [SerializeField] private Transform m_Target;
+    public Transform m_Target;
     private bool m_FacingRight = false;
     private string m_TargetName = "";
 

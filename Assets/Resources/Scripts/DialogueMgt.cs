@@ -5,18 +5,20 @@ using UnityEngine.UI;
 
 public class DialogueMgt : MonoBehaviour {
 
+
+
     private Queue<string> sentences;
+    private Dialogue m_CurrentDialogue;
     [Header("Optional : ")] public Text nameText;
     public Text dialogueText;
     [SerializeField] private Animator m_DialogueBoxAnim;
     [SerializeField] private Animator m_SceneAnim;
     private bool m_DialogueActivated;
     [SerializeField] private GameObject m_ContinueButton;
-    //private bool dialogueReactivated;
-    [SerializeField] private int[] m_SceneIndex; // for n dialogue sentences, a scene at sentence x should have index n - x
 
-    private PlayerMovement m_PlayerMov;
     private Coroutine m_TypeSentenceCo;
+
+
 
 
 
@@ -28,7 +30,7 @@ public class DialogueMgt : MonoBehaviour {
         if (m_ContinueButton == null)
             Debug.LogError(name + " : continue button is missing");
 
-        m_PlayerMov = FindObjectOfType<PlayerMovement>();
+
 
     }
 
@@ -45,9 +47,13 @@ public class DialogueMgt : MonoBehaviour {
 
     public void StartDialogue(Dialogue dialogue)
     {
+        m_CurrentDialogue = dialogue;
         m_DialogueActivated = true;
+        m_ContinueButton.SetActive(true);
         m_DialogueBoxAnim.SetBool("PanelOpen", true);
-        m_PlayerMov.m_IsMovementAllowed = false;
+
+        if (m_CurrentDialogue.sceneManager != null)
+            m_CurrentDialogue.sceneManager.SpecificStartDialogue(dialogue); 
 
         if (nameText != null)
             nameText.text = dialogue.name;
@@ -72,19 +78,23 @@ public class DialogueMgt : MonoBehaviour {
             return;
         }
 
-        for (int i = 0; i < m_SceneIndex.Length; i++)
+        for (int i = 0; i < m_CurrentDialogue.scenes.Length; i++)
         {
-            if (sentences.Count == m_SceneIndex[i])
+            if (sentences.Count == m_CurrentDialogue.scenes[i].sceneIndex)
             {
-                Debug.Log(sentences.Count.ToString());
-                m_SceneAnim.SetBool(sentences.Count.ToString(), true);
+
+                if (m_CurrentDialogue.sceneManager != null)
+                    StartCoroutine(m_CurrentDialogue.sceneManager.SpecificSceneAction(m_CurrentDialogue.scenes[i].sceneIndex));
+                if (m_CurrentDialogue.scenes[i].sceneClip != null)
+                {
+                    m_SceneAnim.SetBool(sentences.Count.ToString(), true);
+                    StartCoroutine(ShutOffContinueButton(m_CurrentDialogue.scenes[i].sceneClip.length));
+                }
+
             }
         }
 
-        if (sentences.Count == 26)
-        {
-            StartCoroutine(ShutOffContinueButton(1f));
-        }
+
 
         string sentence = sentences.Dequeue();
         dialogueText.text = sentence;
@@ -118,7 +128,8 @@ public class DialogueMgt : MonoBehaviour {
 
     void EndDialogue()
     {
-        m_PlayerMov.m_IsMovementAllowed = true;
+        if (m_CurrentDialogue.sceneManager != null)
+            m_CurrentDialogue.sceneManager.SpecificEndDialogue();
         DeactivateDialogue();
 
     }
@@ -158,5 +169,23 @@ public class DialogueMgt : MonoBehaviour {
         m_ContinueButton.SetActive(true);
         m_DialogueBoxAnim.SetBool("ArrowBlink", true);
     }
+
+    public void ShutOffContinueButton()
+    {
+        m_DialogueActivated = false;
+        m_ContinueButton.SetActive(false);
+        m_DialogueBoxAnim.SetBool("ArrowBlink", false);
+    }
+
+
+    public void ShutOnContinueButton()
+    {
+        m_DialogueActivated = true;
+        m_ContinueButton.SetActive(true);
+        m_DialogueBoxAnim.SetBool("ArrowBlink", true);
+    }
+
+
+
 
 }

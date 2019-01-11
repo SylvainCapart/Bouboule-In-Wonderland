@@ -16,12 +16,15 @@ public class PlayerSpit : MonoBehaviour
     private string[] m_SoundNames = { "Fire", "Bubble" };
     private SpitParticle m_LastSpitStatus = SpitParticle.FIRE;
     private bool m_isSpitting = false;
-    public bool m_isSpittingAllowed = false;
+    private bool m_isSpittingAllowed = true;
 
     private const float EPSILON = 0.01f;
 
     public delegate void OnVariableChangeDelegate(SpitParticle spitmode);
     public static event OnVariableChangeDelegate OnSpitModeChange;
+
+    public delegate void OnSpitActivationDelegate(bool state);
+    public static event OnSpitActivationDelegate OnSpitActivationChange;
 
     public SpitParticle SpitStatus
     {
@@ -35,6 +38,24 @@ public class PlayerSpit : MonoBehaviour
             if (OnSpitModeChange != null)
                 OnSpitModeChange(m_SpitStatus);
             }
+    }
+
+    public bool IsSpittingAllowed
+    {
+        get
+        {
+            return m_isSpittingAllowed;
+        }
+
+        set
+        {
+            if (m_isSpittingAllowed == value) return;
+            if (value == false)
+                StopSpit();
+            if (OnSpitActivationChange != null)
+                OnSpitActivationChange(value);
+            m_isSpittingAllowed = value;
+        }
     }
 
     // Use this for initialization
@@ -61,7 +82,7 @@ public class PlayerSpit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (m_isSpittingAllowed == false) return;
+        if (IsSpittingAllowed == false) return;
 
         bool swimming = GetComponentInParent<CharacterController2D>().Swimming;
         bool swim = GetComponentInParent<CharacterController2D>().Swim;

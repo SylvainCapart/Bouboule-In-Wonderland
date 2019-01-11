@@ -80,7 +80,9 @@ public class GameMaster : MonoBehaviour
             m_SpawnPoint.GetComponent<RespawnFlagMgt>().State = RespawnFlagMgt.FlagState.GREEN;
         }
 
-
+        PlayerSpit playerspit = FindObjectOfType<PlayerSpit>();
+        if (playerspit != null)
+            playerspit.IsSpittingAllowed = false;
     }
 
     void Awake()

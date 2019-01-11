@@ -9,13 +9,16 @@ public class AirBarMgt : MonoBehaviour {
     [SerializeField] private GameObject[] m_IconArray;
     [SerializeField] private Sprite[] m_BarImageArray;
     [SerializeField] private Image m_BarImageSlot;
+    [SerializeField] private Canvas m_BarCanvas;
 
     private void Start()
     {
         if (m_OxygenBarRect == null)
             Debug.LogError(this.name + " : m_OxygenBarRect no found");
 
-        
+        if (m_BarCanvas == null)
+            Debug.LogError(this.name + " : m_BarCanvas no found");
+
         EnableSpitIcon(PlayerSpit.SpitParticle.FIRE);
     }
 
@@ -23,15 +26,20 @@ public class AirBarMgt : MonoBehaviour {
     {
         //GameMaster.ResetDelegate += AirBarReset;
         PlayerSpit.OnSpitModeChange += OnSpitModeChanged;
+        PlayerSpit.OnSpitActivationChange += ShowAirBarUI;
     }
 
     private void OnDisable()
     {
         //GameMaster.ResetDelegate -= AirBarReset;
         PlayerSpit.OnSpitModeChange -= OnSpitModeChanged;
+        PlayerSpit.OnSpitActivationChange -= ShowAirBarUI;
     }
 
-
+    private void ShowAirBarUI(bool state)
+    {
+        m_BarCanvas.enabled = state;
+    }
 
     public void SetOxygen(int _cur, int _max)
     {
