@@ -37,10 +37,14 @@ public class BubbleKill : MonoBehaviour
         int count = ps.GetParticles(particles);
         for (int i = 0; i < count; i++)
         {
-            if (particles[i].position.y > (closesttilemap.GetComponent<CompositeCollider2D>().bounds.center.y + closesttilemap.GetComponent<CompositeCollider2D>().bounds.extents.y))
-            {
+
+            /* if (particles[i].position.y > (closesttilemap.GetComponent<CompositeCollider2D>().bounds.center.y + closesttilemap.GetComponent<CompositeCollider2D>().bounds.extents.y))
+             {
+                 particles[i].remainingLifetime = -1.0f;
+             }*/
+            Vector2 pos = particles[i].position;
+        if (!closesttilemap.GetComponent<CompositeCollider2D>().OverlapPoint(pos))
                 particles[i].remainingLifetime = -1.0f;
-            }
         }
         ps.SetParticles(particles, count);
 

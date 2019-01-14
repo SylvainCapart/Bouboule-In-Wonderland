@@ -82,6 +82,16 @@ public class PlayerMovement : MonoBehaviour
         m_verticalMove = Input.GetAxisRaw("Vertical") * m_speedCoeff;
 
 
+
+        if (Input.GetKey(KeyCode.LeftControl) && (Input.GetKey(KeyCode.LeftArrow)))
+        {
+            Debug.Log("Crtl");
+            m_horizontalMove = Input.GetAxisRaw("Horizontal") * m_speedCoeff;
+
+            m_verticalMove = Input.GetAxisRaw("Vertical") * m_speedCoeff;
+        }
+
+
         if (Input.GetButtonDown("Roll"))
         {
             m_Roll = true;
@@ -107,6 +117,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+
     }
 
     void FixedUpdate()
@@ -126,17 +137,11 @@ public class PlayerMovement : MonoBehaviour
     void OnTriggerExit2D(Collider2D other)
     {
 
-        if (other.gameObject.tag == "Water" )
+        if (other.gameObject.tag == "Water")
         {
-            if (this.transform.position.y > other.bounds.center.y + other.bounds.extents.y)
-            {
-                m_Swim = false;
-                transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
-            }  
-            else
-            {
-                m_Swim = true;
-            }
+
+            m_Swim = false;
+            transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
         }
     }
 
@@ -145,12 +150,10 @@ public class PlayerMovement : MonoBehaviour
 
         if (other.gameObject.tag == "Water")
         {
-            if (this.transform.position.y < other.bounds.center.y + other.bounds.extents.y)
-            {
+      
                 m_Swim = true;
-            }
-        }
 
+        }
 
     }
 

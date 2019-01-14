@@ -3,8 +3,8 @@
 public class CameraGameObjectEnable : MonoBehaviour
 {
     [SerializeField] private GameObject[] m_ActivableObjectsArray;
-    private float m_ActivationDistance = 10f;
-
+    private float m_ActivationDistance = 15f;
+    private float m_DeactivationDistance = 15f;
 
     private void Awake()
     {
@@ -23,7 +23,13 @@ public class CameraGameObjectEnable : MonoBehaviour
             if (Vector2.Distance(m_ActivableObjectsArray[i].transform.position, Camera.main.ScreenToWorldPoint(Camera.main.pixelRect.center)) 
             <= m_ActivationDistance)
             {
-                m_ActivableObjectsArray[i].SetActive(true);
+                if (!m_ActivableObjectsArray[i].activeSelf)
+                    m_ActivableObjectsArray[i].SetActive(true);
+            }
+            else
+            {
+                if (m_ActivableObjectsArray[i].activeSelf)
+                    m_ActivableObjectsArray[i].SetActive(false);
             }
         }
     }

@@ -200,7 +200,6 @@ public class CharacterController2D : MonoBehaviour
         m_Anim.SetBool("Swim", swim);
 
 
-
         //only control the player if grounded or airControl is turned on
         if (Grounded || m_airControl)
         {
@@ -231,7 +230,22 @@ public class CharacterController2D : MonoBehaviour
                 else
                 {
                     RollChargeRelease();
+
                 }
+
+
+                    /*if (m_Jump && m_Grounded)
+                    {
+
+                        Debug.Log("NE>W");
+                        m_Rigidbody2D.AddForce(new Vector2((m_FacingRight ? 1f : -1f) * 400, 400));
+                        RollChargeRelease();
+                        m_Anim.SetBool("Roll", false);
+                    }*/
+
+
+
+                
 
                 for (int i = 0; i < m_GroundCheckTable.Length; i++)
                 {
@@ -502,6 +516,9 @@ public class CharacterController2D : MonoBehaviour
     {
         m_Anim.speed -= 1.9f * m_IncrementAnimSpeed * Time.deltaTime;
 
+        if (m_Jump)
+        m_Rigidbody2D.AddForce(new Vector2((m_FacingRight ? 1f : -1f) * 4000* m_Anim.speed * Time.fixedDeltaTime, 0f));
+
         if (m_Anim.speed <= 1f)
         {
             m_Anim.speed = 1f;
@@ -511,6 +528,8 @@ public class CharacterController2D : MonoBehaviour
         EnableParticleEffect(m_SparkEffect, false);
         audioManager.StopSound("FastRolling");
     }
+
+
 
     void RollChargeReset()
     {
@@ -523,9 +542,9 @@ public class CharacterController2D : MonoBehaviour
     {
         if (Rolling)
         {
-            foreach (string tag in m_RollMovableTags)
+            foreach (string rolltag in m_RollMovableTags)
             {
-                if (collision.gameObject.tag == tag)
+                if (collision.gameObject.tag == rolltag)
                 {
                     Vector2 oppositeForce;
                     oppositeForce.y = 0f;

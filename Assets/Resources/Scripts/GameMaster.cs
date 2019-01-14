@@ -37,6 +37,7 @@ public class GameMaster : MonoBehaviour
     public delegate void OnResetDelegate();
     public static event OnResetDelegate ResetDelegate;
 
+    public bool m_DebugMode;
 
 
     /*[SerializeField]
@@ -83,6 +84,17 @@ public class GameMaster : MonoBehaviour
         PlayerSpit playerspit = FindObjectOfType<PlayerSpit>();
         if (playerspit != null)
             playerspit.IsSpittingAllowed = false;
+        GameObject coincounter = GameObject.Find("CoinCounterObject");
+        if (coincounter != null)
+            coincounter.SetActive(false);
+
+        if (m_DebugMode)
+        {
+            if (playerspit != null)
+                playerspit.IsSpittingAllowed = true;
+            if (coincounter != null)
+                coincounter.SetActive(true);
+        }
     }
 
     void Awake()
@@ -139,7 +151,7 @@ public class GameMaster : MonoBehaviour
         if (player.gameObject != null)
         {
             Destroy(player.gameObject);
-            //ResetDelegate(); // called a first time to deactivate the audiosource linked to the player's audiolistener that is to be destroyed
+            ResetDelegate(); // called a first time to deactivate the audiosource linked to the player's audiolistener that is to be destroyed
         }
         else return;
 

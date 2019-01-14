@@ -50,7 +50,7 @@ public class PlayerSpit : MonoBehaviour
         set
         {
             if (m_isSpittingAllowed == value) return;
-            if (value == false)
+            if (value == false && m_isSpitting == true)
                 StopSpit();
             if (OnSpitActivationChange != null)
                 OnSpitActivationChange(value);
