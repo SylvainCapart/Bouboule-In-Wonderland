@@ -118,6 +118,7 @@ GameObject:
   - component: {fileID: 1540538942322350982}
   - component: {fileID: 1540538942322350984}
   - component: {fileID: 1540538942322350979}
+  - component: {fileID: 27559220}
   m_Layer: 0
   m_Name: FishBody
   m_TagString: Fish
@@ -192,7 +193,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 2
+  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!50 &1540538942322350976
 Rigidbody2D:
@@ -202,7 +203,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1540538942322351100}
-  m_BodyType: 1
+  m_BodyType: 2
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -594,6 +595,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &27559220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1540538942322351100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc2918c56f8d84dc5b36f0cc3e93bf78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1540538942363660260
 GameObject:
   m_ObjectHideFlags: 0
@@ -1233,6 +1246,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActivableObjectsArray:
   - {fileID: 1540538942322351100}
+  m_ActivationDistance: 13
+  m_DeactivationDistance: 15
 --- !u!1 &1540538943237232880
 GameObject:
   m_ObjectHideFlags: 0

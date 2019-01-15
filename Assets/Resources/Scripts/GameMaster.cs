@@ -141,7 +141,8 @@ public class GameMaster : MonoBehaviour
         gm.StartCoroutine(cameraFollow.DampingShutOff(0.1f));
 
         //Destroy(spawnClone.gameObject, 3f);
-        ResetDelegate(); // called a second time to relink the statusindicator in the new player instance
+        if (ResetDelegate != null)
+            ResetDelegate(); // called a second time to relink the statusindicator in the new player instance
         isRespawning = false;
 
     }
@@ -151,7 +152,8 @@ public class GameMaster : MonoBehaviour
         if (player.gameObject != null)
         {
             Destroy(player.gameObject);
-            ResetDelegate(); // called a first time to deactivate the audiosource linked to the player's audiolistener that is to be destroyed
+            if (ResetDelegate != null)
+                ResetDelegate(); // called a first time to deactivate the audiosource linked to the player's audiolistener that is to be destroyed
         }
         else return;
 

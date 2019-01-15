@@ -169,6 +169,7 @@ GameObject:
   - component: {fileID: 7730385449195781662}
   - component: {fileID: 7730385449195781663}
   - component: {fileID: 7730385449195781660}
+  - component: {fileID: 1875955023}
   m_Layer: 12
   m_Name: AirStone
   m_TagString: Untagged
@@ -183,7 +184,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7730385449195781649}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 11.82, y: -6.41, z: 0.0390625}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -301,11 +302,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc2918c56f8d84dc5b36f0cc3e93bf78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1875955023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7730385449195781649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d7b32327f193468eaac4d90bb04e17b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ActivableObjectsArray:
+  - {fileID: 7730385449224815396}
+  - {fileID: 7730385447807517182}
+  - {fileID: 7730385448329641667}
+  m_ActivationDistance: 10
+  m_DeactivationDistance: 10
 --- !u!1 &7730385449224815396
 GameObject:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 1595819720372852, guid: 5df7c0ffdfc25e544909ce7384a8b621,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
@@ -324,8 +342,7 @@ GameObject:
 --- !u!4 &7730385449224815397
 Transform:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 4021835131303418, guid: 5df7c0ffdfc25e544909ce7384a8b621,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7730385449224815396}
@@ -339,8 +356,7 @@ Transform:
 --- !u!198 &7730385449224815395
 ParticleSystem:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 198356677382064520, guid: 5df7c0ffdfc25e544909ce7384a8b621,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7730385449224815396}
@@ -4945,8 +4961,7 @@ ParticleSystem:
 ParticleSystemRenderer:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 199552170906171318, guid: 5df7c0ffdfc25e544909ce7384a8b621,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7730385449224815396}
