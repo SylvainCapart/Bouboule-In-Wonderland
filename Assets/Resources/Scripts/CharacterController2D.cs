@@ -546,15 +546,19 @@ public class CharacterController2D : MonoBehaviour
             {
                 if (collision.gameObject.tag == rolltag)
                 {
-                    Vector2 oppositeForce;
-                    oppositeForce.y = 0f;
+                    if (collision.collider.bounds.center.y < transform.position.y)
+                    {
+                        Vector2 oppositeForce;
+                        oppositeForce.y = 0f;
 
-                    if (m_FacingRight)
-                        oppositeForce.x = -7.5f * m_Anim.speed / collision.rigidbody.mass - 20f;
-                    else
-                        oppositeForce.x = 7.5f * m_Anim.speed / collision.rigidbody.mass + 20f;
+                        if (m_FacingRight)
+                            oppositeForce.x = -7.5f * m_Anim.speed / collision.rigidbody.mass - 20f;
+                        else
+                            oppositeForce.x = 7.5f * m_Anim.speed / collision.rigidbody.mass + 20f;
 
-                    collision.rigidbody.AddForce(oppositeForce);
+                        collision.rigidbody.AddForce(oppositeForce);
+                    }
+
                 }
             }
         }

@@ -23,6 +23,7 @@ TagManager:
   - Sausage
   - Chest
   - CoinCounter
+  - MovingWater
   layers:
   - Default
   - TransparentFX
@@ -37,8 +38,8 @@ TagManager:
   - Player
   - Vine_Back
   - Background_Env
-  - Manual_Water
-  - Manual_UI
+  - 
+  - 
   - Enemy
   - 
   - 

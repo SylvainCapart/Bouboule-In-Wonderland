@@ -22,7 +22,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Collider2D m_climbingCollider;                // A collider that detects objects where climbing is possible
     [SerializeField] private Collider2D m_swimmingCollider;
     [SerializeField] private LayerMask m_WhatIsVine;                            // A mask determining what is vine to the character     
-    [SerializeField] private LayerMask m_WhatIsWater;                            // A mask determining what is water to the character     
+    [SerializeField] private LayerMask m_WhatIsWater;                            // A mask determining what is water to the character   
+    private bool m_DeepWater;
 
     private bool m_LastSwimStatus = false;
     private bool m_FacingRight = true;
@@ -108,12 +109,12 @@ public class PlayerMovement : MonoBehaviour
             m_Jump = true;
         }
 
-        if (!m_Swim && m_LastSwimStatus)
+        /*if (!m_Swim && m_LastSwimStatus)
         {
             m_Jump = true;
             m_verticalMove = 30;
         }
-        m_LastSwimStatus = m_Swim;
+        m_LastSwimStatus = m_Swim;*/
 
 
 
@@ -134,27 +135,38 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    void OnTriggerExit2D(Collider2D other)
+    void OnTriggerExit2D(Collider2D collision)
     {
-
-        if (other.gameObject.tag == "Water")
+        if (collision.gameObject.tag == "MovingWater")// && transform.position.y > collision.bounds.center.y + collision.bounds.extents.y)
         {
 
-            m_Swim = false;
-            transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
+
+            if (!m_DeepWater)
+            {
+                m_Swim = false;
+                transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
+            }
+
+        }
+
+        if (collision.gameObject.tag == "Water")// && transform.position.y > collision.bounds.center.y + collision.bounds.extents.y)
+        {
+
+            m_DeepWater = false;
         }
     }
 
-    void OnTriggerStay2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-
-        if (other.gameObject.tag == "Water")
+        if (collision.gameObject.tag == "Water" || collision.gameObject.tag == "MovingWater")// && transform.position.y <= collision.bounds.center.y + collision.bounds.extents.y)
         {
-      
-                m_Swim = true;
 
+            m_Swim = true;
         }
-
+        if (collision.gameObject.tag == "Water")
+        {
+            m_DeepWater = true;
+        }
     }
 
     private void FlipScale()

@@ -48,6 +48,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActivableObjectsArray:
   - {fileID: 1265097912866003819}
+  m_ActivationDistance: 15
+  m_DeactivationDistance: 15
 --- !u!1 &1265097911527466231
 GameObject:
   m_ObjectHideFlags: 0
