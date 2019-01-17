@@ -716,4 +716,12 @@ public class CharacterController2D : MonoBehaviour
         m_StepAllowed = true;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag != "MovingGround" && Grounded)
+        {
+            transform.parent = null;
+        }
+    }
+
 }

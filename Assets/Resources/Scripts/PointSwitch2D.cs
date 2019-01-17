@@ -4,21 +4,25 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody2D))]
 
-public class PointSwitch2D : MonoBehaviour {
+public class PointSwitch2D : MonoBehaviour
+{
 
     public Transform[] points;
     private int targetPointIndex = 0;
-    public float moveSpeed = 40f;
+    [SerializeField] private float m_MoveSpeed;
     private Rigidbody2D m_Rigidbody2D;
     private Vector3 velocity = Vector3.zero;
-    [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;  // How much to smooth out the movement
     private bool m_FacingRight = false;
     public bool m_Randomize;
     private int[] m_validChoices;
-
+    [SerializeField] private bool m_ReverseScale;
+    [SerializeField] private bool m_StartRight;
+    [SerializeField] private bool m_PlayerFollowsMvt;
 
     private void Start()
     {
+        m_FacingRight = m_StartRight;
+
         if (points.Length < 2)
             Debug.LogError("Number of points unsufficient or points non assigned");
 
@@ -46,7 +50,7 @@ public class PointSwitch2D : MonoBehaviour {
         }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         Vector3 dirVector = Vector3.zero;
         int lastIndex;
@@ -54,7 +58,7 @@ public class PointSwitch2D : MonoBehaviour {
         dirVector = (points[targetPointIndex].position - this.transform.position);
         dirVector.Normalize();
 
-        Move(dirVector.x * moveSpeed * Time.fixedDeltaTime, dirVector.y * moveSpeed * Time.fixedDeltaTime);
+        MoveTo(dirVector);
 
         if (Vector2.Distance(points[targetPointIndex].position, this.transform.position) < 0.1f)
         {
@@ -77,22 +81,32 @@ public class PointSwitch2D : MonoBehaviour {
                     ++targetPointIndex;
                 }
             }
+            if (m_PlayerFollowsMvt)
+            {
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                if (player != null && player.transform.parent != null)
+                    player.transform.parent = null;
+
+            }
+
 
         }
 
-        if (!m_FacingRight && this.transform.position.x - points[targetPointIndex].position.x > 0)
-            Flip();
-        else if (m_FacingRight && this.transform.position.x - points[targetPointIndex].position.x < 0)
-            Flip();
+        if (m_ReverseScale)
+        {
+            if (!m_FacingRight && this.transform.position.x - points[targetPointIndex].position.x > 0)
+                Flip();
+            else if (m_FacingRight && this.transform.position.x - points[targetPointIndex].position.x < 0)
+                Flip();
+        }
 
     }
 
-
-    public void Move(float moveX, float moveY)
+    public void MoveTo(Vector3 dir)
     {
-        Vector3 targetVelocity = new Vector2(moveX * 10, moveY * 10);
-        m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref velocity, m_MovementSmoothing);
+        transform.position += dir * m_MoveSpeed * Time.deltaTime;
     }
+
 
     private void Flip()
     {

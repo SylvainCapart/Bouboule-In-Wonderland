@@ -1,36 +1,27 @@
-﻿
+﻿using System.Collections;
 using UnityEngine;
 
 public class MovingGround : MonoBehaviour
 {
-    private GameObject m_Player;
-    private Rigidbody2D m_Rigidbody2D;
-    [SerializeField] private PointSwitch2D m_PointSwitch;
-
-    void Start()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        m_Rigidbody2D = GetComponent<Rigidbody2D>();
-        if (m_Rigidbody2D == null)
-            Debug.LogError(this.name + " : RB not found");
-        if (m_PointSwitch == null)
-            m_PointSwitch = GetComponent<PointSwitch2D>();
-    }
-
-    void FixedUpdate()
-    {
-        if (m_Player != null)
+        if ((collision.transform.tag == "Player"))
         {
-            m_Player.GetComponent<Rigidbody2D>().AddForce(m_Rigidbody2D.velocity * m_PointSwitch.moveSpeed * 2);//* moveSpeed );
+            StopAllCoroutines();
+            collision.transform.parent = transform;
         }
     }
 
-
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.transform.tag == "Player")
+        if ((collision.transform.tag == "Player"))
         {
-            m_Player = collision.gameObject;
+            if (collision.transform.parent != transform)
+            {
+                StopAllCoroutines();
+                collision.transform.parent = transform;
+            }
+
         }
     }
 
@@ -38,10 +29,15 @@ public class MovingGround : MonoBehaviour
     {
         if (collision.transform.tag == "Player")
         {
-            m_Player = null;
-
+            StartCoroutine(UnparentCo(collision.transform, 0.4f));
         }
     }
 
+    private IEnumerator UnparentCo(Transform child, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        child.parent = null;
+    }
 
 }
+

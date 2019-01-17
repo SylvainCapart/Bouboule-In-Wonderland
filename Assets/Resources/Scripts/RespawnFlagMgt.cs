@@ -58,10 +58,12 @@ public class RespawnFlagMgt : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        GameMaster.gm.ResetFlagsExcept(gameObject);
-        State = FlagState.GREEN;
-        GameMaster.gm.SpawnPoint = this.gameObject;
-        //GameMaster.gm.LastRespawnMgt = this;
+        if (collision.gameObject.tag == "Player")
+        {
+            GameMaster.gm.ResetFlagsExcept(gameObject);
+            State = FlagState.GREEN;
+            GameMaster.gm.SpawnPoint = this.gameObject;
+        }
     }
 
 
