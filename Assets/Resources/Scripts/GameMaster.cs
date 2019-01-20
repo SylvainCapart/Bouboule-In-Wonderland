@@ -12,7 +12,9 @@ public class GameMaster : MonoBehaviour
     private GameObject m_SpawnPoint;
     [SerializeField] private GameObject[] m_SpawnArray;
 
-    public float spawnDelay = 0.5f;
+    [SerializeField] private float m_SpawnDelay = 0.5f;
+    [SerializeField] private float m_AppearDelay = 1f;
+
     public bool isRespawning = false;
     //public Transform spawnPrefab;
 
@@ -64,6 +66,8 @@ public class GameMaster : MonoBehaviour
 
     private void Start()
     {
+        Screen.fullScreen = false;
+
         if (cameraShake == null)
         {
             Debug.LogError("No camera shake found in Gamemaster");
@@ -123,24 +127,26 @@ public class GameMaster : MonoBehaviour
     {
         isRespawning = true;
 
-        //audioManager.PlaySound(respawnCountdownSoundName);
+        yield return new WaitForSeconds(m_SpawnDelay);
 
-        yield return new WaitForSeconds(spawnDelay);
+        GameObject cloneappear = (GameObject)Instantiate(Resources.Load("Prefabs\\AppearPlayer"));
+        cloneappear.transform.position = m_SpawnPoint.transform.position + new Vector3(0f, 0.5f, 0f);
+        cloneappear.name = "AppearPlayer";
 
-        //audioManager.PlaySound(spawnSoundName);
-        //Transform clone = Instantiate(playerPrefab, m_SpawnPoint.position, m_SpawnPoint.rotation);
+        Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
+        cameraFollow.target = cloneappear.transform;
+        gm.StartCoroutine(cameraFollow.DampingShutOff(0.1f));
+
+        yield return new WaitForSeconds(m_AppearDelay);
+
+        Destroy(cloneappear);
+
         GameObject clone = (GameObject)Instantiate(Resources.Load("Prefabs\\Player"));
         clone.transform.position = m_SpawnPoint.transform.position + new Vector3(0f, 0.5f, 0f);
         clone.name = "Player";
 
-        //Transform spawnClone = Instantiate(spawnPrefab, m_SpawnPoint.position, m_SpawnPoint.rotation);
-
-        Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
-
         cameraFollow.target = clone.transform;
-        gm.StartCoroutine(cameraFollow.DampingShutOff(0.1f));
 
-        //Destroy(spawnClone.gameObject, 3f);
         if (ResetDelegate != null)
             ResetDelegate(); // called a second time to relink the statusindicator in the new player instance
         isRespawning = false;

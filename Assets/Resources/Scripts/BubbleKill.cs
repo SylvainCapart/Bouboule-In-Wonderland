@@ -34,6 +34,8 @@ public class BubbleKill : MonoBehaviour
             return;
         }
 
+        GameObject movingWaterTilemap = GameObject.FindGameObjectWithTag("MovingWater");
+
         int count = ps.GetParticles(particles);
         for (int i = 0; i < count; i++)
         {
@@ -43,7 +45,7 @@ public class BubbleKill : MonoBehaviour
                  particles[i].remainingLifetime = -1.0f;
              }*/
             Vector2 pos = particles[i].position;
-        if (!closesttilemap.GetComponent<CompositeCollider2D>().OverlapPoint(pos))
+        if (!closesttilemap.GetComponent<CompositeCollider2D>().OverlapPoint(pos) && !movingWaterTilemap.GetComponent<CompositeCollider2D>().OverlapPoint(pos))
                 particles[i].remainingLifetime = -1.0f;
         }
         ps.SetParticles(particles, count);

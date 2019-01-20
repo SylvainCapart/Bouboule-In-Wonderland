@@ -153,6 +153,8 @@ public class PlayerMovement : MonoBehaviour
         {
 
             m_DeepWater = false;
+            m_Swim = false; /**/
+            transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
         }
     }
 

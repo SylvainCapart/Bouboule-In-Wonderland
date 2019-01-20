@@ -40,6 +40,7 @@ public class CoinMgt : MonoBehaviour {
 
             explosionClone = Instantiate(m_ExplosionCoin, transform.position, Quaternion.identity);
             explosionClone.transform.SetParent(GameObject.Find("Coins").transform);
+
             Destroy(explosionClone, 1f);
             Destroy(this.gameObject, 1f);
         }
