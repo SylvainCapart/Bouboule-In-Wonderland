@@ -6,6 +6,7 @@ public class CoinMgt : MonoBehaviour {
 
 
     [SerializeField] private GameObject m_ExplosionCoin;
+    [SerializeField] private GameObject m_Aura;
     private AudioManager audioManager;
 
 
@@ -40,7 +41,7 @@ public class CoinMgt : MonoBehaviour {
 
             explosionClone = Instantiate(m_ExplosionCoin, transform.position, Quaternion.identity);
             explosionClone.transform.SetParent(GameObject.Find("Coins").transform);
-
+            Destroy(m_Aura);
             Destroy(explosionClone, 1f);
             Destroy(this.gameObject, 1f);
         }

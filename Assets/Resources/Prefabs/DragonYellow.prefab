@@ -4859,6 +4859,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActivableObjectsArray:
   - {fileID: 4034651750469462196}
+  m_ActivationDistance: 15
+  m_DeactivationDistance: 15
 --- !u!1 &4034651749364297463
 GameObject:
   m_ObjectHideFlags: 0
@@ -9986,7 +9988,7 @@ MonoBehaviour:
   m_CurrentHealth: 0
   m_MaxHealth: 15
   m_StartPcHealh: 1
-  m_Damage: 10
+  m_Damage: 15
   m_HealthRegenRate: 20
   m_HealthRegenAmount: 10
   m_ShakeAmountAmt: 0

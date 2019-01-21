@@ -63,6 +63,10 @@ public class CharacterController2D : MonoBehaviour
 
     private AudioManager audioManager;
 
+    public enum GroundDirection { BOTTOM, TOP, LEFT, RIGHT };
+    public GroundDirection m_GroundDir;
+    [SerializeField] private float m_SideLeftGravCoeff;
+
     void OnGUI()
     {
         //Debug.Log("" + (int)(1.0f / Time.smoothDeltaTime));
@@ -77,6 +81,8 @@ public class CharacterController2D : MonoBehaviour
         {
             Debug.LogError("No audioManager found in " + this.name);
         }
+        m_GroundDir = GroundDirection.BOTTOM;
+        m_Rigidbody2D.gravityScale = m_normalGravity;
     }
 
     private void Awake()
@@ -161,7 +167,7 @@ public class CharacterController2D : MonoBehaviour
     public void Move(float xMove, float yMove, bool jump, bool roll, bool charging, bool climb, bool swim)
     {
 
-        // If rolling, check to see if the character can stand up
+        /*// If rolling, check to see if the character can stand up
         if (!roll && !swim)
         {
             // If the character has a ceiling preventing them from standing up, keep them rolling
@@ -169,7 +175,7 @@ public class CharacterController2D : MonoBehaviour
             {
                 roll = true;
             }
-        }
+        }*/
 
         Rolling = roll;
         Climbing = climb;
@@ -233,20 +239,6 @@ public class CharacterController2D : MonoBehaviour
 
                 }
 
-
-                    /*if (m_Jump && m_Grounded)
-                    {
-
-                        Debug.Log("NE>W");
-                        m_Rigidbody2D.AddForce(new Vector2((m_FacingRight ? 1f : -1f) * 400, 400));
-                        RollChargeRelease();
-                        m_Anim.SetBool("Roll", false);
-                    }*/
-
-
-
-                
-
                 for (int i = 0; i < m_GroundCheckTable.Length; i++)
                 {
                     m_GroundCheckTable[i].gameObject.SetActive(false);
@@ -306,6 +298,25 @@ public class CharacterController2D : MonoBehaviour
 
                 this.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0f;
                 targetVelocity = new Vector2(xMove * m_climbSpeed * 10f, yMove * m_climbSpeed * 10f);
+                /*switch (m_GroundDir)
+                {
+                    case GroundDirection.LEFT:
+                        targetVelocity = new Vector2(xMove * m_climbSpeed * 10f, yMove * m_climbSpeed * 10f);
+                        break;
+                    case GroundDirection.RIGHT:
+                        // to be implemented if needed
+                        break;
+                    case GroundDirection.TOP:
+                        // to be implemented if needed
+                        break;
+                    case GroundDirection.BOTTOM:
+                        targetVelocity = new Vector2(xMove * m_climbSpeed * 10f, yMove * m_climbSpeed * 10f);
+                        // to be implemented if needed
+                        break;
+                    default:
+                        targetVelocity = new Vector2(xMove * m_climbSpeed * 10f, yMove * m_climbSpeed * 10f);
+                        break;
+                }*/
             }
             else if (swim)
             {
@@ -320,15 +331,37 @@ public class CharacterController2D : MonoBehaviour
 
                 m_Anim.SetBool("Swimming", Swimming);
                 this.gameObject.GetComponent<Rigidbody2D>().gravityScale = m_archimedeGravity;
+                ////
                 targetVelocity = new Vector2(xMove * m_SwimSpeed * 10f * m_DrowningSpeedReduction, yMove * m_SwimSpeed * 10f * m_DrowningSpeedReduction);
             }
             else
             {
                 m_Anim.SetBool("Climb", false);
                 m_Anim.SetBool("Swimming", false);
+                ////
                 this.gameObject.GetComponent<Rigidbody2D>().gravityScale = m_normalGravity;
-                targetVelocity = new Vector2(xMove * GetSpeedRatio(), m_Rigidbody2D.velocity.y);
+
+
+                switch (m_GroundDir)
+                {
+                    case GroundDirection.LEFT:
+                        targetVelocity = new Vector2(m_Rigidbody2D.velocity.x, -xMove *GetSpeedRatio());
+                        break;
+                    case GroundDirection.RIGHT:
+                        // to be implemented if needed
+                        break;
+                    case GroundDirection.TOP:
+                        // to be implemented if needed
+                        break;
+                    case GroundDirection.BOTTOM:
+                        targetVelocity = new Vector2(xMove * GetSpeedRatio(), m_Rigidbody2D.velocity.y);
+                        break;
+                    default:
+                        targetVelocity = new Vector2(xMove * GetSpeedRatio(), m_Rigidbody2D.velocity.y);
+                        break;
+                }
             }
+
 
 
 
@@ -382,9 +415,9 @@ public class CharacterController2D : MonoBehaviour
             m_Anim.SetBool("Ground", false);
 
             if (climb)
-                m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce * m_JumpReductionWhenClimbing));
+                m_Rigidbody2D.AddForce(GetGroundDirVector() * m_JumpForce * m_JumpReductionWhenClimbing);
             else
-                m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+                m_Rigidbody2D.AddForce(GetGroundDirVector() * m_JumpForce);
 
         }
 
@@ -655,6 +688,10 @@ public class CharacterController2D : MonoBehaviour
                 OnSwimChangeRaw(value);
             if (m_Swim == value) return;
             m_Swim = value;
+            if (m_Swim)
+                this.gameObject.GetComponent<Rigidbody2D>().gravityScale = m_archimedeGravity;
+            else
+                this.gameObject.GetComponent<Rigidbody2D>().gravityScale = m_normalGravity;
             if (MovementStatusChange != null)
                 MovementStatusChange("Swim", value);
         }
@@ -722,6 +759,30 @@ public class CharacterController2D : MonoBehaviour
         {
             transform.parent = null;
         }
+    }
+
+    private Vector2 GetGroundDirVector()
+    {
+        Vector2 groundDirVector = Vector2.zero;
+
+        switch (m_GroundDir)
+        {
+            case GroundDirection.BOTTOM:
+                groundDirVector = Vector2.up;
+                break;
+            case GroundDirection.TOP:
+                groundDirVector = Vector2.down;
+                break;
+            case GroundDirection.LEFT:
+                groundDirVector = Vector2.right * m_SideLeftGravCoeff;
+                break;
+            case GroundDirection.RIGHT:
+                groundDirVector = Vector2.left;
+                break;
+            default:
+                break;
+        }
+        return groundDirVector;
     }
 
 }

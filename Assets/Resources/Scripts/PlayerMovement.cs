@@ -23,7 +23,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Collider2D m_swimmingCollider;
     [SerializeField] private LayerMask m_WhatIsVine;                            // A mask determining what is vine to the character     
     [SerializeField] private LayerMask m_WhatIsWater;                            // A mask determining what is water to the character   
-    private bool m_DeepWater;
 
     private bool m_LastSwimStatus = false;
     private bool m_FacingRight = true;
@@ -84,15 +83,6 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-        if (Input.GetKey(KeyCode.LeftControl) && (Input.GetKey(KeyCode.LeftArrow)))
-        {
-            Debug.Log("Crtl");
-            m_horizontalMove = Input.GetAxisRaw("Horizontal") * m_speedCoeff;
-
-            m_verticalMove = Input.GetAxisRaw("Vertical") * m_speedCoeff;
-        }
-
-
         if (Input.GetButtonDown("Roll"))
         {
             m_Roll = true;
@@ -137,37 +127,27 @@ public class PlayerMovement : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "MovingWater")// && transform.position.y > collision.bounds.center.y + collision.bounds.extents.y)
+
+        if (collision.gameObject.tag == "Water" || collision.gameObject.tag == "MovingWater")// && transform.position.y <= collision.bounds.center.y + collision.bounds.extents.y)
         {
+            GameObject movingWaterTilemap = GameObject.FindGameObjectWithTag("MovingWater");
+            GameObject waterTilemap = GameObject.FindGameObjectWithTag("Water");
 
-
-            if (!m_DeepWater)
+            if (!movingWaterTilemap.GetComponent<CompositeCollider2D>().OverlapPoint(transform.position + new Vector3(0,0.5f,0)) || !waterTilemap.GetComponent<CompositeCollider2D>().OverlapPoint(transform.position + new Vector3(0, -0.5f, 0)))
             {
                 m_Swim = false;
                 transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
             }
-
-        }
-
-        if (collision.gameObject.tag == "Water")// && transform.position.y > collision.bounds.center.y + collision.bounds.extents.y)
-        {
-
-            m_DeepWater = false;
-            m_Swim = false; /**/
-            transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
         }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+
         if (collision.gameObject.tag == "Water" || collision.gameObject.tag == "MovingWater")// && transform.position.y <= collision.bounds.center.y + collision.bounds.extents.y)
         {
 
             m_Swim = true;
-        }
-        if (collision.gameObject.tag == "Water")
-        {
-            m_DeepWater = true;
         }
     }
 
