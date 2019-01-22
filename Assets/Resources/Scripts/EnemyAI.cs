@@ -55,6 +55,7 @@ public class EnemyAI : MonoBehaviour
     // Detection
     [SerializeField] private GameObject m_Detection;
     [SerializeField] private GameObject m_Predetection;
+    private Transform m_DetectionTransform;
     [HideInInspector] public bool m_IsPlayerSwimming;
     public bool m_UndetectIfPlayerSwimIs;
     [Range(0f, 1f)] [SerializeField] private float m_SleepScaleTrigger = 1f;
@@ -68,7 +69,8 @@ public class EnemyAI : MonoBehaviour
     /* ---- MODE PATROL ---- */
 
     public Transform[] m_PatrolPoints;
-    private int m_PatrolPointIndex = 0;
+    [SerializeField] private int m_LastPatrolIndex = 0;
+    [SerializeField] private int m_PatrolPointIndex = 0;
     public bool m_Randomize;
     private int[] m_validChoices;
     [SerializeField] private float m_PatrolSpeed;
@@ -117,6 +119,7 @@ public class EnemyAI : MonoBehaviour
                     m_AiLerpScript.speed = m_TargetSpeed;
                     m_ExpressionManager.CancelExpression();
                     m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.EXCLAMATION);
+                    m_DetectionTransform.position = transform.position;
                     break;
 
                 case EnemyState.SLEEP:
@@ -252,6 +255,8 @@ public class EnemyAI : MonoBehaviour
         }
 
         State = (m_ModeEnabled[(int)EnemyState.PATROL] == true) ? EnemyState.PATROL : EnemyState.SLEEP;
+        m_DetectionTransform = new GameObject().transform; // empty gameobject
+
     }
 
     private void Update()
@@ -295,8 +300,6 @@ public class EnemyAI : MonoBehaviour
 
     void PatrolMode()
     {
-        int lastIndex;
-
         m_Detection.transform.localScale = new Vector3(1, 1, 1);
         m_Predetection.transform.localScale = new Vector3(1, 1, 1);
 
@@ -314,9 +317,9 @@ public class EnemyAI : MonoBehaviour
         {
             if (m_Randomize)
             {
-                lastIndex = m_PatrolPointIndex;
+                m_LastPatrolIndex = m_PatrolPointIndex;
                 m_PatrolPointIndex = GetRandomTagetIndex();
-                m_validChoices[GetValueIndex(m_PatrolPointIndex)] = lastIndex;
+                m_validChoices[GetValueIndex(m_PatrolPointIndex)] = m_LastPatrolIndex;
 
             }
             else
@@ -324,10 +327,11 @@ public class EnemyAI : MonoBehaviour
                 if (m_PatrolPointIndex >= m_PatrolPoints.Length - 1)
                 {
                     m_PatrolPointIndex = 0;
-
+                    m_LastPatrolIndex = m_PatrolPoints.Length - 1;
                 }
                 else
                 {
+                    m_LastPatrolIndex = m_PatrolPointIndex;
                     ++m_PatrolPointIndex;
                 }
             }
@@ -346,24 +350,24 @@ public class EnemyAI : MonoBehaviour
 
         if (m_Target.targettransform != null)
         {
-            if (Vector3.Distance(m_Target.targettransform.position, m_StartPosition.position) >= m_GiveUpDistance)
+            if (Vector3.Distance(m_Target.targettransform.position, m_DetectionTransform.position) >= m_GiveUpDistance)
             {
-                SetTargetState(m_StartPosition, 0, EnemyState.GIVEUP);
+                SetTargetState(m_DetectionTransform, 0, EnemyState.GIVEUP);
             }
         }
         else
         {
-            SetTargetState(m_StartPosition, 0, EnemyState.GIVEUP);
+            SetTargetState(m_DetectionTransform, 0, EnemyState.GIVEUP);
         }
 
 
         if (m_IsPlayerSwimming == m_UndetectIfPlayerSwimIs)
-            SetTargetState(m_StartPosition, 0, EnemyState.GIVEUP);
+            SetTargetState(m_DetectionTransform, 0, EnemyState.GIVEUP);
 
         if (m_SpecificGiveup != null)
         {
             if (m_SpecificGiveup.IsSpecificGiveup())
-                SetTargetState(m_StartPosition, 0, EnemyState.GIVEUP);
+                SetTargetState(m_DetectionTransform, 0, EnemyState.GIVEUP);
         }
 
     }
@@ -407,7 +411,7 @@ public class EnemyAI : MonoBehaviour
         m_Enemy.SetRegenHealthStatus(true);
         m_ModeEnabled[(int)EnemyState.TARGET] = false;
 
-        if (Vector2.Distance(transform.position, m_StartPosition.position) <= 0.2f)
+        if (Vector2.Distance(transform.position, m_DetectionTransform.position) <= 0.2f)
         {
             m_ModeEnabled[(int)EnemyState.TARGET] = true;
             if (m_ModeEnabled[(int)EnemyState.SLEEP] == true)
