@@ -51,8 +51,6 @@ public class GravityChange : MonoBehaviour
         }
 
         m_ForceMagnitude = m_AreaEffector.forceMagnitude;
-
-
     }
 
     private void Update()
@@ -67,16 +65,9 @@ public class GravityChange : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            if (!m_ZoneEntered)
-            {
-                Debug.Log("ENTER");
-                //collision.transform.parent = this.transform;
-                collision.GetComponent<Rigidbody2D>().gravityScale = 0f;
-                collision.GetComponent<CharacterController2D>().m_GroundDir = TargetDir;
-                collision.transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, m_DirAngles[(int)TargetDir] - 270f));
-
-                m_ZoneEntered = true;
-            }
+            collision.GetComponent<Rigidbody2D>().gravityScale = 0f;
+            collision.GetComponent<CharacterController2D>().m_GroundDir = TargetDir;
+            collision.transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, m_DirAngles[(int)TargetDir] - 270f));
         }
     }
 
@@ -84,15 +75,12 @@ public class GravityChange : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            if (m_ZoneEntered)
-            {
-                if (collision.GetComponent<CharacterController2D>().Climbing)
-                    m_AreaEffector.forceMagnitude = 0;
-                else
-                    m_AreaEffector.forceMagnitude = m_ForceMagnitude;
+            if (collision.GetComponent<CharacterController2D>().Climbing)
+                m_AreaEffector.forceMagnitude = 0;
+            else
+                m_AreaEffector.forceMagnitude = m_ForceMagnitude;
 
-                collision.GetComponent<Rigidbody2D>().gravityScale = 0f;
-            }
+            collision.GetComponent<Rigidbody2D>().gravityScale = 0f;
 
         }
     }
@@ -101,16 +89,11 @@ public class GravityChange : MonoBehaviour
     {
         if (collision.tag == "Player" && !m_ShutOffExit)
         {
-            if (m_ZoneEntered)
-            {
-                Debug.Log("EXIT");
-                if (!collision.GetComponent<CharacterController2D>().Climbing)
-                    collision.GetComponent<Rigidbody2D>().gravityScale = 3.5f;
-                collision.GetComponent<CharacterController2D>().m_GroundDir = CharacterController2D.GroundDirection.BOTTOM;
-                collision.transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
+            if (!collision.GetComponent<CharacterController2D>().Climbing)
+                collision.GetComponent<Rigidbody2D>().gravityScale = 3.5f;
+            collision.GetComponent<CharacterController2D>().m_GroundDir = CharacterController2D.GroundDirection.BOTTOM;
+            collision.transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
 
-                m_ZoneEntered = false;
-            }
         }
     }
 
@@ -121,14 +104,4 @@ public class GravityChange : MonoBehaviour
         m_ShutOffExit = false;
     }
 
-    private void OnClimbChange(string status, bool state)
-    {
-        if (status == "Climbing")
-        {
-            if (!state)
-            {
-                //test
-            }
-        }
-    }
 }
