@@ -13542,7 +13542,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0.05
+  m_GravityScale: 3.5
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -13573,7 +13573,7 @@ MonoBehaviour:
     m_Bits: 256
   m_WhatIsWater:
     serializedVersion: 2
-    m_Bits: 8192
+    m_Bits: 16
 --- !u!114 &816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13594,7 +13594,7 @@ MonoBehaviour:
   m_airControl: 1
   m_whatIsGround:
     serializedVersion: 2
-    m_Bits: 567
+    m_Bits: 513
   m_GroundCheckTable:
   - {fileID: 676}
   - {fileID: 672}
@@ -13615,6 +13615,8 @@ MonoBehaviour:
   m_Swimming: 0
   m_Charging: 0
   m_SparkEffect: {fileID: 706}
+  m_GroundDir: 0
+  m_SideLeftGravCoeff: 1.3
 --- !u!114 &815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13627,7 +13629,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9f572fbfcd5f3241a43814934b83fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FallBoundary: -50
+  m_FallBoundary: -90
   m_Burnable: 1
   deathSoundName: DeathVoice
   damageSoundName: Grunt

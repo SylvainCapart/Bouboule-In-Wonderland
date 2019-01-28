@@ -9,6 +9,8 @@ public class GravityChange : MonoBehaviour
     [SerializeField] private CharacterController2D.GroundDirection m_TargetDir;
     private float[] m_DirAngles;
     private bool m_ShutOffExit;
+    private float m_ForceMagnitude;
+    private bool m_ZoneEntered;
 
     public CharacterController2D.GroundDirection TargetDir
     {
@@ -23,6 +25,8 @@ public class GravityChange : MonoBehaviour
             m_TargetDir = value;
         }
     }
+
+
 
     private void Start()
     {
@@ -46,6 +50,8 @@ public class GravityChange : MonoBehaviour
             Debug.LogError(name + " : gravity change direction unkown");
         }
 
+        m_ForceMagnitude = m_AreaEffector.forceMagnitude;
+
 
     }
 
@@ -53,7 +59,7 @@ public class GravityChange : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump"))
         {
-            StartCoroutine(ShutOffExit(0.4f));
+            StartCoroutine(ShutOffExit(0.01f));
         }
     }
 
@@ -61,24 +67,33 @@ public class GravityChange : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            Debug.Log("ENTER");
-            //collision.transform.parent = this.transform;
-            collision.GetComponent<Rigidbody2D>().gravityScale = 0f;
-            collision.GetComponent<CharacterController2D>().m_GroundDir = TargetDir;
-            collision.transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, m_DirAngles[(int)TargetDir] - 270f));
+            if (!m_ZoneEntered)
+            {
+                Debug.Log("ENTER");
+                //collision.transform.parent = this.transform;
+                collision.GetComponent<Rigidbody2D>().gravityScale = 0f;
+                collision.GetComponent<CharacterController2D>().m_GroundDir = TargetDir;
+                collision.transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, m_DirAngles[(int)TargetDir] - 270f));
+
+                m_ZoneEntered = true;
+            }
         }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        return;
         if (collision.tag == "Player")
         {
-            Debug.Log("STAY");
-            //collision.transform.parent = this.transform;
-            collision.GetComponent<Rigidbody2D>().gravityScale = 0f;
-            collision.GetComponent<CharacterController2D>().m_GroundDir = TargetDir;
-            collision.transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, m_DirAngles[(int)TargetDir] - 270f));
+            if (m_ZoneEntered)
+            {
+                if (collision.GetComponent<CharacterController2D>().Climbing)
+                    m_AreaEffector.forceMagnitude = 0;
+                else
+                    m_AreaEffector.forceMagnitude = m_ForceMagnitude;
+
+                collision.GetComponent<Rigidbody2D>().gravityScale = 0f;
+            }
+
         }
     }
 
@@ -86,11 +101,16 @@ public class GravityChange : MonoBehaviour
     {
         if (collision.tag == "Player" && !m_ShutOffExit)
         {
-            Debug.Log("EXIT");
-            //collision.transform.parent = null;
-            collision.GetComponent<Rigidbody2D>().gravityScale = 3.5f;
-            collision.GetComponent<CharacterController2D>().m_GroundDir = CharacterController2D.GroundDirection.BOTTOM;
-            collision.transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
+            if (m_ZoneEntered)
+            {
+                Debug.Log("EXIT");
+                if (!collision.GetComponent<CharacterController2D>().Climbing)
+                    collision.GetComponent<Rigidbody2D>().gravityScale = 3.5f;
+                collision.GetComponent<CharacterController2D>().m_GroundDir = CharacterController2D.GroundDirection.BOTTOM;
+                collision.transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, transform.rotation.y, 0f));
+
+                m_ZoneEntered = false;
+            }
         }
     }
 
@@ -99,5 +119,16 @@ public class GravityChange : MonoBehaviour
         m_ShutOffExit = true;
         yield return new WaitForSeconds(delay);
         m_ShutOffExit = false;
+    }
+
+    private void OnClimbChange(string status, bool state)
+    {
+        if (status == "Climbing")
+        {
+            if (!state)
+            {
+                //test
+            }
+        }
     }
 }

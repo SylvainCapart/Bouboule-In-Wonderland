@@ -10,8 +10,8 @@ public class GravityCheck : MonoBehaviour
         if (collision.tag == "Player")
         {
             Debug.Log("Reinit");
-            collision.GetComponent<Rigidbody2D>().gravityScale = m_GravityTarget;
-
+            //collision.GetComponent<Rigidbody2D>().gravityScale = m_GravityTarget;
+            collision.GetComponent<CharacterController2D>().m_GroundDir = CharacterController2D.GroundDirection.BOTTOM;
         }
     }
 }

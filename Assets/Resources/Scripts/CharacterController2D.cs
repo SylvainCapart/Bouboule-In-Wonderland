@@ -296,7 +296,7 @@ public class CharacterController2D : MonoBehaviour
                     m_Anim.SetBool("DirectionPressed", false);
                 }
 
-                this.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0f;
+
                 targetVelocity = new Vector2(xMove * m_climbSpeed * 10f, yMove * m_climbSpeed * 10f);
                 /*switch (m_GroundDir)
                 {
@@ -330,7 +330,7 @@ public class CharacterController2D : MonoBehaviour
                 }
 
                 m_Anim.SetBool("Swimming", Swimming);
-                this.gameObject.GetComponent<Rigidbody2D>().gravityScale = m_archimedeGravity;
+                //this.gameObject.GetComponent<Rigidbody2D>().gravityScale = m_archimedeGravity;
                 ////
                 targetVelocity = new Vector2(xMove * m_SwimSpeed * 10f * m_DrowningSpeedReduction, yMove * m_SwimSpeed * 10f * m_DrowningSpeedReduction);
             }
@@ -339,7 +339,7 @@ public class CharacterController2D : MonoBehaviour
                 m_Anim.SetBool("Climb", false);
                 m_Anim.SetBool("Swimming", false);
                 ////
-                this.gameObject.GetComponent<Rigidbody2D>().gravityScale = m_normalGravity;
+                //this.gameObject.GetComponent<Rigidbody2D>().gravityScale = m_normalGravity;
 
 
                 switch (m_GroundDir)
@@ -633,11 +633,10 @@ public class CharacterController2D : MonoBehaviour
 
         set
         {
-
-
-
             if (m_Rolling == value) return;
             m_Rolling = value;
+            if (m_Rolling)
+                this.gameObject.GetComponent<Rigidbody2D>().gravityScale = m_normalGravity;
             if (MovementStatusChange != null)
                 MovementStatusChange("Rolling", value);
         }
@@ -654,6 +653,11 @@ public class CharacterController2D : MonoBehaviour
         {
             if (m_Climbing == value) return;
             m_Climbing = value;
+            if (m_Climbing)
+                this.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0f;
+            else
+                this.gameObject.GetComponent<Rigidbody2D>().gravityScale = m_normalGravity;
+
             if (MovementStatusChange != null)
                 MovementStatusChange("Climbing", value);
         }
@@ -755,7 +759,7 @@ public class CharacterController2D : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag != "MovingGround" && Grounded)
+        if (transform.parent != null && collision.gameObject.tag != "MovingGround" && Grounded)
         {
             transform.parent = null;
         }
