@@ -120,7 +120,7 @@ public class OxygenMgt : MonoBehaviour
     private void OnParticleCollision(GameObject other)
     {
         if (other.tag == "StreamBubble")
-            stats.CurrentOxygen += 3;
+            stats.CurrentOxygen += 7;
 
     }
 }
