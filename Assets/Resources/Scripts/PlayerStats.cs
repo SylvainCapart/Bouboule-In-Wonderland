@@ -23,6 +23,8 @@ public class PlayerStats : MonoBehaviour
     public float m_StartPcHealh = 1f;
     public float m_StartPcOxygen = 1f;
     public int m_MaxOxygen = 100;
+    public int m_MaxBreatheCapa = 200;
+    public int m_MaxSpitCapa = 100;
     public float m_OxygenDecreaseRate = 1f;
     public float m_OxygenIncreaseRate = 1f;
     public float m_PassiveOxygenLossRate = 7f;

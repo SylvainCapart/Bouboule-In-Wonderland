@@ -50,8 +50,8 @@ public class Sound
 
 public class AudioManager : MonoBehaviour {
 
-    [SerializeField]
-    Sound[] sounds;
+    [SerializeField] private Sound[] sounds;
+    private Sound m_MainSound;
 
     public static AudioManager instance;
     [SerializeField] private bool m_IsCrossFading;
@@ -82,8 +82,8 @@ public class AudioManager : MonoBehaviour {
             sounds[i].SetSource(_obj.AddComponent<AudioSource>());
             sounds[i].initVol = sounds[i].volume;
         }
-
-        PlaySound("Music");
+        m_MainSound = GetSound("Music");
+        PlaySound(m_MainSound.name);
 
     }
 
@@ -186,7 +186,6 @@ public class AudioManager : MonoBehaviour {
 
     public void CrossFade(string soundToFade, string soundToPlay, float fadeDelay, float appearDelay, float targetVolume)
     {
-        Debug.Log("target vol : " + targetVolume);
         Sound source1 = GetSound(soundToFade);
         if (source1 == null)
         {

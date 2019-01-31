@@ -9986,7 +9986,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_CurrentHealth: 0
-  m_MaxHealth: 15
+  m_MaxHealth: 30
   m_StartPcHealh: 1
   m_Damage: 15
   m_HealthRegenRate: 20
@@ -10035,6 +10035,8 @@ MonoBehaviour:
   m_SpecificGiveup: {fileID: 0}
   m_PatrolPoints:
   - {fileID: 4034651750424472286}
+  m_LastPatrolIndex: 0
+  m_PatrolPointIndex: 0
   m_Randomize: 0
   m_PatrolSpeed: 2
   m_SleepRight: 0

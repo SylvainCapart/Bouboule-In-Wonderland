@@ -86,11 +86,13 @@ namespace UnityStandardAssets._2D
 
         public IEnumerator DampingShutOff(float delay)
         {
+            float oldamping = m_Damping;
+
             m_Damping = 0f;
 
             yield return new WaitForSeconds(delay);
 
-            m_Damping = 1f;
+            m_Damping = oldamping;
         }
     }
 

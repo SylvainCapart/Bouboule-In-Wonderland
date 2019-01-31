@@ -256,6 +256,8 @@ public class EnemyAI : MonoBehaviour
 
         State = (m_ModeEnabled[(int)EnemyState.PATROL] == true) ? EnemyState.PATROL : EnemyState.SLEEP;
         m_DetectionTransform = new GameObject().transform; // empty gameobject
+        m_DetectionTransform.parent = this.transform.parent;
+        m_DetectionTransform.name = "DetectionTransform";
 
     }
 

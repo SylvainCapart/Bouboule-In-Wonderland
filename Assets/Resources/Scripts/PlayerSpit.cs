@@ -37,7 +37,19 @@ public class PlayerSpit : MonoBehaviour
             m_SpitStatus = value;
             if (OnSpitModeChange != null)
                 OnSpitModeChange(m_SpitStatus);
+            if (m_SpitStatus == SpitParticle.BUBBLE)
+            {
+                stats.m_MaxOxygen = stats.m_MaxBreatheCapa;
+                stats.CurrentOxygen = Mathf.RoundToInt(stats.CurrentOxygen * stats.m_MaxBreatheCapa / stats.m_MaxSpitCapa);
             }
+
+            else if (m_SpitStatus == SpitParticle.FIRE)
+            {
+                stats.m_MaxOxygen = stats.m_MaxSpitCapa;
+                stats.CurrentOxygen = Mathf.RoundToInt(stats.CurrentOxygen * stats.m_MaxSpitCapa / stats.m_MaxBreatheCapa);
+            }
+
+        }
     }
 
     public bool IsSpittingAllowed
@@ -182,6 +194,11 @@ public class PlayerSpit : MonoBehaviour
 
         m_isSpitting = false;
 
+    }
+
+    private void OnDestroy()
+    {
+        StopSpit();
     }
 
 
