@@ -47,6 +47,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActivableObjectsArray:
   - {fileID: 3954884337438502093}
+  m_ActivationDistance: 15
+  m_DeactivationDistance: 15
 --- !u!1 &3954884336085275473
 GameObject:
   m_ObjectHideFlags: 0
@@ -4860,7 +4862,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 3
+      scalar: 1.1
       minScalar: 0.6
       maxCurve:
         serializedVersion: 2
@@ -8423,7 +8425,7 @@ ParticleSystem:
     radiusScale: 0.21
     collidesWith:
       serializedVersion: 2
-      m_Bits: 1591
+      m_Bits: 1552
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -10140,8 +10142,7 @@ MonoBehaviour:
     targettransform: {fileID: 0}
     targetpriority: 0
   m_TargetsArray:
-  - targetname: Player
-    targettag: Player
+  - targettag: Player
     priority: 5
   m_WhatIsTarget:
     serializedVersion: 2
@@ -10157,6 +10158,8 @@ MonoBehaviour:
   m_SpecificGiveup: {fileID: 0}
   m_PatrolPoints:
   - {fileID: 3954884337485328039}
+  m_LastPatrolIndex: 0
+  m_PatrolPointIndex: 0
   m_Randomize: 0
   m_PatrolSpeed: 2
   m_SleepRight: 0
@@ -10298,7 +10301,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3954884337485328032}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.52, y: -2.58, z: 0}
+  m_LocalPosition: {x: -4.37, y: -1.87, z: 0}
   m_LocalScale: {x: 3.7015, y: 3.7015, z: 3.7015}
   m_Children: []
   m_Father: {fileID: 3954884337319741744}

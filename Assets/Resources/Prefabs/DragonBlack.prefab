@@ -9539,7 +9539,7 @@ GameObject:
   m_Layer: 0
   m_Name: Point1
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -9551,7 +9551,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1265097912172432532}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.18, y: -0.03, z: 0}
+  m_LocalPosition: {x: 0.5, y: -0.91, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1265097913009405590}
@@ -9756,7 +9756,7 @@ GameObject:
   m_Layer: 0
   m_Name: Point0
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 8418204508859773708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -9768,7 +9768,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1265097912843622662}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.23, y: -1.38, z: 0}
+  m_LocalPosition: {x: 0.49, y: -0.93, z: 0}
   m_LocalScale: {x: 3.7015, y: 3.7015, z: 3.7015}
   m_Children: []
   m_Father: {fileID: 1265097913009405590}
@@ -10001,8 +10001,7 @@ MonoBehaviour:
     targettransform: {fileID: 0}
     targetpriority: 0
   m_TargetsArray:
-  - targetname: Player
-    targettag: Player
+  - targettag: Player
     priority: 5
   m_WhatIsTarget:
     serializedVersion: 2
@@ -10016,8 +10015,11 @@ MonoBehaviour:
   m_UndetectIfPlayerSwimIs: 1
   m_SleepScaleTrigger: 0.847
   m_SpecificGiveup: {fileID: 0}
+  m_FacingRight: 1
   m_PatrolPoints:
   - {fileID: 1265097912843622657}
+  m_LastPatrolIndex: 0
+  m_PatrolPointIndex: 0
   m_Randomize: 0
   m_PatrolSpeed: 2
   m_SleepRight: 0

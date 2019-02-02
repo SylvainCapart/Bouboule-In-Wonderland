@@ -185,7 +185,10 @@ public class CharacterController2D : MonoBehaviour
 
         // disable climbing if player is rolling
         if (roll && climb)
+        {
             climb = false;
+        }
+
 
         // if swimming, disable jump, rolling and climbing
         if (swim)
@@ -212,6 +215,7 @@ public class CharacterController2D : MonoBehaviour
             // If rolling
             if (roll)
             {
+                m_climbingTrigger.enabled = false;
                 float speedRatio = 0f;
 
                 // Reduce the speed by the m_rollSpeed multiplier
@@ -254,6 +258,7 @@ public class CharacterController2D : MonoBehaviour
             }
             else
             {
+                m_climbingTrigger.enabled = true;
                 m_Anim.SetBool("Roll", false);
                 m_RollCollider.enabled = false;
 

@@ -7,7 +7,6 @@ public class Repulse : MonoBehaviour {
     private float m_bumpActivationDelay = 0.5f;
     private float m_lastBumpActivation = 0.0f;
     public float m_repulsiveForce = 10f;
-    public float m_jumpRepulsiveForce = 30f;
     public float m_jewelRepulsiveForce = 20f;
     private Animator m_Anim;
 
@@ -36,35 +35,27 @@ public class Repulse : MonoBehaviour {
 
         if (collision.tag == "Player")
         {
-            if (collision.gameObject.GetComponent<CharacterController2D>().Jump)
+            if ((Time.time - m_lastBumpActivation) > m_bumpActivationDelay)
             {
-                m_repulsiveForce = 20f;
-            }
-            else
-            {
-                m_repulsiveForce = 10f;
-            }
-        }
-        if ((Time.time - m_lastBumpActivation) > m_bumpActivationDelay)
-        {
-            if (collision.tag == "Player" || collision.tag == "Jewel")
-            {
-                repulsiveVector = new Vector2(collision.transform.position.x - this.transform.position.x, collision.transform.position.y - this.transform.position.y);
-                incRb = collision.GetComponent<Rigidbody2D>();
-                if (incRb != null && m_Anim.GetBool("BounceActivation"))
+                if (collision.tag == "Player" || collision.tag == "Jewel")
                 {
-                    if (collision.tag == "Player")
-                        incRb.AddForce(repulsiveVector * m_repulsiveForce, ForceMode2D.Impulse);
-                    else if (collision.tag == "Jewel")
-                        incRb.AddForce(repulsiveVector * m_jewelRepulsiveForce, ForceMode2D.Impulse);
+                    repulsiveVector = new Vector2(collision.transform.position.x - this.transform.position.x, collision.transform.position.y - this.transform.position.y);
+                    incRb = collision.GetComponent<Rigidbody2D>();
+                    if (incRb != null && m_Anim.GetBool("BounceActivation"))
+                    {
+                        if (collision.tag == "Player")
+                            incRb.AddForce(repulsiveVector * m_repulsiveForce, ForceMode2D.Impulse);
+                        else if (collision.tag == "Jewel")
+                            incRb.AddForce(repulsiveVector * m_jewelRepulsiveForce, ForceMode2D.Impulse);
+                    }
+                    else
+                        Debug.Log("No RB found");
+
+                    m_lastBumpActivation = Time.time;
                 }
-                else
-                    Debug.Log("No RB found");
 
-                m_lastBumpActivation = Time.time;
+
             }
-
-
         }
     }
 

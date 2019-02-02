@@ -13,11 +13,16 @@ public class CoinCounter : MonoBehaviour
     {
         GameObject[] objs = GameObject.FindGameObjectsWithTag("Coin");
         GameObject[] chests = GameObject.FindGameObjectsWithTag("Chest");
+        GameObject[] chestsSimple = GameObject.FindGameObjectsWithTag("ChestSimple");
         m_CoinsLimit = objs.Length;
 
         for (int i = 0; i < chests.Length; i++)
         {
             m_CoinsLimit += chests[i].GetComponent<ChestMgt>().m_CoinsMax;
+        }
+        for (int i = 0; i < chestsSimple.Length; i++)
+        {
+            m_CoinsLimit += chestsSimple[i].GetComponent<ChestSimpleMgt>().m_CoinsMax;
         }
         m_CoinCounter = 0;
 

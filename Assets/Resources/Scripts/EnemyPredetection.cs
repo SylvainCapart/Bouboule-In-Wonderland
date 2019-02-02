@@ -21,7 +21,7 @@ public class EnemyPredetection : MonoBehaviour
             {
                 for (int i = 0; i < m_EnemyAI.m_TargetsArray.Length; i++)
                 {
-                    if (collision.tag == m_EnemyAI.m_TargetsArray[i].targettag && collision.name == m_EnemyAI.m_TargetsArray[i].targetname)
+                    if (collision.tag == m_EnemyAI.m_TargetsArray[i].targettag)
                     {
                         RaycastHit2D hit = Physics2D.Raycast(this.transform.position, collision.gameObject.transform.position - this.transform.position, 50f, m_EnemyAI.m_WhatIsTarget);
                         Debug.DrawLine(this.transform.position, collision.gameObject.transform.position);

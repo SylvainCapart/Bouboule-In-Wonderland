@@ -32,7 +32,6 @@ public class EnemyAI : MonoBehaviour
     [System.Serializable]
     public class TargetData
     {
-        public string targetname;
         public string targettag;
         public int priority;
     };
@@ -62,7 +61,7 @@ public class EnemyAI : MonoBehaviour
     [Header("Optional : ")] public EnemySpecificGiveup m_SpecificGiveup;
 
     // orientation
-    private bool m_FacingRight = true;
+    [HideInInspector] public bool m_FacingRight = true;
 
     /* ----------------------------- */
 

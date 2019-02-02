@@ -25,6 +25,7 @@ TagManager:
   - CoinCounter
   - MovingWater
   - MovingGround
+  - ChestSimple
   layers:
   - Default
   - TransparentFX

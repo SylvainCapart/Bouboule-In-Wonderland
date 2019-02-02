@@ -8,6 +8,9 @@ public class CoinMgt : MonoBehaviour {
     [SerializeField] private GameObject m_ExplosionCoin;
     [SerializeField] private GameObject m_Aura;
     private AudioManager audioManager;
+    private bool m_IsCollected;
+    private bool m_IsCollectable = false;
+    private float m_StartCollectDelay = 0.7f;
 
 
     private void Start()
@@ -17,12 +20,14 @@ public class CoinMgt : MonoBehaviour {
         {
             Debug.LogError("No audioManager found in " + this.name);
         }
+        StartCoroutine(CollectShutoffCo());
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player" && m_IsCollectable && !m_IsCollected)
         {
+            m_IsCollected = true;
             GameObject explosionClone;
             GameObject coinCounter = GameObject.Find("CoinCounter");
             if (coinCounter != null)
@@ -45,5 +50,11 @@ public class CoinMgt : MonoBehaviour {
             Destroy(explosionClone, 1f);
             Destroy(this.gameObject, 1f);
         }
+    }
+
+    private IEnumerator CollectShutoffCo()
+    {
+        yield return new WaitForSeconds(m_StartCollectDelay);
+        m_IsCollectable = true;
     }
 }

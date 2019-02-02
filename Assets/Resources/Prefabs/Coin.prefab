@@ -221,4 +221,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ExplosionCoin: {fileID: 1651614386522964, guid: 04c0881686b926042bccdd30e74b6e8c,
     type: 3}
-  m_Aura: {fileID: 0}
+  m_Aura: {fileID: 8687307565623504704}
