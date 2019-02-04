@@ -13,6 +13,7 @@ public class CoinCounter : MonoBehaviour
     {
         GameObject[] objs = GameObject.FindGameObjectsWithTag("Coin");
         GameObject[] chests = GameObject.FindGameObjectsWithTag("Chest");
+        GameObject[] chestsghost = GameObject.FindGameObjectsWithTag("ChestGhost");
         GameObject[] chestsSimple = GameObject.FindGameObjectsWithTag("ChestSimple");
         m_CoinsLimit = objs.Length;
 
@@ -24,6 +25,10 @@ public class CoinCounter : MonoBehaviour
         {
             m_CoinsLimit += chestsSimple[i].GetComponent<ChestSimpleMgt>().m_CoinsMax;
         }
+        /*for (int i = 0; i < chestsghost.Length; i++)
+        {
+            m_CoinsLimit += chestsghost[i].GetComponentInChildren<ChestSimpleMgt>().m_CoinsMax;
+        }*/
         m_CoinCounter = 0;
 
     }
