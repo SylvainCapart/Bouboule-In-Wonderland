@@ -130,3 +130,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SawDamage: 30
+  m_SawDamageDelay: 0.2

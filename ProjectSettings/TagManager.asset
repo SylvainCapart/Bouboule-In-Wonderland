@@ -26,6 +26,7 @@ TagManager:
   - MovingWater
   - MovingGround
   - ChestSimple
+  - ChestGhost
   layers:
   - Default
   - TransparentFX

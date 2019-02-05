@@ -12,12 +12,12 @@ public class AudioSourceResetShutoff : MonoBehaviour
 
     private void OnEnable()
     {
-        GameMaster.ResetDelegate += AudioSourceShutoff;
+        GameMaster.AudioResetDelegate += AudioSourceShutoff;
     }
 
     private void OnDisable()
     {
-        GameMaster.ResetDelegate -= AudioSourceShutoff;
+        GameMaster.AudioResetDelegate -= AudioSourceShutoff;
     }
 
 

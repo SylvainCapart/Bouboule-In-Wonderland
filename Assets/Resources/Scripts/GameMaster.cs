@@ -38,6 +38,8 @@ public class GameMaster : MonoBehaviour
 
     public delegate void OnResetDelegate();
     public static event OnResetDelegate ResetDelegate;
+    public delegate void OnAudioResetDelegate();
+    public static event OnAudioResetDelegate AudioResetDelegate;
 
     public bool m_DebugMode;
 
@@ -148,7 +150,7 @@ public class GameMaster : MonoBehaviour
         cameraFollow.target = clone.transform;
 
         if (ResetDelegate != null)
-            ResetDelegate(); // called a second time to relink the statusindicator in the new player instance
+            ResetDelegate(); // called to relink the statusindicator in the new player instance
         isRespawning = false;
 
     }
@@ -157,9 +159,12 @@ public class GameMaster : MonoBehaviour
     {
         if (player.gameObject != null)
         {
+            if (AudioResetDelegate != null)
+                AudioResetDelegate(); // called to deactivate the audiosource linked to the player's audiolistener that is to be destroyed
+
+            DeathCounter.instance.DeathCount += 1;
             Destroy(player.gameObject);
-            if (ResetDelegate != null)
-                ResetDelegate(); // called a first time to deactivate the audiosource linked to the player's audiolistener that is to be destroyed
+
         }
         else return;
 

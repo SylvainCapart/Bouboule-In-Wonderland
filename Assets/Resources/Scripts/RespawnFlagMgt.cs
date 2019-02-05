@@ -9,6 +9,8 @@ public class RespawnFlagMgt : MonoBehaviour {
     public enum FlagState { RED, GREEN };
     [SerializeField] private FlagState m_State;
 
+    public delegate void RespawnFlagDelegate(bool state);
+    public static event RespawnFlagDelegate OnRespawnFlagStay;
 
     public FlagState State
     {
@@ -63,10 +65,21 @@ public class RespawnFlagMgt : MonoBehaviour {
             GameMaster.gm.ResetFlagsExcept(gameObject);
             State = FlagState.GREEN;
             GameMaster.gm.SpawnPoint = this.gameObject;
+
+            if (OnRespawnFlagStay != null)
+                OnRespawnFlagStay(true);
         }
     }
 
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            if (OnRespawnFlagStay != null)
+                OnRespawnFlagStay(false);
+        }
+    }
 
 
 

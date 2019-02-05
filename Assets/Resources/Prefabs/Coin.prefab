@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 8687307567200032965}
   - component: {fileID: 8687307567200032966}
   - component: {fileID: 8687307567200032967}
+  - component: {fileID: 1786190196}
   m_Layer: 0
   m_Name: Coin
   m_TagString: Coin
@@ -106,7 +107,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8687307567200032969}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 20.27, y: -4.8, z: 0}
   m_LocalScale: {x: 0.29999998, y: 0.29999998, z: 1}
   m_Children:
@@ -222,3 +223,21 @@ MonoBehaviour:
   m_ExplosionCoin: {fileID: 1651614386522964, guid: 04c0881686b926042bccdd30e74b6e8c,
     type: 3}
   m_Aura: {fileID: 8687307565623504704}
+--- !u!114 &1786190196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8687307567200032969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c11911eda422455da0acd4272a8c318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_player: {fileID: 0}
+  m_UIOverlay: {fileID: 0}
+  m_ArrowParent: {fileID: 0}
+  m_targetIcon: {fileID: 21300000, guid: 7cd0748d8980f4111847163f7aebdb01, type: 3}
+  m_targetIconScale: {x: 0.25, y: 0.25, z: 1}
+  m_ArrowOffs: 10
