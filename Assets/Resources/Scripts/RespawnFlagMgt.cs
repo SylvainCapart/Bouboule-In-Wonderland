@@ -68,6 +68,8 @@ public class RespawnFlagMgt : MonoBehaviour {
 
             if (OnRespawnFlagStay != null)
                 OnRespawnFlagStay(true);
+
+            GameMaster.gm.LastMainSoundStr = AudioManager.instance.MainSound.name;
         }
     }
 

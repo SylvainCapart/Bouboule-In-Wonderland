@@ -12,12 +12,14 @@ public class AudioSourceResetShutoff : MonoBehaviour
 
     private void OnEnable()
     {
-        GameMaster.AudioResetDelegate += AudioSourceShutoff;
+        GameMaster.OnPlayerKill += MuteSourceOn;
+        GameMaster.OnPlayerRespawn += MuteSourceOff;
     }
 
     private void OnDisable()
     {
-        GameMaster.AudioResetDelegate -= AudioSourceShutoff;
+        GameMaster.OnPlayerKill -= MuteSourceOn;
+        GameMaster.OnPlayerRespawn -= MuteSourceOff;
     }
 
 
@@ -32,6 +34,16 @@ public class AudioSourceResetShutoff : MonoBehaviour
     {
         m_AudioSource.mute = true;
         yield return new WaitForSeconds(2.5f);
+        m_AudioSource.mute = false;
+    }
+
+    private void MuteSourceOn()
+    {
+        m_AudioSource.mute = true;
+    }
+
+    private void MuteSourceOff()
+    {
         m_AudioSource.mute = false;
     }
 

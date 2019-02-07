@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CameraShake : MonoBehaviour {
 
+    public static CameraShake instance;
     public Camera mainCam;
 
     float shakeAmount = 0f;
@@ -12,6 +13,18 @@ public class CameraShake : MonoBehaviour {
         if (mainCam == null)
         {
             mainCam = Camera.main;
+        }
+
+        if (instance != null)
+        {
+            if (instance != this)
+            {
+                Destroy(this.gameObject);
+            }
+        }
+        else
+        {
+            instance = this;
         }
     }
 

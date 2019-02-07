@@ -85,13 +85,13 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-        GameMaster.ResetDelegate += OnReset;
+        GameMaster.OnPlayerRespawn += OnReset;
         CharacterController2D.MovementStatusChange += OnSwim;
     }
 
     private void OnDisable()
     {
-        GameMaster.ResetDelegate -= OnReset;
+        GameMaster.OnPlayerRespawn -= OnReset;
         CharacterController2D.MovementStatusChange += OnSwim;
     }
 

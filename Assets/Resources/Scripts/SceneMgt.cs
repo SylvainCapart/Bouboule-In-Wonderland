@@ -6,7 +6,7 @@ public class SceneMgt : MonoBehaviour
     [SerializeField] private Dialogue m_CurrentDialogue;
     private DialogueMgt m_DialogueManager;
     private AudioManager m_AudioManager;
-    private CameraShake cameraShake;
+    private CameraShake m_CameraShake;
 
     //specific members, to be removed in case of new import
     private PlayerMovement m_PlayerMov;
@@ -34,9 +34,9 @@ public class SceneMgt : MonoBehaviour
                 Debug.LogError(name + " no PlayerMov found");
         }
 
-        m_DialogueManager = FindObjectOfType<DialogueMgt>();
-        m_AudioManager = FindObjectOfType<AudioManager>();
-        cameraShake = FindObjectOfType<CameraShake>();
+        m_DialogueManager = DialogueMgt.instance;
+        m_AudioManager = AudioManager.instance;
+        m_CameraShake = CameraShake.instance;
     }
 
     // Specific methods may have to be re written in cas of new import
@@ -45,6 +45,7 @@ public class SceneMgt : MonoBehaviour
         m_Barrier1.SetActive(true);
         m_CurrentDialogue = dialogue;
         m_AudioManager.CrossFade("Music", "MusicSorcerer", 3f, 3f, 0.5f);
+
         //specific operations
         m_PlayerMov.IsMovementAllowed = false;
 
@@ -66,7 +67,7 @@ public class SceneMgt : MonoBehaviour
 
                         yield return new WaitForSeconds(3f);
                         m_AudioManager.PlaySound("Fire");
-                        cameraShake.Shake(0.02f, 1.25f);
+                        m_CameraShake.Shake(0.02f, 1.25f);
                         yield return new WaitForSeconds(1.17f);
                         yield return new WaitForSeconds(0.2f);
                         m_AudioManager.StopSound("Fire");
@@ -76,7 +77,7 @@ public class SceneMgt : MonoBehaviour
                         m_AudioManager.StopSound("DragonFire");
                         m_AudioManager.PlaySound("DragonDie");
                         yield return new WaitForSeconds(0.07f);
-                        cameraShake.Shake(0.5f, 0.2f);
+                        m_CameraShake.Shake(0.5f, 0.2f);
                         m_AudioManager.PlaySound("WoodImpact");
                         yield return new WaitForSeconds(m_CurrentDialogue.scenes[1].sceneClip.length - 6.17f);
                         Destroy(m_FirstDragon);

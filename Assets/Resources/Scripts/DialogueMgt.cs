@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class DialogueMgt : MonoBehaviour {
 
-
+    public static DialogueMgt instance;
 
     private Queue<string> sentences;
     private Dialogue m_CurrentDialogue;
@@ -19,19 +19,28 @@ public class DialogueMgt : MonoBehaviour {
     private Coroutine m_TypeSentenceCo;
 
 
-
-
-
     // Use this for initialization
-    void Start () {
-
+    void Start () 
+    {
         sentences = new Queue<string>();
 
         if (m_ContinueButton == null)
             Debug.LogError(name + " : continue button is missing");
+    }
 
-
-
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            if (instance != this)
+            {
+                Destroy(this.gameObject);
+            }
+        }
+        else
+        {
+            instance = this;
+        }
     }
 
     private void Update()

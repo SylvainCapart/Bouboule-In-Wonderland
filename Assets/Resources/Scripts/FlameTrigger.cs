@@ -8,6 +8,7 @@ public class FlameTrigger : MonoBehaviour
     private ParticleSystem.Particle[] particles;
     [SerializeField] private GameObject[] m_ObjectToEnable;
     [SerializeField] private Collider2D m_SausageCollider;
+    private DialogueMgt m_DialogueMgt;
 
     private void Start()
     {
@@ -18,6 +19,7 @@ public class FlameTrigger : MonoBehaviour
         {
             Destroy(this);
         }
+        m_DialogueMgt = DialogueMgt.instance;
 
     }
 
@@ -41,11 +43,11 @@ public class FlameTrigger : MonoBehaviour
                         if (m_ObjectToEnable[j] != null)
                             m_ObjectToEnable[j].SetActive(true);
                     }
-                    DialogueMgt dialogueMgt = FindObjectOfType<DialogueMgt>();
-                    if (dialogueMgt != null)
+
+                    if (m_DialogueMgt != null)
                     {
-                        dialogueMgt.DisplayNextSentence();
-                        dialogueMgt.ShutOffContinueButton();
+                        m_DialogueMgt.DisplayNextSentence();
+                        m_DialogueMgt.ShutOffContinueButton();
                     }
 
 
@@ -54,22 +56,5 @@ public class FlameTrigger : MonoBehaviour
                 }
             }
         }
-
-
-        //if (Physics2D.OverlapPoint(particles[i].position) == m_SausageCollider)
-            //if (particles[i].position.y > (closesttilemap.GetComponent<CompositeCollider2D>().bounds.center.y + closesttilemap.GetComponent<CompositeCollider2D>().bounds.extents.y))
-            
-        /*
-        Debug.LogError("HERE3");
-        m_FireTriggered = true;
-        for (int i = 0; i < m_ObjectToEnable.Length; i++)
-        {
-            if (m_ObjectToEnable[i] != null)
-            m_ObjectToEnable[i].SetActive(true);
-        }
-        FindObjectOfType<DialogueMgt>().DisplayNextSentence();*/
-
     }
-
-
 }

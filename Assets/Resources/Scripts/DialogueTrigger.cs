@@ -5,22 +5,22 @@ using UnityEngine;
 public class DialogueTrigger : MonoBehaviour {
 
     public Dialogue dialogue;
-    
+    private DialogueMgt m_DialogueMgt;
 
     public void TriggerDialogue()
     {
-        FindObjectOfType<DialogueMgt>().StartDialogue(dialogue);
+        m_DialogueMgt.StartDialogue(dialogue);
     }
 
     public void Start()
     {
-        //StartCoroutine(AutoTriggerDialogue());
+        m_DialogueMgt = DialogueMgt.instance;
     }
 
     private IEnumerator AutoTriggerDialogue()
     {
         yield return (new WaitForSeconds(1f));
-        FindObjectOfType<DialogueMgt>().StartDialogue(dialogue);
+        m_DialogueMgt.StartDialogue(dialogue);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

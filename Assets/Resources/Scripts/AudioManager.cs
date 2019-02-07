@@ -82,8 +82,8 @@ public class AudioManager : MonoBehaviour {
             sounds[i].SetSource(_obj.AddComponent<AudioSource>());
             sounds[i].initVol = sounds[i].volume;
         }
-        m_MainSound = GetSound("Music");
-        PlaySound(m_MainSound.name);
+        MainSound = GetSound("Music");
+        PlaySound(MainSound.name);
 
     }
 
@@ -186,6 +186,9 @@ public class AudioManager : MonoBehaviour {
 
     public void CrossFade(string soundToFade, string soundToPlay, float fadeDelay, float appearDelay, float targetVolume)
     {
+        if (soundToFade == soundToPlay)
+            return;
+
         Sound source1 = GetSound(soundToFade);
         if (source1 == null)
         {
@@ -193,6 +196,8 @@ public class AudioManager : MonoBehaviour {
             return;
         }
         Sound source2 = GetSound(soundToPlay);
+        MainSound = source2;
+
         if (source2 == null)
         {
             Debug.Log("No sound found in AudioManager with that name : " + soundToPlay);
@@ -235,7 +240,47 @@ public class AudioManager : MonoBehaviour {
         yield return null;
     }
 
-    
+    public void StopSoundSmooth(string soundToFade, float fadeDelay)
+    {
+
+        Sound source1 = GetSound(soundToFade);
+        if (source1 == null)
+        {
+            Debug.Log("No sound found in AudioManager with that name : " + soundToFade);
+            return;
+        }
+
+        m_CrossFadeCo = StartCoroutine(StopSoundSmooth(source1, fadeDelay));
+    }
+
+    public IEnumerator StopSoundSmooth(Sound soundToFade, float fadeDelay)
+    {
+
+        float initialFadeVolume = soundToFade.source.volume;
+
+        for (float t = 0.0f; t < fadeDelay; t += Time.deltaTime)
+        {
+            soundToFade.source.volume = initialFadeVolume * (1 - t / fadeDelay);
+            yield return null;
+        }
+        soundToFade.Stop();
+
+        yield return null;
+    }
+
+
+    public Sound MainSound
+    {
+        get
+        {
+            return m_MainSound;
+        }
+
+        set
+        {
+            m_MainSound = value;
+        }
+    }
 
 
 }

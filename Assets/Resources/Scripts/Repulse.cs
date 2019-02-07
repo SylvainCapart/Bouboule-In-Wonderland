@@ -50,8 +50,6 @@ public class Repulse : MonoBehaviour
                     else if (collision.tag == "Jewel")
                         incRb.AddForce(repulsiveVector * m_jewelRepulsiveForce, ForceMode2D.Impulse);
                 }
-                else
-                    Debug.Log("No RB found");
 
                 m_lastBumpActivation = Time.time;
             }

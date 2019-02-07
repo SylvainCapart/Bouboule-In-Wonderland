@@ -31,11 +31,10 @@ public class ChestMgt : MonoBehaviour
 
         if (resetButton == null)
             resetButton = GameObject.Find("UIOverlay").transform.Find("JewelResetButton");
+            
+        cameraShake = CameraShake.instance;
 
-        if (cameraShake == null)
-            cameraShake = FindObjectOfType<CameraShake>();
-
-        m_AudioManager = FindObjectOfType<AudioManager>();
+        m_AudioManager = AudioManager.instance;
 
     }
 

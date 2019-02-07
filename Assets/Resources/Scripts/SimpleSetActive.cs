@@ -8,6 +8,12 @@ public class SimpleSetActive : MonoBehaviour
     [SerializeField] private bool m_ActiveState;
     private bool m_IsActivated = false;
     [SerializeField] private bool m_ShakeCamera = false;
+    private CameraShake m_CameraShake;
+
+    private void Start()
+    {
+        m_CameraShake = CameraShake.instance;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -18,7 +24,7 @@ public class SimpleSetActive : MonoBehaviour
                 m_Objects[i].SetActive(m_ActiveState);
             }
             if (m_ShakeCamera)
-                FindObjectOfType<CameraShake>().Shake(0.2f, 0.2f);
+                m_CameraShake.Shake(0.2f, 0.2f);
 
             m_IsActivated = true;
         }
@@ -33,7 +39,7 @@ public class SimpleSetActive : MonoBehaviour
                 m_Objects[i].SetActive(m_ActiveState);
             }
             if (m_ShakeCamera)
-                FindObjectOfType<CameraShake>().Shake(0.2f, 0.2f);
+                m_CameraShake.Shake(0.2f, 0.2f);
 
             m_IsActivated = true;
         }

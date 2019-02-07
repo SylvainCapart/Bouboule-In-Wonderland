@@ -235,9 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c11911eda422455da0acd4272a8c318, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_player: {fileID: 0}
-  m_UIOverlay: {fileID: 0}
-  m_ArrowParent: {fileID: 0}
+  m_ArrowParentStr: CoinsOTI
   m_targetIcon: {fileID: 21300000, guid: 7cd0748d8980f4111847163f7aebdb01, type: 3}
   m_targetIconScale: {x: 0.25, y: 0.25, z: 1}
   m_ArrowOffs: 10

@@ -15,16 +15,16 @@ public class WoodBreak : MonoBehaviour
             m_Anim = GetComponent<Animator>();
         if (m_BoxCollider == null)
             m_BoxCollider = GetComponent<BoxCollider2D>();
-        if (m_CameraShake == null)
-            m_CameraShake = FindObjectOfType<CameraShake>();
-        if (m_AudioManager == null)
-            m_AudioManager = FindObjectOfType<AudioManager>();
+
+        m_CameraShake = CameraShake.instance;
+
+        m_AudioManager = AudioManager.instance;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -44,7 +44,7 @@ public class WoodBreak : MonoBehaviour
                     collision.gameObject.GetComponent<Rigidbody2D>().velocity -= new Vector2(0f, 3f);
                 }
 
-                
+
 
                 m_BoxCollider.enabled = false;
                 m_CameraShake.Shake(0.2f, 0.2f);

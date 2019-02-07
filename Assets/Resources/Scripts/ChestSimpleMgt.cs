@@ -12,7 +12,7 @@ public class ChestSimpleMgt : MonoBehaviour
     [SerializeField] private float m_CoinsRangeY = 1f;
 
     private Animator m_Anim;
-    [SerializeField] private CameraShake cameraShake;
+    [SerializeField] private CameraShake m_CameraShake;
     private AudioManager m_AudioManager;
 
     private void Start()
@@ -21,11 +21,10 @@ public class ChestSimpleMgt : MonoBehaviour
         m_Anim = this.GetComponent<Animator>();
         if (m_Anim == null)
             Debug.LogError(this.name + " : Animator not found");
-            
-        if (cameraShake == null)
-            cameraShake = FindObjectOfType<CameraShake>();
 
-        m_AudioManager = FindObjectOfType<AudioManager>();
+        m_CameraShake = CameraShake.instance;
+
+        m_AudioManager = AudioManager.instance;
 
     }
 
@@ -54,7 +53,7 @@ public class ChestSimpleMgt : MonoBehaviour
                 coinClone.transform.parent = GameObject.Find("Coins").transform;
             }
             m_AudioManager.PlaySound("Explosion");
-            cameraShake.Shake(0.2f, 0.4f);
+            m_CameraShake.Shake(0.2f, 0.4f);
 
             Destroy(explosionClone, m_ExplosionOnDeletePrefab.GetComponent<ParticleSystem>().main.startLifetime.constant + m_ExplosionOnDeletePrefab.GetComponent<ParticleSystem>().main.duration);
             Destroy(this.gameObject);

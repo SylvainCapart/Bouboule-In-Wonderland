@@ -16,33 +16,25 @@ public class GameMaster : MonoBehaviour
     [SerializeField] private float m_AppearDelay = 1f;
 
     public bool isRespawning = false;
-    //public Transform spawnPrefab;
 
-
-    public string respawnCountdownSoundName = "RespawnCountdown";
-    public string spawnSoundName = "Spawn";
     public string gameOverSoundName = "GameOver";
 
-    public CameraShake cameraShake;
+    public CameraShake m_CameraShake;
 
-    //[SerializeField]
-    //private Transform gameOverUI;
+    private AudioManager m_AudioManager;
+    [SerializeField] private string m_LastMainSoundStr = "Music";
 
-    //[SerializeField]
-    //private GameObject upgradeMenu;
-
-    public delegate void UpgradeMenuCallback(bool active);
-    public UpgradeMenuCallback onToggleUpgrademenu;
-
-    private AudioManager audioManager;
-
-    public delegate void OnResetDelegate();
-    public static event OnResetDelegate ResetDelegate;
-    public delegate void OnAudioResetDelegate();
-    public static event OnAudioResetDelegate AudioResetDelegate;
+    public delegate void PlayerRespawnDelegate();
+    public static event PlayerRespawnDelegate OnPlayerRespawn;
+    public delegate void PlayerKillDelegate();
+    public static event PlayerKillDelegate OnPlayerKill;
 
     public bool m_DebugMode;
+    private bool m_EndReached;
 
+    [SerializeField] private GameObject m_IntroScene;
+    [SerializeField] private GameObject m_EndScene;
+    [SerializeField] private Transform m_EndPlayerPos;
 
     /*[SerializeField]
     private WaveSpawner waveSpawner;*/
@@ -54,6 +46,31 @@ public class GameMaster : MonoBehaviour
         set { gm.m_SpawnPoint = value; }
     }
 
+    public bool EndReached
+    {
+        get
+        {
+            return m_EndReached;
+        }
+
+        set
+        {
+            m_EndReached = value;
+            if (m_EndReached == true)
+            {
+                m_IntroScene.SetActive(false);
+                m_EndScene.SetActive(true);
+                SpawnPoint = m_EndPlayerPos.gameObject;
+                Player player = FindObjectOfType<Player>();
+                if (player != null)
+                    KillPlayer(player);
+
+            }
+        }
+    }
+
+
+
     /*public RespawnFlagMgt LastRespawnMgt
     {
         get{return gm.m_LastRespawnMgt;}
@@ -62,7 +79,7 @@ public class GameMaster : MonoBehaviour
 
     public void EndGame()
     {
-        //audioManager.PlaySound(gameOverSoundName);
+        //m_AudioManager.PlaySound(gameOverSoundName);
         //gameOverUI.gameObject.SetActive(true);
     }
 
@@ -70,15 +87,9 @@ public class GameMaster : MonoBehaviour
     {
         Screen.fullScreen = false;
 
-        if (cameraShake == null)
-        {
-            Debug.LogError("No camera shake found in Gamemaster");
-        }
-        audioManager = AudioManager.instance;
-        if (audioManager == null)
-        {
-            Debug.LogError("AudioManager missing in GameMaster");
-        }
+        m_CameraShake = CameraShake.instance;
+
+        m_AudioManager = AudioManager.instance;
 
         m_SpawnArray = GameObject.FindGameObjectsWithTag("Flag");
         if (m_SpawnArray.Length >= 1)
@@ -105,24 +116,20 @@ public class GameMaster : MonoBehaviour
 
     void Awake()
     {
-        if (gm == null)
-            gm = GameObject.FindGameObjectWithTag("GM").GetComponent<GameMaster>();
-    }
+        //if (gm == null)
+        //  gm = GameObject.FindGameObjectWithTag("GM").GetComponent<GameMaster>();
 
-
-    private void Update()
-    {
-        if (!isRespawning && Input.GetKeyDown(KeyCode.U))
+        if (gm != null)
         {
-            //ToggleUpgradeMenu();
+            if (gm != this)
+            {
+                Destroy(this.gameObject);
+            }
         }
-    }
-
-    private void ToggleUpgradeMenu()
-    {
-        //upgradeMenu.SetActive(!upgradeMenu.activeSelf);
-        //waveSpawner.enabled = !upgradeMenu.activeSelf;
-        //onToggleUpgrademenu.Invoke(upgradeMenu.activeSelf);
+        else
+        {
+            gm = this;
+        }
     }
 
     public IEnumerator RespawnPlayer()
@@ -149,22 +156,24 @@ public class GameMaster : MonoBehaviour
 
         cameraFollow.target = clone.transform;
 
-        if (ResetDelegate != null)
-            ResetDelegate(); // called to relink the statusindicator in the new player instance
+        if (OnPlayerRespawn != null)
+            OnPlayerRespawn(); // called to relink the statusindicator in the new player instance
         isRespawning = false;
 
     }
 
     public static void KillPlayer(Player player)
     {
+
+
         if (player.gameObject != null)
         {
-            if (AudioResetDelegate != null)
-                AudioResetDelegate(); // called to deactivate the audiosource linked to the player's audiolistener that is to be destroyed
+            if (OnPlayerKill != null)
+                OnPlayerKill(); // called to deactivate the audiosource linked to the player's audiolistener that is to be destroyed
 
+            AudioManager.instance.CrossFade(AudioManager.instance.MainSound.name, gm.m_LastMainSoundStr, 2f, 2f, AudioManager.instance.GetSound(gm.m_LastMainSoundStr).initVol);
             DeathCounter.instance.DeathCount += 1;
             Destroy(player.gameObject);
-
         }
         else return;
 
@@ -181,14 +190,10 @@ public class GameMaster : MonoBehaviour
     {
         //sound
         if (_enemy.m_DeathSoundName != "")
-            audioManager.PlaySound(_enemy.m_DeathSoundName);
-
-        //particles
-        //Transform clone = Instantiate(_enemy.deathParticles, _enemy.transform.position, Quaternion.identity);
-        //Destroy(clone.gameObject, 5f);
+            m_AudioManager.PlaySound(_enemy.m_DeathSoundName);
 
         //camerashake
-        cameraShake.Shake(_enemy.m_ShakeAmountAmt, _enemy.m_ShakeLength);
+        m_CameraShake.Shake(_enemy.m_ShakeAmountAmt, _enemy.m_ShakeLength);
 
         Destroy(_enemy.gameObject);
 
@@ -205,6 +210,19 @@ public class GameMaster : MonoBehaviour
             if (m_SpawnArray[i].GetComponent<RespawnFlagMgt>().State == RespawnFlagMgt.FlagState.GREEN
             && m_SpawnArray[i] != gameObj)
                 m_SpawnArray[i].GetComponent<RespawnFlagMgt>().State = RespawnFlagMgt.FlagState.RED;
+        }
+    }
+
+    public string LastMainSoundStr
+    {
+        get
+        {
+            return m_LastMainSoundStr;
+        }
+
+        set
+        {
+            m_LastMainSoundStr = value;
         }
     }
 

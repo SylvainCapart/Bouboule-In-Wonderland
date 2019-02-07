@@ -26,13 +26,13 @@ public class WaterShade : MonoBehaviour
     {
         //m_SpriteRenderer.transform.parent = this.transform;
         CharacterController2D.MovementStatusChange += SwimShader;
-        GameMaster.ResetDelegate += ResetShade;
+        GameMaster.OnPlayerRespawn += ResetShade;
     }
 
     private void OnDisable()
     {
         CharacterController2D.MovementStatusChange -= SwimShader;
-        GameMaster.ResetDelegate -= ResetShade;
+        GameMaster.OnPlayerRespawn -= ResetShade;
     }
 
     private void ResetShade()

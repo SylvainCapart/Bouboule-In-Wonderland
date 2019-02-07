@@ -24,9 +24,9 @@ public class Eraser : MonoBehaviour
     private void Start()
     {
         if (m_ShakeCamera)
-            m_CameraShake = FindObjectOfType<CameraShake>();
+            m_CameraShake = CameraShake.instance;
         if (m_PlaySound)
-            m_AudioManager = FindObjectOfType<AudioManager>();
+            m_AudioManager = AudioManager.instance;
     }
 
     // Update is called once per frame

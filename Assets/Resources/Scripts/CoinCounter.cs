@@ -10,6 +10,30 @@ public class CoinCounter : MonoBehaviour
     [SerializeField] private ChestMgt[] m_ChestsMgt;
     [SerializeField] private ChestSimpleMgt[] m_ChestsSimpleMgt;
 
+    public int CoinCounterGetSet
+    {
+        get
+        {
+            return m_CoinCounter;
+        }
+
+        set
+        {
+            m_CoinCounter = value;
+            m_CoinText.text = m_CoinCounter.ToString() + " / " + m_CoinsLimit;
+            if (m_CoinCounter == m_CoinsLimit)
+                GameMaster.gm.EndReached = true;
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            CoinCounterGetSet = m_CoinsLimit - 1;
+        }
+    }
+
     // Use this for initialization
     void Start()
     {
@@ -26,23 +50,13 @@ public class CoinCounter : MonoBehaviour
             m_CoinsLimit += m_ChestsSimpleMgt[i].m_CoinsMax;
         }
 
-        m_CoinCounter = 0;
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        m_CoinText.text = m_CoinCounter.ToString() + " / " + m_CoinsLimit;
+        CoinCounterGetSet = 0;
 
     }
 
     public void IncreaseCoinCount()
     {
-
-        m_CoinCounter++;
-
-
+        CoinCounterGetSet++;
     }
 
 }

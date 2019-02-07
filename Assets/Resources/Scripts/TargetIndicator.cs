@@ -4,8 +4,8 @@ using UnityEngine.UI;
 public class TargetIndicator : MonoBehaviour
 {
     private GameObject m_player;
-     private GameObject m_UIOverlay;
-     private Transform m_ArrowParent;
+    private Transform m_ArrowParent;
+    [SerializeField] private string m_ArrowParentStr;
     private Camera mainCamera;
     private RectTransform m_icon;
     private Text m_ArrowText;
@@ -15,15 +15,16 @@ public class TargetIndicator : MonoBehaviour
     [SerializeField] private Vector3 m_targetIconScale;
     [SerializeField] private float m_ArrowOffs;
 
+
+
     void Start()
     {
 
         m_player = FindObjectOfType<Player>().gameObject;
-        m_UIOverlay = GameObject.Find("UIOverlay");
-        m_ArrowParent = GameObject.Find("CoinsOTI").transform;
+
+        m_ArrowParent = GameObject.Find(m_ArrowParentStr).transform;
         mainCamera = Camera.main;
-        mainCanvas = m_UIOverlay.GetComponent<Canvas>();
-        Debug.Assert((mainCanvas != null), "There needs to be a Canvas object in the scene for the OTI to display");
+
         InstantiateTargetIcon();
     }
 
@@ -35,12 +36,18 @@ public class TargetIndicator : MonoBehaviour
     private void OnEnable()
     {
         RespawnFlagMgt.OnRespawnFlagStay += SetOTIState;
+        GameMaster.OnPlayerKill += SetOTIInactive;
+        GameMaster.OnPlayerRespawn += SetOTIActive;
     }
 
     private void OnDisable()
     {
         RespawnFlagMgt.OnRespawnFlagStay -= SetOTIState;
+        GameMaster.OnPlayerKill -= SetOTIInactive;
+        GameMaster.OnPlayerRespawn -= SetOTIActive;
     }
+
+
 
     private void UpdateTargetIconPosition()
     {
@@ -91,13 +98,20 @@ public class TargetIndicator : MonoBehaviour
     {
         m_icon.gameObject.SetActive(state);
     }
-         
+
+    private void SetOTIInactive()
+    {
+        m_icon.gameObject.SetActive(false);
+    }
+
+    private void SetOTIActive()
+    {
+        m_icon.gameObject.SetActive(true);
+    }
 
     private void InstantiateTargetIcon()
     {
         m_icon = new GameObject().AddComponent<RectTransform>();
-        //m_icon.transform.SetParent(mainCanvas.transform);
-        //m_icon.transform.position = 
         m_icon.transform.SetParent(m_ArrowParent);
         m_icon.localScale = m_targetIconScale;
         m_icon.name = name + ": OTI icon";

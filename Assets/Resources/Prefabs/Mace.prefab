@@ -163,7 +163,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: -1.7}
   serializedVersion: 2
-  m_Radius: 0.67
+  m_Radius: 0.5558488
 --- !u!114 &2982385565876675482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,12 +178,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_CurrentHealth: 0
   m_MaxHealth: 0
+  m_StartPcHealh: 1
   m_Damage: 25
-  m_RepulsePlayerCoeff: 10
+  m_HealthRegenRate: 0.2
+  m_HealthRegenAmount: 10
   m_ShakeAmountAmt: 0.1
   m_ShakeLength: 0.1
   m_DeathSoundName: Explosion
   m_Burnable: 0
+  m_BurnEffect: {fileID: 0}
   statusIndicator: {fileID: 0}
 --- !u!1 &2954277762738418452
 GameObject:
