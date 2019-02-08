@@ -14,6 +14,7 @@ public class TargetIndicator : MonoBehaviour
     [SerializeField] private Sprite m_targetIcon;
     [SerializeField] private Vector3 m_targetIconScale;
     [SerializeField] private float m_ArrowOffs;
+    private bool m_OTISystemActive;
 
 
 
@@ -30,7 +31,8 @@ public class TargetIndicator : MonoBehaviour
 
     void Update()
     {
-        UpdateTargetIconPosition();
+        if (m_OTISystemActive)
+            UpdateTargetIconPosition();
     }
 
     private void OnEnable()
@@ -38,6 +40,7 @@ public class TargetIndicator : MonoBehaviour
         RespawnFlagMgt.OnRespawnFlagStay += SetOTIState;
         GameMaster.OnPlayerKill += SetOTIInactive;
         GameMaster.OnPlayerRespawn += SetOTIActive;
+        CoinCounter.OnCoinCounterEnabled += SetOTISystemActive;
     }
 
     private void OnDisable()
@@ -45,6 +48,7 @@ public class TargetIndicator : MonoBehaviour
         RespawnFlagMgt.OnRespawnFlagStay -= SetOTIState;
         GameMaster.OnPlayerKill -= SetOTIInactive;
         GameMaster.OnPlayerRespawn -= SetOTIActive;
+        CoinCounter.OnCoinCounterEnabled -= SetOTISystemActive;
     }
 
 
@@ -118,6 +122,11 @@ public class TargetIndicator : MonoBehaviour
         m_iconImage = m_icon.gameObject.AddComponent<Image>();
         m_iconImage.sprite = m_targetIcon;
         m_icon.gameObject.SetActive(false);
+    }
+
+    private void SetOTISystemActive(bool state)
+    {
+        m_OTISystemActive = state;
     }
 
 

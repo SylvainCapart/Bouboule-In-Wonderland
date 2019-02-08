@@ -5,6 +5,8 @@ namespace UnityStandardAssets._2D
 {
     public class Camera2DFollow : MonoBehaviour
     {
+        public static Camera2DFollow instance;
+
         public Transform target;
         public float m_Damping = 1;
         public float lookAheadFactor = 3;
@@ -23,8 +25,6 @@ namespace UnityStandardAssets._2D
         // Use this for initialization
         private void Start()
         {
-            
-
             m_LastTargetPosition = target.position;
             m_OffsetZ = (transform.position - target.position).z;
             if (m_ResetParentAtStart)
@@ -34,10 +34,24 @@ namespace UnityStandardAssets._2D
         private void Awake()
         {
 
-            Transform playerTransfom = GameObject.Find("Player").transform;
+            Transform playerTransfom = FindObjectOfType<Player>().transform;
             if (playerTransfom != null)
                 target = playerTransfom;
             this.transform.position = new Vector3(target.transform.position.x, target.transform.position.y, zNewPosition);
+
+
+            if (instance != null)
+            {
+                if (instance != this)
+                {
+                    Destroy(this.gameObject);
+                }
+            }
+            else
+            {
+                instance = this;
+            }
+
         }
 
         // Update is called once per frame

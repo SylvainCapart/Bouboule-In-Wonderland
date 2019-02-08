@@ -13588,7 +13588,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_JumpForce: 400
   m_rollSpeed: 1
-  m_climbSpeed: 0.42
+  m_climbSpeed: 0.33
   m_SwimSpeed: 0.26
   m_movementSmoothing: 0.05
   m_airControl: 1

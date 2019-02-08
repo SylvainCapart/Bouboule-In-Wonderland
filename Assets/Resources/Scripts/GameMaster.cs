@@ -31,6 +31,7 @@ public class GameMaster : MonoBehaviour
 
     public bool m_DebugMode;
     private bool m_EndReached;
+    public float m_FinalTime;
 
     [SerializeField] private GameObject m_IntroScene;
     [SerializeField] private GameObject m_EndScene;
@@ -64,12 +65,16 @@ public class GameMaster : MonoBehaviour
                 Player player = FindObjectOfType<Player>();
                 if (player != null)
                     KillPlayer(player);
-
+                DeathCounter.instance.DeathCount -= 1;
+                m_FinalTime = Time.time;
             }
         }
     }
 
+    private void Update()
+    {
 
+    }
 
     /*public RespawnFlagMgt LastRespawnMgt
     {
@@ -101,7 +106,7 @@ public class GameMaster : MonoBehaviour
         PlayerSpit playerspit = FindObjectOfType<PlayerSpit>();
         if (playerspit != null)
             playerspit.IsSpittingAllowed = false;
-        GameObject coincounter = GameObject.Find("CoinCounterObject");
+        GameObject coincounter = GameObject.FindGameObjectWithTag("CoinCounter");
         if (coincounter != null)
             coincounter.SetActive(false);
 
@@ -111,6 +116,15 @@ public class GameMaster : MonoBehaviour
                 playerspit.IsSpittingAllowed = true;
             if (coincounter != null)
                 coincounter.SetActive(true);
+        }
+        else
+        {
+            /*Player player = FindObjectOfType<Player>();
+            if (player != null)
+                Destroy(player.gameObject);
+            if (OnPlayerKill != null)
+                OnPlayerKill();
+            gm.StartCoroutine(gm.RespawnPlayer());*/
         }
     }
 
@@ -142,7 +156,7 @@ public class GameMaster : MonoBehaviour
         cloneappear.transform.position = m_SpawnPoint.transform.position + new Vector3(0f, 0.5f, 0f);
         cloneappear.name = "AppearPlayer";
 
-        Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
+        Camera2DFollow cameraFollow = Camera2DFollow.instance; // Camera.main.GetComponentInParent<Camera2DFollow>();
         cameraFollow.target = cloneappear.transform;
         gm.StartCoroutine(cameraFollow.DampingShutOff(0.1f));
 

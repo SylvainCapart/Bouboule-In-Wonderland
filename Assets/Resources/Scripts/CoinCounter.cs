@@ -10,6 +10,9 @@ public class CoinCounter : MonoBehaviour
     [SerializeField] private ChestMgt[] m_ChestsMgt;
     [SerializeField] private ChestSimpleMgt[] m_ChestsSimpleMgt;
 
+    public delegate void CoinCounterDelegate(bool state);
+    public static event CoinCounterDelegate OnCoinCounterEnabled;
+
     public int CoinCounterGetSet
     {
         get
@@ -24,6 +27,19 @@ public class CoinCounter : MonoBehaviour
             if (m_CoinCounter == m_CoinsLimit)
                 GameMaster.gm.EndReached = true;
         }
+    }
+
+
+    private void OnEnable()
+    {
+        if (OnCoinCounterEnabled != null)
+            OnCoinCounterEnabled(true);
+    }
+
+    private void OnDisable()
+    {
+        if (OnCoinCounterEnabled != null)
+            OnCoinCounterEnabled(false);
     }
 
     private void Update()

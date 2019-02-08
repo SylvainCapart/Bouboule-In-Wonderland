@@ -17,6 +17,7 @@ public class DialogueMgt : MonoBehaviour {
     [SerializeField] private GameObject m_ContinueButton;
 
     private Coroutine m_TypeSentenceCo;
+    [HideInInspector] public bool m_IsSentencesQueueEmpty;
 
 
     // Use this for initialization
@@ -51,6 +52,14 @@ public class DialogueMgt : MonoBehaviour {
             //GameObject.Find("ContinueText").GetComponent<TextBlinker>().Awake();
             dialogueReactivated = true;
         }*/
+
+        if (m_CurrentDialogue != null && sentences.Count >= 0 && m_ContinueButton.activeSelf)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                DisplayNextSentence();
+            }
+        }
     }
 
 
@@ -73,16 +82,15 @@ public class DialogueMgt : MonoBehaviour {
         {
             sentences.Enqueue(sentence);
         }
+        m_IsSentencesQueueEmpty = false;
         DisplayNextSentence();
     }
 
     public void DisplayNextSentence()
     {
-
-        Debug.Log(sentences.Count);
-
         if (sentences.Count == 0)
         {
+            m_IsSentencesQueueEmpty = true;
             EndDialogue();
             return;
         }
@@ -116,11 +124,10 @@ public class DialogueMgt : MonoBehaviour {
         m_DialogueBoxAnim.SetBool("ArrowBlink", false);
 
         m_TypeSentenceCo = StartCoroutine(TypeSentence(sentence));
-
-
-
-
     }
+
+    
+
 
     IEnumerator TypeSentence(string sentence)
     {

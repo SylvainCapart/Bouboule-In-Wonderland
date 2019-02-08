@@ -12,10 +12,7 @@ public class Scene
 [System.Serializable]
 public class Dialogue {
 
-    public enum DialogueID { INTRO };
-
     public string name;
-    public DialogueID dialogueID;
 
     [TextArea(3,10)] public string[] sentences;
     public Scene[] scenes;

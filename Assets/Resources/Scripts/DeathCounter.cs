@@ -5,7 +5,7 @@ public class DeathCounter : MonoBehaviour
 {
 
     public static DeathCounter instance;
-    [SerializeField] private int m_DeathCount = 0;
+    private int m_DeathCount = 0;
     [SerializeField] private Text m_DeathText;
 
     public int DeathCount
@@ -24,6 +24,7 @@ public class DeathCounter : MonoBehaviour
 
     private void Awake()
     {
+
         instance = this;
     }
 
