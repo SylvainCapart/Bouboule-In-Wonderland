@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class OxygenMgt : MonoBehaviour
 {
@@ -61,9 +62,12 @@ public class OxygenMgt : MonoBehaviour
         {
             if (Input.GetButton("Fire1") && (stats.CurrentOxygen > 10))
             {
-                CancelInvoke("IncreaseOxygen");
-                if (!IsInvoking("DecreaseOxygen"))
-                    InvokeRepeating("DecreaseOxygen", 1f / stats.m_OxygenDecreaseRate, 1f / stats.m_OxygenDecreaseRate);
+                if (!EventSystem.current.IsPointerOverGameObject())
+                {
+                    CancelInvoke("IncreaseOxygen");
+                    if (!IsInvoking("DecreaseOxygen"))
+                        InvokeRepeating("DecreaseOxygen", 1f / stats.m_OxygenDecreaseRate, 1f / stats.m_OxygenDecreaseRate);
+                }
             }
             else if (!Input.GetButton("Fire1") || stats.CurrentOxygen <= 0)
             {

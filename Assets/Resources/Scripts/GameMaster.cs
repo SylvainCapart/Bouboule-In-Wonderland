@@ -30,6 +30,7 @@ public class GameMaster : MonoBehaviour
     public static event PlayerKillDelegate OnPlayerKill;
 
     public bool m_DebugMode;
+    public bool m_IntroSceneEnded;
     private bool m_EndReached;
     public float m_FinalTime;
 
@@ -156,7 +157,7 @@ public class GameMaster : MonoBehaviour
         cloneappear.transform.position = m_SpawnPoint.transform.position + new Vector3(0f, 0.5f, 0f);
         cloneappear.name = "AppearPlayer";
 
-        Camera2DFollow cameraFollow = Camera2DFollow.instance; // Camera.main.GetComponentInParent<Camera2DFollow>();
+        Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
         cameraFollow.target = cloneappear.transform;
         gm.StartCoroutine(cameraFollow.DampingShutOff(0.1f));
 
@@ -167,6 +168,9 @@ public class GameMaster : MonoBehaviour
         GameObject clone = (GameObject)Instantiate(Resources.Load("Prefabs\\Player"));
         clone.transform.position = m_SpawnPoint.transform.position + new Vector3(0f, 0.5f, 0f);
         clone.name = "Player";
+
+        if (!gm.m_IntroSceneEnded)
+            clone.GetComponentInChildren<PlayerSpit>().IsSpittingAllowed = false;
 
         cameraFollow.target = clone.transform;
 

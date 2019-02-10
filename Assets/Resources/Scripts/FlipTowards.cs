@@ -33,11 +33,23 @@ public class FlipTowards : MonoBehaviour
                 FlipRotate();
             }
         }
+        
     }
 
     private void FlipRotate()
     {
         transform.Rotate(new Vector3(0, 180, 0));
         m_FacingRight = !m_FacingRight;
+    }
+
+    private void FlipScale()
+    {
+        // Switch the way the player is labelled as facing.
+        m_FacingRight = !m_FacingRight;
+
+        // Multiply the player's x local scale by -1.
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
     }
 }

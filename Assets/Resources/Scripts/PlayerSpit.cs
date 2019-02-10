@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerSpit : MonoBehaviour
 {
@@ -130,8 +131,14 @@ public class PlayerSpit : MonoBehaviour
                     
                     if (Input.GetButton("Fire1") && (stats.CurrentOxygen > 10))
                     {
-                        StartSpit();
-
+                        if (Input.GetMouseButtonDown(0))
+                        {
+                            // Check if the mouse was clicked over a UI element
+                            if (!EventSystem.current.IsPointerOverGameObject())
+                            {
+                                StartSpit();
+                            }
+                        }
                     }
                     else if ( (!Input.GetButton("Fire1")) || (stats.CurrentOxygen <= 0) )
                     {
@@ -174,7 +181,8 @@ public class PlayerSpit : MonoBehaviour
         if (!m_isSpitting)
         {
             m_SpitEffects[(int)SpitStatus].Play();
-            audioManager.PlaySound(m_SoundNames[(int)SpitStatus]);
+            if (Time.timeScale > 0f)
+                audioManager.PlaySound(m_SoundNames[(int)SpitStatus]);
             m_isSpitting = true;
         }
 

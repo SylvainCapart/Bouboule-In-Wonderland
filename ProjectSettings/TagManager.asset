@@ -27,6 +27,9 @@ TagManager:
   - MovingGround
   - ChestSimple
   - ChestGhost
+  - SausageBurnEffect
+  - SausageCollider
+  - SorcererRightHand
   layers:
   - Default
   - TransparentFX

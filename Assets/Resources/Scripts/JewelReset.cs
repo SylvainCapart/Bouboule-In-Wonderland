@@ -8,7 +8,8 @@ public class JewelReset : MonoBehaviour
         {
             if (tr.tag == "Jewel")
             {
-                tr.GetComponent<JewelMgt>().Respawn();
+                if (Time.timeScale > 0f)
+                    tr.GetComponent<JewelMgt>().Respawn();
             }
         }
     }

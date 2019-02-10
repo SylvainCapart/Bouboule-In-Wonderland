@@ -35,15 +35,6 @@ public class CameraShake : MonoBehaviour {
         Invoke("StopShake", duration);
     }
 
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.T))
-        {
-            Shake(0.1f, 0.2f);
-        }
-
-    }
-
     void DoShake()
     {
         if (shakeAmount > 0)

@@ -285,7 +285,7 @@ public class EnemyAI : MonoBehaviour
                 break;
         }
 
-        if (m_Target.targettransform != null && State != EnemyState.SLEEP && State != EnemyState.SURPRISED)
+        if (m_Target.targettransform != null && State != EnemyState.SLEEP  && State != EnemyState.SURPRISED)
         {
             if (!m_FacingRight && m_Target.targettransform.position.x - this.transform.position.x > 0)
             {
@@ -423,7 +423,7 @@ public class EnemyAI : MonoBehaviour
 
     }
 
-    private void FlipScale()
+    public void FlipScale()
     {
         // unparent expressionmanager then reparent it after scaling
         //m_ExpressionManager.transform.parent = null;
@@ -436,7 +436,7 @@ public class EnemyAI : MonoBehaviour
         //m_ExpressionManager.transform.parent = transform;
     }
 
-    private void FlipRotate()
+    public void FlipRotate()
     {
 
         transform.Rotate(new Vector3(0, 180, 0));

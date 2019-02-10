@@ -65,7 +65,7 @@ AnimationClip:
       value: {fileID: 0}
     - time: 1.5333333
       value: {fileID: 0}
-    - time: 2.0333333
+    - time: 2.05
       value: {fileID: 0}
     attribute: m_Target
     path: BlackSorcerer

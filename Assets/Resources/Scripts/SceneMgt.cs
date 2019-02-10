@@ -17,13 +17,30 @@ public class SceneMgt : MonoBehaviour
     [SerializeField] private GameObject m_FirstDragon;
     [SerializeField] private GameObject m_SecondDragon;
     [SerializeField] private GameObject m_SausageObject;
+    [SerializeField] private Collider2D m_SausageTrigger;
+    [SerializeField] private SpriteRenderer m_SausageImage;
     [SerializeField] private GameObject m_CoinCounter;
     [SerializeField] private GameObject m_Barrier1;
     [SerializeField] private GameObject m_Barrier2;
 
+
     // Start is called before the first frame update
     void Start()
     {
+        m_DialogueManager = DialogueMgt.instance;
+        m_AudioManager = AudioManager.instance;
+        m_CameraShake = CameraShake.instance;
+        m_CameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
+    }
+
+    // Specific methods may have to be re written in cas of new import
+    public void SpecificStartDialogue(Dialogue dialogue)
+    {
+        m_Barrier1.SetActive(true);
+        m_CurrentDialogue = dialogue;
+        m_AudioManager.CrossFade("Music", "MusicSorcerer", 3f, 3f, 0.5f);
+
+
         m_Player = FindObjectOfType<Player>();
         if (m_Player == null)
         {
@@ -35,19 +52,6 @@ public class SceneMgt : MonoBehaviour
             if (m_PlayerMov == null)
                 Debug.LogError(name + " no PlayerMov found");
         }
-
-        m_DialogueManager = DialogueMgt.instance;
-        m_AudioManager = AudioManager.instance;
-        m_CameraShake = CameraShake.instance;
-        m_CameraFollow = Camera2DFollow.instance;
-    }
-
-    // Specific methods may have to be re written in cas of new import
-    public void SpecificStartDialogue(Dialogue dialogue)
-    {
-        m_Barrier1.SetActive(true);
-        m_CurrentDialogue = dialogue;
-        m_AudioManager.CrossFade("Music", "MusicSorcerer", 3f, 3f, 0.5f);
 
         //specific operations
         m_PlayerMov.IsMovementAllowed = false;
@@ -120,11 +124,14 @@ public class SceneMgt : MonoBehaviour
             case 3:
                 yield return new WaitForSeconds(0.52f);
                 m_DialogueManager.ShutOffContinueButton();
+                m_SausageTrigger.enabled = true;
+                m_SausageImage.enabled = true;
                 yield return new WaitForSeconds(0.5f);
                 m_PlayerMov.IsMovementAllowed = true;
                 PlayerSpit playerspit = FindObjectOfType<PlayerSpit>();
                 if (playerspit != null)
                     playerspit.IsSpittingAllowed = true;
+
                 break;
 
             case 2:
@@ -132,7 +139,10 @@ public class SceneMgt : MonoBehaviour
                 PlayerSpit playerspit2 = FindObjectOfType<PlayerSpit>();
                 if (playerspit2 != null)
                     playerspit2.IsSpittingAllowed = false;
-                yield return new WaitForSeconds(3.5f);
+                yield return new WaitForSeconds(1.5f);
+                m_SausageTrigger.enabled = false;
+                m_SausageImage.enabled = false;
+                yield return new WaitForSeconds(2f);
                 Destroy(m_SausageObject);
                 break;
 
@@ -165,6 +175,7 @@ public class SceneMgt : MonoBehaviour
             playerspit3.IsSpittingAllowed = true;
         m_CameraFollow.target = m_Player.transform;
         m_AudioManager.CrossFade("MusicSorcerer", "Music", 3f, 3f, 0.1f);
+        GameMaster.gm.m_IntroSceneEnded = true;
         Destroy(m_Barrier1);
         Destroy(m_Barrier2);
     }

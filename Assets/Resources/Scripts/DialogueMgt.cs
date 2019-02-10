@@ -17,7 +17,10 @@ public class DialogueMgt : MonoBehaviour {
     [SerializeField] private GameObject m_ContinueButton;
 
     private Coroutine m_TypeSentenceCo;
-    [HideInInspector] public bool m_IsSentencesQueueEmpty;
+     public bool m_IsSentencesQueueEmpty;
+
+    public delegate void DialogueMgtDeleguate();
+    public static event DialogueMgtDeleguate OnEmptyQueue;
 
 
     // Use this for initialization
@@ -88,9 +91,14 @@ public class DialogueMgt : MonoBehaviour {
 
     public void DisplayNextSentence()
     {
+        if (Time.timeScale < 0.01f)
+            return;
+
         if (sentences.Count == 0)
         {
             m_IsSentencesQueueEmpty = true;
+            if (OnEmptyQueue != null)
+                OnEmptyQueue();
             EndDialogue();
             return;
         }
