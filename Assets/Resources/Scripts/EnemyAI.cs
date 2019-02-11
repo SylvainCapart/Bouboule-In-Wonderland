@@ -380,7 +380,8 @@ public class EnemyAI : MonoBehaviour
         m_Detection.transform.localScale = new Vector3(m_SleepScaleTrigger, m_SleepScaleTrigger, m_SleepScaleTrigger);
         m_Predetection.transform.localScale = new Vector3(m_SleepScaleTrigger, m_SleepScaleTrigger, m_SleepScaleTrigger);
 
-        m_AISetter.target = m_StartPosition;
+        if (m_AISetter != null)
+            m_AISetter.target = m_StartPosition;
         m_Target.targettransform = m_StartPosition;
 
         if (m_SleepRight != m_FacingRight)

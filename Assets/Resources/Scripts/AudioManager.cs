@@ -54,8 +54,9 @@ public class AudioManager : MonoBehaviour {
     private Sound m_MainSound;
 
     public static AudioManager instance;
-    [SerializeField] private bool m_IsCrossFading;
+    private bool m_IsCrossFading;
     private Coroutine m_CrossFadeCo;
+    [SerializeField] private string m_InitSoundStr = "Music";
 
     private void Awake()
     {
@@ -82,7 +83,7 @@ public class AudioManager : MonoBehaviour {
             sounds[i].SetSource(_obj.AddComponent<AudioSource>());
             sounds[i].initVol = sounds[i].volume;
         }
-        MainSound = GetSound("Music");
+        MainSound = GetSound(m_InitSoundStr);
         PlaySound(MainSound.name);
 
     }

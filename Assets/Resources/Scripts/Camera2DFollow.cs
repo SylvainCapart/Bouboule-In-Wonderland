@@ -19,6 +19,9 @@ namespace UnityStandardAssets._2D
         private Vector3 m_LastTargetPosition;
         private Vector3 m_CurrentVelocity;
         private Vector3 m_LookAheadPos;
+        [SerializeField] private bool m_InitializeOnPlayer;
+
+
 
         // Use this for initialization
         private void Start()
@@ -31,10 +34,16 @@ namespace UnityStandardAssets._2D
 
         private void Awake()
         {
-
-            Transform playerTransfom = FindObjectOfType<Player>().transform;
-            if (playerTransfom != null)
-                target = playerTransfom;
+            if (m_InitializeOnPlayer == true)
+            {
+                Transform playerTransfom = FindObjectOfType<Player>().transform;
+                if (playerTransfom != null)
+                    target = playerTransfom;
+            }
+            else
+            {
+                target = this.transform;
+            }
             this.transform.position = new Vector3(target.transform.position.x, target.transform.position.y, zNewPosition);
 
         }

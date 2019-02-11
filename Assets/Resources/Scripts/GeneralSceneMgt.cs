@@ -9,9 +9,14 @@ public class GeneralSceneMgt : MonoBehaviour
 
     public static GeneralSceneMgt instance;
 
-    public float m_delay = 2f;
+    private float m_delay = 2f;
     public SceneIndex m_sceneTarget;
     private const float EPSILON = 0.01f;
+
+    private bool m_IsMenuPlayedOnce;
+
+    public delegate void GenScnMgtDlg();
+    public static event GenScnMgtDlg OnMenuInit;
 
     private void Awake()
     {
@@ -36,6 +41,16 @@ public class GeneralSceneMgt : MonoBehaviour
             GoToGame();
         }
 
+    }
+
+    private void Start()
+    {
+        if (!m_IsMenuPlayedOnce)
+        {
+            if (OnMenuInit != null)
+                OnMenuInit();
+            m_IsMenuPlayedOnce = true;
+        }
     }
 
     public void GoToScene(SceneIndex scene_index)
@@ -111,5 +126,10 @@ public class GeneralSceneMgt : MonoBehaviour
         yield return null;
     }
 
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 
 }
