@@ -27,6 +27,8 @@ public class PlayerMovement : MonoBehaviour
     private bool m_LastSwimStatus = false;
     private bool m_FacingRight = true;
 
+
+
     public bool IsMovementAllowed
     {
         get
@@ -81,7 +83,7 @@ public class PlayerMovement : MonoBehaviour
 
         m_verticalMove = Input.GetAxisRaw("Vertical") * m_speedCoeff;
 
-
+        Debug.Log(m_horizontalMove);
 
         if (Input.GetButtonDown("Roll"))
         {

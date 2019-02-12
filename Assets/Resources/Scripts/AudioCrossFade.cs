@@ -14,7 +14,7 @@ public class AudioCrossFade : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_AudioManager = FindObjectOfType<AudioManager>();
+        m_AudioManager = AudioManager.instance;
         m_Collider = GetComponent<Collider2D>();
     }
 

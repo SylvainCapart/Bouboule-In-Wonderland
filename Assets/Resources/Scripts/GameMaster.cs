@@ -38,8 +38,11 @@ public class GameMaster : MonoBehaviour
     [SerializeField] private GameObject m_EndScene;
     [SerializeField] private Transform m_EndPlayerPos;
 
-    /*[SerializeField]
-    private WaveSpawner waveSpawner;*/
+    void OnGUI()
+    {
+        if (m_DebugMode)
+            GUI.Label(new Rect(0, 0, 100, 100), "" + (int)(1.0f / Time.smoothDeltaTime));
+    }
 
 
     public GameObject SpawnPoint

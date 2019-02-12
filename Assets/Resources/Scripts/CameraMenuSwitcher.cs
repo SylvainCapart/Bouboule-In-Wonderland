@@ -4,7 +4,6 @@ using UnityStandardAssets._2D;
 
 public class CameraMenuSwitcher : MonoBehaviour
 {
-
     public enum CameraSpot
     {
         INIT,
@@ -63,7 +62,7 @@ public class CameraMenuSwitcher : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         m_CameraFollow.target = m_CameraSpots[(int)cameraspot];
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(6f);
         m_CameraFollow.m_Damping = m_SwitchDamp;
     }
 
@@ -73,6 +72,7 @@ public class CameraMenuSwitcher : MonoBehaviour
         {
             m_ButtonsOff = true;
             m_CameraFollow.target = m_CameraSpots[(int)CameraSpot.MENU];
+            AudioManager.instance.PlaySound("AirCut");
         }
 
     }
@@ -83,6 +83,7 @@ public class CameraMenuSwitcher : MonoBehaviour
         {
             m_ButtonsOff = true;
             m_CameraFollow.target = m_CameraSpots[(int)CameraSpot.CREDITS];
+            AudioManager.instance.PlaySound("AirCut");
         }
 
     }

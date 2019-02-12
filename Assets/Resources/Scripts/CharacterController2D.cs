@@ -67,12 +67,7 @@ public class CharacterController2D : MonoBehaviour
     public GroundDirection m_GroundDir;
     [SerializeField] private float m_SideLeftGravCoeff;
 
-    void OnGUI()
-    {
-        //Debug.Log("" + (int)(1.0f / Time.smoothDeltaTime));
-        GUI.Label(new Rect(0, 0, 100, 100), "" + (int)(1.0f / Time.smoothDeltaTime));
 
-    }
 
     private void Start()
     {

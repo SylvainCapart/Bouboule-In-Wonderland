@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Runtime.Serialization;
-using Pathfinding;
+﻿using Pathfinding;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -17,7 +14,7 @@ public class EnemyAI : MonoBehaviour
     private EnemyState m_LastState;
     [SerializeField] private AILerp m_AiLerpScript;
     [SerializeField] private AIDestinationSetter m_AISetter;
-    public bool[] m_ModeEnabled;
+    private bool[] m_ModeEnabled;
     private Enemy m_Enemy;
     private ExpressionMgt m_ExpressionManager;
     private const int m_ModeNb = 5;
