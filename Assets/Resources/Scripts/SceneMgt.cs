@@ -22,6 +22,7 @@ public class SceneMgt : MonoBehaviour
     [SerializeField] private GameObject m_CoinCounter;
     [SerializeField] private GameObject m_Barrier1;
     [SerializeField] private GameObject m_Barrier2;
+    [SerializeField] private GameObject m_ArrowRed;
 
 
     // Start is called before the first frame update
@@ -131,10 +132,14 @@ public class SceneMgt : MonoBehaviour
                 PlayerSpit playerspit = FindObjectOfType<PlayerSpit>();
                 if (playerspit != null)
                     playerspit.IsSpittingAllowed = true;
+                m_ArrowRed.SetActive(true);
+                DialogueMgt.instance.ShutOffContinueButton();
 
                 break;
 
             case 2:
+                DialogueMgt.instance.ShutOnContinueButton();
+                m_ArrowRed.SetActive(false);
                 m_PlayerMov.IsMovementAllowed = false;
                 PlayerSpit playerspit2 = FindObjectOfType<PlayerSpit>();
                 if (playerspit2 != null)

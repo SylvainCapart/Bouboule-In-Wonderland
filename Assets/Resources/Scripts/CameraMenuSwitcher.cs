@@ -4,6 +4,8 @@ using UnityStandardAssets._2D;
 
 public class CameraMenuSwitcher : MonoBehaviour
 {
+
+    public static CameraMenuSwitcher instance;
     public enum CameraSpot
     {
         INIT,
@@ -18,39 +20,59 @@ public class CameraMenuSwitcher : MonoBehaviour
 
     private bool m_ButtonsOff = true;
 
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            if (instance != this)
+            {
+                Destroy(this.gameObject);
+            }
+        }
+        else
+        {
+            instance = this;
+        }
+    }
+
     private void Update()
     {
-        if (Input.GetKey(KeyCode.L))
-        {
-            m_CameraFollow.target = m_CameraSpots[(int)CameraSpot.CREDITS];
-        }
-        if (Input.GetKey(KeyCode.K))
-        {
-            m_CameraFollow.target = m_CameraSpots[(int)CameraSpot.MENU];
-        }
-
         if (Vector2.Distance(transform.position, m_CameraFollow.target.position) < EPSILON)
         {
             m_ButtonsOff = false;
         }
+    }
 
-
+    private void Start()
+    {
+        if (GeneralSceneMgt.instance.IsMenuPlayedOnce)
+            NormalSetup();
     }
 
     private void OnEnable()
     {
         GeneralSceneMgt.OnMenuInit += Init;
+        GeneralSceneMgt.OnMenuAlreadyInit += NormalSetup;
+
     }
 
     private void OnDisable()
     {
         GeneralSceneMgt.OnMenuInit -= Init;
+        GeneralSceneMgt.OnMenuAlreadyInit -= NormalSetup;
     }
 
     private void Init()
     {
+        m_CameraFollow.m_Damping = 1.5f;
         SetCamera(CameraSpot.INIT);
         StartCoroutine(SetCameraCor(CameraSpot.MENU, m_InitDelay));
+    }
+
+    private void NormalSetup()
+    {
+        SetCamera(CameraSpot.MENU);
+        m_CameraFollow.m_Damping = m_SwitchDamp;
     }
 
     void SetCamera(CameraSpot cameraspot)
@@ -62,12 +84,14 @@ public class CameraMenuSwitcher : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         m_CameraFollow.target = m_CameraSpots[(int)cameraspot];
-        yield return new WaitForSeconds(6f);
-        m_CameraFollow.m_Damping = m_SwitchDamp;
     }
 
     public void SetCameraToMenu()
     {
+        StopAllCoroutines();
+        if (System.Math.Abs(m_CameraFollow.m_Damping - m_SwitchDamp) > EPSILON)
+            m_CameraFollow.m_Damping = m_SwitchDamp;
+
         if (!m_ButtonsOff)
         {
             m_ButtonsOff = true;
@@ -79,6 +103,10 @@ public class CameraMenuSwitcher : MonoBehaviour
 
     public void SetCameraToCredits()
     {
+        StopAllCoroutines();
+        if (System.Math.Abs(m_CameraFollow.m_Damping - m_SwitchDamp) > EPSILON)
+            m_CameraFollow.m_Damping = m_SwitchDamp;
+
         if (!m_ButtonsOff)
         {
             m_ButtonsOff = true;

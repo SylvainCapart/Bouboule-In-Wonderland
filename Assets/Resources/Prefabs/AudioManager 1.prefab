@@ -221,7 +221,7 @@ MonoBehaviour:
     pitch: 1.01
     randomVolume: 0
     randomPitch: 0
-    loop: 0
+    loop: 1
     playedOnce: 0
     initVol: 0
   - name: Cave
@@ -257,7 +257,7 @@ MonoBehaviour:
   - name: Guitar
     clip: {fileID: 8300000, guid: ef7afdc2825cc411183d4392d73e61b0, type: 3}
     source: {fileID: 0}
-    volume: 0.393
+    volume: 0.21
     pitch: 1.024
     randomVolume: 0
     randomPitch: 0

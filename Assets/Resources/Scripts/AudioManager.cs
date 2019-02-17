@@ -88,6 +88,17 @@ public class AudioManager : MonoBehaviour {
 
     }
 
+    private void OnEnable()
+    {
+        GameMaster.OnPlayerKill += MuteWaterSounds;
+        GameMaster.OnPlayerRespawn += AllowWaterSounds;
+    }
+
+    private void OnDisable()
+    {
+        GameMaster.OnPlayerKill -= MuteWaterSounds;
+        GameMaster.OnPlayerRespawn -= AllowWaterSounds;
+    }
 
     public void PlaySound(string _name)
     {
@@ -197,6 +208,7 @@ public class AudioManager : MonoBehaviour {
             return;
         }
         Sound source2 = GetSound(soundToPlay);
+
         MainSound = source2;
 
         if (source2 == null)
@@ -283,5 +295,30 @@ public class AudioManager : MonoBehaviour {
         }
     }
 
+    public void MuteWaterSounds()
+    {
+        Sound tempsound;
+        tempsound = GetSound("Bubble");
+        if (tempsound != null && tempsound.source != null)
+            tempsound.source.mute = true;
+
+        tempsound = GetSound("Swimming");
+        if (tempsound != null && tempsound.source != null)
+            tempsound.source.mute = true;
+
+
+    }
+
+    public void AllowWaterSounds()
+    {
+        Sound tempsound;
+        tempsound = GetSound("Bubble");
+        if (tempsound != null && tempsound.source != null)
+            tempsound.source.mute = false;
+
+        tempsound = GetSound("Swimming");
+        if (tempsound != null && tempsound.source != null)
+            tempsound.source.mute = false;
+    }
 
 }

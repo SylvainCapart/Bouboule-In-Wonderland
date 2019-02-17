@@ -42,14 +42,6 @@ public class CoinCounter : MonoBehaviour
             OnCoinCounterEnabled(false);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            CoinCounterGetSet = m_CoinsLimit - 1;
-        }
-    }
-
     // Use this for initialization
     void Start()
     {

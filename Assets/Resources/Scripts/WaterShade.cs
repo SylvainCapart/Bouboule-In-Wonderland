@@ -12,6 +12,7 @@ public class WaterShade : MonoBehaviour
     [SerializeField] private readonly float m_fadeTime = 1f;
     [SerializeField] private readonly float m_appearTime = 1f;
 
+    public Transform target;
 
     private void Start()
     {
@@ -37,7 +38,24 @@ public class WaterShade : MonoBehaviour
 
     private void ResetShade()
     {
-        m_SpriteRenderer.material.color = m_FadedAlphaColor;
+        //m_SpriteRenderer.material.color = m_FadedAlphaColor;
+        StartCoroutine(ShadeFade());
+    }
+
+    private void Update()
+    {
+        if (target == null)
+        {
+            GameObject sResult = GameObject.FindGameObjectWithTag("Player");
+            if (sResult == null)
+                return;
+            target = sResult.transform;
+        }
+        else
+        {
+            transform.position = target.position;
+        }
+
     }
 
     void SwimShader(string statusname, bool state)

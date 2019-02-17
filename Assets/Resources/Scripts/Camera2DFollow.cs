@@ -26,14 +26,6 @@ namespace UnityStandardAssets._2D
         // Use this for initialization
         private void Start()
         {
-            m_LastTargetPosition = target.position;
-            m_OffsetZ = (transform.position - target.position).z;
-            if (m_ResetParentAtStart)
-                transform.parent = null;
-        }
-
-        private void Awake()
-        {
             if (m_InitializeOnPlayer == true)
             {
                 Transform playerTransfom = FindObjectOfType<Player>().transform;
@@ -45,6 +37,16 @@ namespace UnityStandardAssets._2D
                 target = this.transform;
             }
             this.transform.position = new Vector3(target.transform.position.x, target.transform.position.y, zNewPosition);
+
+            m_LastTargetPosition = target.position;
+            m_OffsetZ = (transform.position - target.position).z;
+            if (m_ResetParentAtStart)
+                transform.parent = null;
+        }
+
+        private void Awake()
+        {
+
 
         }
 

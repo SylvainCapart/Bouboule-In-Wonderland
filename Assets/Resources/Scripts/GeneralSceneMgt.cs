@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
-
 
 public class GeneralSceneMgt : MonoBehaviour
 {
@@ -9,17 +8,31 @@ public class GeneralSceneMgt : MonoBehaviour
 
     public static GeneralSceneMgt instance;
 
-    private float m_delay = 2f;
-    public SceneIndex m_sceneTarget;
     private const float EPSILON = 0.01f;
 
     private bool m_IsMenuPlayedOnce;
 
+    public bool IsMenuPlayedOnce
+    {
+        get
+        {
+            return m_IsMenuPlayedOnce;
+        }
+
+        set
+        {
+            m_IsMenuPlayedOnce = value;
+        }
+    }
+
     public delegate void GenScnMgtDlg();
     public static event GenScnMgtDlg OnMenuInit;
+    public static event GenScnMgtDlg OnMenuAlreadyInit;
 
     private void Awake()
     {
+        //Screen.fullScreen = false;
+
         if (instance != null)
         {
             if (instance != this)
@@ -34,26 +47,21 @@ public class GeneralSceneMgt : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.P))
-        {
-            GoToGame();
-        }
-
-    }
-
-
-
     private void Start()
     {
-        if (!m_IsMenuPlayedOnce)
+        if (!IsMenuPlayedOnce)
         {
             if (OnMenuInit != null)
                 OnMenuInit();
-            m_IsMenuPlayedOnce = true;
+            IsMenuPlayedOnce = true;
+        }
+        else
+        {
+            if (OnMenuAlreadyInit != null)
+                OnMenuAlreadyInit();
         }
     }
+
 
     public void GoToScene(SceneIndex scene_index)
     {
@@ -64,9 +72,12 @@ public class GeneralSceneMgt : MonoBehaviour
     {
         if (System.Math.Abs(Time.timeScale - 1f) > EPSILON)
             Time.timeScale = 1f;
-        AudioManager.instance.StopSound("Music");
+
+        AudioManager.instance.StopSound(AudioManager.instance.MainSound.name);
         AudioManager.instance.PlaySound("Guitar");
+        AudioManager.instance.MainSound = AudioManager.instance.GetSound("Guitar");
         SceneManager.LoadScene((int)SceneIndex.MENU);
+
 
     }
 
@@ -76,58 +87,10 @@ public class GeneralSceneMgt : MonoBehaviour
             Time.timeScale = 1f;
         AudioManager.instance.StopSound("Guitar");
         AudioManager.instance.PlaySound("Music");
+        AudioManager.instance.MainSound = AudioManager.instance.GetSound("Music");
         SceneManager.LoadScene((int)SceneIndex.GAME);
 
     }
-
-    public void goToScene()
-    {
-        StartCoroutine(goToSceneCo());
-
-    }
-    private IEnumerator goToSceneCo()
-    {
-        yield return (new WaitForSeconds(m_delay));
-        SceneManager.LoadScene((int)m_sceneTarget);
-        yield return null;
-    }
-
-
-    public void nextScene()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-
-    }
-
-    public void chooseSceneWithDelay(SceneIndex sceneIndex, float delay)
-    {
-        StartCoroutine(chooseSceneWithDelayCo(sceneIndex, delay));
-    }
-
-
-    private IEnumerator chooseSceneWithDelayCo(SceneIndex sceneIndex, float delay)
-    {
-        yield return (new WaitForSeconds(delay));
-        SceneManager.LoadScene((int)sceneIndex);
-        yield return null;
-    }
-
-    private IEnumerator goToGameDelay()
-    {
-        yield return (new WaitForSeconds(m_delay));
-        SceneManager.LoadScene((int)SceneIndex.GAME);
-        yield return null;
-    }
-
-
-
-    private IEnumerator nextSceneDelay()
-    {
-        yield return (new WaitForSeconds(m_delay));
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        yield return null;
-    }
-
 
     public void QuitGame()
     {

@@ -158,7 +158,7 @@ public class DialogueMgt : MonoBehaviour {
 
     }
 
-    void DeactivateDialogue()
+    public void DeactivateDialogue()
     {
 
         //if (Input.GetButtonDown("Fire1") && m_DialogueActivated)
@@ -172,7 +172,7 @@ public class DialogueMgt : MonoBehaviour {
 
     }
 
-    void ActivateDialogue()
+    public void ActivateDialogue()
     {
         //GameObject.Find("DialogueBox").transform.Find("ContinueButton").gameObject.SetActive(true);
         //if (Input.GetButtonDown("Fire1") && !m_DialogueActivated)

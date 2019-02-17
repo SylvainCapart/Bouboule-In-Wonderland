@@ -8,9 +8,11 @@ public class GameMaster : MonoBehaviour
     public static GameMaster gm;
 
 
-    public Transform playerPrefab;
+    //public Transform playerPrefab;
     private GameObject m_SpawnPoint;
-    [SerializeField] private GameObject[] m_SpawnArray;
+    private GameObject[] m_SpawnArray;
+
+    [SerializeField] private Transform m_InitSpawnPoint;
 
     [SerializeField] private float m_SpawnDelay = 0.5f;
     [SerializeField] private float m_AppearDelay = 1f;
@@ -75,27 +77,14 @@ public class GameMaster : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-
-    }
-
     /*public RespawnFlagMgt LastRespawnMgt
     {
         get{return gm.m_LastRespawnMgt;}
         set{ gm.m_LastRespawnMgt = value;}
     }*/
 
-    public void EndGame()
-    {
-        //m_AudioManager.PlaySound(gameOverSoundName);
-        //gameOverUI.gameObject.SetActive(true);
-    }
-
     private void Start()
     {
-        Screen.fullScreen = false;
-
         m_CameraShake = CameraShake.instance;
 
         m_AudioManager = AudioManager.instance;
@@ -108,28 +97,24 @@ public class GameMaster : MonoBehaviour
         }
 
         PlayerSpit playerspit = FindObjectOfType<PlayerSpit>();
-        if (playerspit != null)
+        if (playerspit != null && gm.m_IntroSceneEnded == false)
             playerspit.IsSpittingAllowed = false;
+
         GameObject coincounter = GameObject.FindGameObjectWithTag("CoinCounter");
         if (coincounter != null)
             coincounter.SetActive(false);
-
         if (m_DebugMode)
         {
             if (playerspit != null)
                 playerspit.IsSpittingAllowed = true;
             if (coincounter != null)
                 coincounter.SetActive(true);
+            gm.m_IntroSceneEnded = true;
         }
-        else
-        {
-            /*Player player = FindObjectOfType<Player>();
-            if (player != null)
-                Destroy(player.gameObject);
-            if (OnPlayerKill != null)
-                OnPlayerKill();
-            gm.StartCoroutine(gm.RespawnPlayer());*/
-        }
+
+        if (OnPlayerRespawn != null)
+            OnPlayerRespawn(); // called to relink the statusindicator in the new player instance
+
     }
 
     void Awake()
@@ -148,6 +133,19 @@ public class GameMaster : MonoBehaviour
         {
             gm = this;
         }
+
+        GameObject clone = (GameObject)Instantiate(Resources.Load("Prefabs\\Player"));
+        clone.transform.position = m_InitSpawnPoint.position + new Vector3(0f, 0.5f, 0f);
+        clone.name = "Player";
+
+        //if (gm.m_IntroSceneEnded == false)
+          //  clone.GetComponentInChildren<PlayerSpit>().IsSpittingAllowed = false;
+
+        Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
+        if (cameraFollow != null)
+            cameraFollow.target = clone.transform;
+
+
     }
 
     public IEnumerator RespawnPlayer()
@@ -161,7 +159,8 @@ public class GameMaster : MonoBehaviour
         cloneappear.name = "AppearPlayer";
 
         Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
-        cameraFollow.target = cloneappear.transform;
+        if (cameraFollow != null)
+            cameraFollow.target = cloneappear.transform;
         gm.StartCoroutine(cameraFollow.DampingShutOff(0.1f));
 
         yield return new WaitForSeconds(m_AppearDelay);

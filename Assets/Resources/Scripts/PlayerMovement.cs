@@ -24,7 +24,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask m_WhatIsVine;                            // A mask determining what is vine to the character     
     [SerializeField] private LayerMask m_WhatIsWater;                            // A mask determining what is water to the character   
 
-    private bool m_LastSwimStatus = false;
     private bool m_FacingRight = true;
 
 
@@ -83,8 +82,6 @@ public class PlayerMovement : MonoBehaviour
 
         m_verticalMove = Input.GetAxisRaw("Vertical") * m_speedCoeff;
 
-        Debug.Log(m_horizontalMove);
-
         if (Input.GetButtonDown("Roll"))
         {
             m_Roll = true;
@@ -100,16 +97,6 @@ public class PlayerMovement : MonoBehaviour
         {
             m_Jump = true;
         }
-
-        /*if (!m_Swim && m_LastSwimStatus)
-        {
-            m_Jump = true;
-            m_verticalMove = 30;
-        }
-        m_LastSwimStatus = m_Swim;*/
-
-
-
 
     }
 

@@ -14,7 +14,7 @@ public class EnemyAI : MonoBehaviour
     private EnemyState m_LastState;
     [SerializeField] private AILerp m_AiLerpScript;
     [SerializeField] private AIDestinationSetter m_AISetter;
-    private bool[] m_ModeEnabled;
+    public bool[] m_ModeEnabled;
     private Enemy m_Enemy;
     private ExpressionMgt m_ExpressionManager;
     private const int m_ModeNb = 5;
@@ -100,7 +100,7 @@ public class EnemyAI : MonoBehaviour
 
         set
         {
-            if (m_State == value) return;
+            //if (m_State == value) return;
             if (m_ModeEnabled[(int)value] == false) return;
             switch (value)
             {
@@ -249,12 +249,18 @@ public class EnemyAI : MonoBehaviour
             m_LastState = EnemyState.PATROL;
             m_StartPosition = m_PatrolPoints[0];
         }
-
         State = (m_ModeEnabled[(int)EnemyState.PATROL] == true) ? EnemyState.PATROL : EnemyState.SLEEP;
+
         m_DetectionTransform = new GameObject().transform; // empty gameobject
         m_DetectionTransform.parent = this.transform.parent;
         m_DetectionTransform.name = "DetectionTransform";
 
+    }
+
+    private void OnEnable()
+    {
+        if (State != EnemyState.GIVEUP)
+            State = (m_ModeEnabled[(int)EnemyState.PATROL] == true) ? EnemyState.PATROL : EnemyState.SLEEP;
     }
 
     private void Update()

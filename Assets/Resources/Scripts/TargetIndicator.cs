@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class TargetIndicator : MonoBehaviour
 {
-    private GameObject m_player;
+    //private GameObject m_player;
     private Transform m_ArrowParent;
     [SerializeField] private string m_ArrowParentStr;
     private Camera mainCamera;
@@ -14,15 +14,12 @@ public class TargetIndicator : MonoBehaviour
     [SerializeField] private Sprite m_targetIcon;
     [SerializeField] private Vector3 m_targetIconScale;
     [SerializeField] private float m_ArrowOffs;
-    private bool m_OTISystemActive;
+    [SerializeField] private bool m_OTISystemActive;
 
 
 
     void Start()
     {
-
-        m_player = FindObjectOfType<Player>().gameObject;
-
         m_ArrowParent = GameObject.Find(m_ArrowParentStr).transform;
         mainCamera = Camera.main;
 
@@ -38,17 +35,17 @@ public class TargetIndicator : MonoBehaviour
     private void OnEnable()
     {
         RespawnFlagMgt.OnRespawnFlagStay += SetOTIState;
-        GameMaster.OnPlayerKill += SetOTIInactive;
-        GameMaster.OnPlayerRespawn += SetOTIActive;
         CoinCounter.OnCoinCounterEnabled += SetOTISystemActive;
+        //GameMaster.OnPlayerKill += SetOTIInactive;
+        //GameMaster.OnPlayerRespawn += SetOTIActive;
     }
 
     private void OnDisable()
     {
         RespawnFlagMgt.OnRespawnFlagStay -= SetOTIState;
-        GameMaster.OnPlayerKill -= SetOTIInactive;
-        GameMaster.OnPlayerRespawn -= SetOTIActive;
         CoinCounter.OnCoinCounterEnabled -= SetOTISystemActive;
+        //GameMaster.OnPlayerKill -= SetOTIInactive;
+        //GameMaster.OnPlayerRespawn -= SetOTIActive;
     }
 
 
@@ -100,17 +97,20 @@ public class TargetIndicator : MonoBehaviour
 
     private void SetOTIState(bool state)
     {
-        m_icon.gameObject.SetActive(state);
+        if (m_icon != null && m_OTISystemActive != false)
+            m_icon.gameObject.SetActive(state);
     }
 
     private void SetOTIInactive()
     {
-        m_icon.gameObject.SetActive(false);
+        if (m_icon != null && m_OTISystemActive != false)
+            m_icon.gameObject.SetActive(false);
     }
 
     private void SetOTIActive()
     {
-        m_icon.gameObject.SetActive(true);
+        if (m_icon != null && m_OTISystemActive != false)
+            m_icon.gameObject.SetActive(true);
     }
 
     private void InstantiateTargetIcon()

@@ -5,7 +5,6 @@ using UnityStandardAssets._2D;
 [RequireComponent(typeof(PlayerMovement))]
 public class Player : MonoBehaviour
 {
-
     private PlayerStats stats;
 
     private AudioManager m_AudioManager;
@@ -39,19 +38,18 @@ public class Player : MonoBehaviour
     public delegate void OnDrowningDelegate(bool drowning);
     public static event OnDrowningDelegate OnDrowning;
 
-
     private void Start()
     {
         stats = PlayerStats.Instance;
 
         stats.CurrentHealth = stats.m_MaxHealth;
 
-        if (GameObject.FindObjectsOfType<Player>().Length > 1)
+        /*if (GameObject.FindObjectsOfType<Player>().Length > 1)
         {
             Debug.LogError("Only one player can be instatiated");
             Destroy(this.transform.gameObject);
             return;
-        }
+        }*/
 
         if (statusIndicator == null)
         {

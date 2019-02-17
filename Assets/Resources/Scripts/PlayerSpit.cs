@@ -13,11 +13,11 @@ public class PlayerSpit : MonoBehaviour
 
 
     public enum SpitParticle { FIRE, BUBBLE };
-    [SerializeField]  private SpitParticle m_SpitStatus = SpitParticle.FIRE;
+    [SerializeField] private SpitParticle m_SpitStatus = SpitParticle.FIRE;
     private string[] m_SoundNames = { "Fire", "Bubble" };
     private SpitParticle m_LastSpitStatus = SpitParticle.FIRE;
     private bool m_isSpitting = false;
-    private bool m_isSpittingAllowed = true;
+    [SerializeField] private bool m_isSpittingAllowed = true;
 
     private const float EPSILON = 0.01f;
 
@@ -30,7 +30,7 @@ public class PlayerSpit : MonoBehaviour
     public SpitParticle SpitStatus
     {
         get
-        { return m_SpitStatus;}
+        { return m_SpitStatus; }
 
         set
         {
@@ -90,7 +90,7 @@ public class PlayerSpit : MonoBehaviour
         }
 
     }
-    
+
 
     // Update is called once per frame
     void Update()
@@ -128,19 +128,16 @@ public class PlayerSpit : MonoBehaviour
 
                 if (!roll && !climb && !swim)
                 {
-                    
+
                     if (Input.GetButton("Fire1") && (stats.CurrentOxygen > 10))
                     {
-                        if (Input.GetMouseButtonDown(0))
+                        // Check if the mouse was clicked over a UI element
+                        if (!EventSystem.current.IsPointerOverGameObject())
                         {
-                            // Check if the mouse was clicked over a UI element
-                            if (!EventSystem.current.IsPointerOverGameObject())
-                            {
-                                StartSpit();
-                            }
+                            StartSpit();
                         }
                     }
-                    else if ( (!Input.GetButton("Fire1")) || (stats.CurrentOxygen <= 0) )
+                    else if ((!Input.GetButton("Fire1")) || (stats.CurrentOxygen <= 0))
                     {
                         StopSpit();
                     }

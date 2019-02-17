@@ -5,6 +5,7 @@ public class Portal2Points : MonoBehaviour
 {
     [SerializeField] private Transform m_TargetDoor;
     private bool m_IsDoorActive = true;
+    private bool m_DoorShutOffCo = false;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -18,7 +19,8 @@ public class Portal2Points : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        m_IsDoorActive = true;
+        if (!m_DoorShutOffCo)
+            StartCoroutine(DoorActiveShutOff(1f));
     }
 
     private IEnumerator DoorShutOff(CapsuleCollider2D portal, float delay)
@@ -26,5 +28,14 @@ public class Portal2Points : MonoBehaviour
         portal.enabled = false;
         yield return new WaitForSeconds(delay);
         portal.enabled = true;
+    }
+
+    private IEnumerator DoorActiveShutOff(float delay)
+    {
+        m_DoorShutOffCo = true;
+        m_IsDoorActive = false;
+        yield return new WaitForSeconds(delay);
+        m_IsDoorActive = true;
+        m_DoorShutOffCo = false;
     }
 }

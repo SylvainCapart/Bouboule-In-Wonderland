@@ -36,7 +36,8 @@ public class MovingGround : MonoBehaviour
     private IEnumerator UnparentCo(Transform child, float delay)
     {
         yield return new WaitForSeconds(delay);
-        child.parent = null;
+        if (child != null)
+            child.parent = null;
     }
 
 }

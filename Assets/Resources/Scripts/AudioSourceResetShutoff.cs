@@ -39,12 +39,14 @@ public class AudioSourceResetShutoff : MonoBehaviour
 
     private void MuteSourceOn()
     {
-        m_AudioSource.mute = true;
+        if (m_AudioSource != null)
+            m_AudioSource.mute = true;
     }
 
     private void MuteSourceOff()
     {
-        m_AudioSource.mute = false;
+        if (m_AudioSource != null)
+            m_AudioSource.mute = false;
     }
 
 }
