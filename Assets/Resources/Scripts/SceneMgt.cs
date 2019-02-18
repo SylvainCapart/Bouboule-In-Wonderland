@@ -69,7 +69,7 @@ public class SceneMgt : MonoBehaviour
                 m_CameraFollow.target = transform.parent;
                 break;
             case 26:
-
+                m_DialogueManager.ShutOffContinueButton();
                 yield return new WaitForSeconds(3f);
                 m_AudioManager.PlaySound("Fire");
                 m_CameraShake.Shake(0.02f, 1.25f);
@@ -88,10 +88,17 @@ public class SceneMgt : MonoBehaviour
                 Destroy(m_FirstDragon);
                 Destroy(m_SecondDragon);
                 m_DialogueManager.DisplayNextSentence();
+                m_DialogueManager.ShutOnContinueButton();
+                break;
+
+            case 11:
+                if (m_CoinCounter != null)
+                    m_CoinCounter.SetActive(true);
+                m_AudioManager.PlaySound("Coin");
                 break;
 
             case 4:
-
+                m_DialogueManager.ShutOffContinueButton();
                 yield return new WaitForSeconds(1f);
 
                 GameObject burnprefab;
@@ -113,18 +120,15 @@ public class SceneMgt : MonoBehaviour
                 Destroy(burnprefab);
 
                 yield return new WaitForSeconds(1f);
-                m_DialogueManager.DisplayNextSentence();
-
+                //m_DialogueManager.DisplayNextSentence();
+                m_DialogueManager.ShutOnContinueButton();
                 break;
 
-            case 11:
-                if (m_CoinCounter != null)
-                    m_CoinCounter.SetActive(true);
-                m_AudioManager.PlaySound("Coin");
-                break;
+
             case 3:
-                yield return new WaitForSeconds(0.52f);
                 m_DialogueManager.ShutOffContinueButton();
+                yield return new WaitForSeconds(0.52f);
+
                 m_SausageTrigger.enabled = true;
                 m_SausageImage.enabled = true;
                 yield return new WaitForSeconds(0.5f);
@@ -133,12 +137,13 @@ public class SceneMgt : MonoBehaviour
                 if (playerspit != null)
                     playerspit.IsSpittingAllowed = true;
                 m_ArrowRed.SetActive(true);
-                DialogueMgt.instance.ShutOffContinueButton();
+
 
                 break;
 
             case 2:
-                DialogueMgt.instance.ShutOnContinueButton();
+
+                m_DialogueManager.ShutOffContinueButton();
                 m_ArrowRed.SetActive(false);
                 m_PlayerMov.IsMovementAllowed = false;
                 PlayerSpit playerspit2 = FindObjectOfType<PlayerSpit>();
@@ -147,8 +152,10 @@ public class SceneMgt : MonoBehaviour
                 yield return new WaitForSeconds(1.5f);
                 m_SausageTrigger.enabled = false;
                 m_SausageImage.enabled = false;
+                m_DialogueManager.ShutOnContinueButton();
                 yield return new WaitForSeconds(2f);
                 Destroy(m_SausageObject);
+
                 break;
 
             case 1:

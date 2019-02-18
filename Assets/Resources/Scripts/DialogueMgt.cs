@@ -103,6 +103,7 @@ public class DialogueMgt : MonoBehaviour {
             return;
         }
 
+        StopAllCoroutines();
         for (int i = 0; i < m_CurrentDialogue.scenes.Length; i++)
         {
             if (sentences.Count == m_CurrentDialogue.scenes[i].sceneIndex)
@@ -113,7 +114,7 @@ public class DialogueMgt : MonoBehaviour {
                 if (m_CurrentDialogue.scenes[i].sceneClip != null)
                 {
                     m_SceneAnim.SetBool(sentences.Count.ToString(), true);
-                    StartCoroutine(ShutOffContinueButton(m_CurrentDialogue.scenes[i].sceneClip.length));
+                    //StartCoroutine(ShutOffContinueButton(m_CurrentDialogue.scenes[i].sceneClip.length));
                 }
 
             }
