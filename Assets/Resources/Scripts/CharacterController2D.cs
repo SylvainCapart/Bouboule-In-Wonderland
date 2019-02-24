@@ -60,6 +60,7 @@ public class CharacterController2D : MonoBehaviour
     private float m_MaxSparkParticles = 60f;
     private float m_MaxSparkSimulationSpeed = 3f;
     private const float EPSILON = 0.01f;
+    [SerializeField] private bool m_ExtendedJump;
 
     private AudioManager audioManager;
 
@@ -407,7 +408,7 @@ public class CharacterController2D : MonoBehaviour
             }
         }
         // If the player should jump...
-        if (!Swim && ((Grounded && jump && m_Anim.GetBool("Ground")) || (jump && climb) ))
+        if (!Swim && jump && ((Grounded && m_Anim.GetBool("Ground")) || climb || m_ExtendedJump))
         {
             // Add a vertical force to the player.
             StartCoroutine(DisableClimbFor(m_JumpDisableClimbingTime));
@@ -428,17 +429,6 @@ public class CharacterController2D : MonoBehaviour
 
         }
 
-       
-            
-
-        /*if (Rolling && Grounded)
-        {
-            audioManager.PlaySound("Rolling");
-        }
-        else if(!Rolling || !Grounded)
-        {
-            audioManager.StopSound("Rolling");
-        }*/
     }
 
 
@@ -787,6 +777,13 @@ public class CharacterController2D : MonoBehaviour
                 break;
         }
         return groundDirVector;
+    }
+
+    public IEnumerator ExtendJump()
+    {
+        m_ExtendedJump = true;
+        yield return new WaitForSeconds(0.2f);
+        m_ExtendedJump = false;
     }
 
 }

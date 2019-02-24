@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -17,12 +16,6 @@ public class QuitUIMgt : MonoBehaviour
         m_PanelAnim.SetFloat("Speed" ,-1f);
 
         m_PanelAnim.Play("QuitUIAppear", 0, 0f);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     private void OnGUI()

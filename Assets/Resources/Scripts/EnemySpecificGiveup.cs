@@ -1,13 +1,50 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(EnemyAI))]
 public class EnemySpecificGiveup : MonoBehaviour
 {
-    [SerializeField] private EnemyAI m_EnemyAI;
+    private EnemyAI m_EnemyAI;
+    private bool m_IsPlayerSwimming;
+    private bool m_UndetectIfPlayerSwimIs;
+
+    private void Start()
+    {
+        switch (transform.tag)
+        {
+            case "Fish":
+                m_UndetectIfPlayerSwimIs = false;
+                break;
+            case "Dragon":
+                m_UndetectIfPlayerSwimIs = true;
+                break;
+            default:
+                break;
+        }
+    }
 
     private void Awake()
     {
         if (m_EnemyAI == null)
             m_EnemyAI = GetComponentInParent<EnemyAI>();
+
+        CharacterController2D.OnSwimChangeRaw += OnPlayerSwim;
+    }
+
+    private void OnDestroy()
+    {
+        CharacterController2D.OnSwimChangeRaw -= OnPlayerSwim;
+    }
+
+    private void Update()
+    {
+        if (m_EnemyAI.State == EnemyAI.EnemyState.TARGET)
+        {
+            if (IsSpecificGiveup())
+                m_EnemyAI.SetTargetState(m_EnemyAI.DetectionTransform, 0, EnemyAI.EnemyState.GIVEUP);
+
+            if (m_IsPlayerSwimming == m_UndetectIfPlayerSwimIs)
+                m_EnemyAI.SetTargetState(m_EnemyAI.DetectionTransform, 0, EnemyAI.EnemyState.GIVEUP);
+        }
     }
 
     public bool IsSpecificGiveup()
@@ -22,7 +59,7 @@ public class EnemySpecificGiveup : MonoBehaviour
                     switch (m_EnemyAI.GetTarget.targettransform.tag)
                     {
                         case "Player":
-                            specificCondition = (m_EnemyAI.m_IsPlayerSwimming == m_EnemyAI.m_UndetectIfPlayerSwimIs);
+                            specificCondition = (m_IsPlayerSwimming == m_UndetectIfPlayerSwimIs);
 
                             if (m_EnemyAI.GetTarget.targettransform.GetComponent<AlgaHide>() != null)
                             {
@@ -37,7 +74,7 @@ public class EnemySpecificGiveup : MonoBehaviour
                     switch (m_EnemyAI.GetTarget.targettransform.tag)
                     {
                         case "Player":
-                            specificCondition = (m_EnemyAI.m_IsPlayerSwimming == m_EnemyAI.m_UndetectIfPlayerSwimIs);
+                            specificCondition = (m_IsPlayerSwimming == m_UndetectIfPlayerSwimIs);
                             break;
                         default:
                             break;
@@ -63,7 +100,7 @@ public class EnemySpecificGiveup : MonoBehaviour
                     switch (obj.tag)
                     {
                         case "Player":
-                            specificCondition = (m_EnemyAI.m_IsPlayerSwimming == m_EnemyAI.m_UndetectIfPlayerSwimIs);
+                            specificCondition = (m_IsPlayerSwimming == m_UndetectIfPlayerSwimIs);
 
                             if (obj.GetComponent<AlgaHide>() != null)
                             {
@@ -78,7 +115,7 @@ public class EnemySpecificGiveup : MonoBehaviour
                     switch (obj.tag)
                     {
                         case "Player":
-                            specificCondition = (m_EnemyAI.m_IsPlayerSwimming == m_EnemyAI.m_UndetectIfPlayerSwimIs);
+                            specificCondition = (m_IsPlayerSwimming == m_UndetectIfPlayerSwimIs);
                             break;
                         default:
                             break;
@@ -91,4 +128,11 @@ public class EnemySpecificGiveup : MonoBehaviour
         }
         return specificCondition;
     }
+
+    private void OnPlayerSwim(bool state)
+    {
+        m_IsPlayerSwimming = state;
+    }
+
+
 }

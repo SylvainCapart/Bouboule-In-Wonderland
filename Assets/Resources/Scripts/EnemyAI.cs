@@ -52,8 +52,8 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private GameObject m_Detection;
     [SerializeField] private GameObject m_Predetection;
     private Transform m_DetectionTransform;
-    [HideInInspector] public bool m_IsPlayerSwimming;
-    public bool m_UndetectIfPlayerSwimIs;
+
+
     [Range(0f, 1f)] [SerializeField] private float m_SleepScaleTrigger = 1f;
     [Header("Optional : ")] public EnemySpecificGiveup m_SpecificGiveup;
 
@@ -100,7 +100,6 @@ public class EnemyAI : MonoBehaviour
 
         set
         {
-            //if (m_State == value) return;
             if (m_ModeEnabled[(int)value] == false) return;
             switch (value)
             {
@@ -115,7 +114,7 @@ public class EnemyAI : MonoBehaviour
                     m_AiLerpScript.speed = m_TargetSpeed;
                     m_ExpressionManager.CancelExpression();
                     m_ExpressionManager.CallExpression(ExpressionMgt.ExpressionSymbol.EXCLAMATION);
-                    m_DetectionTransform.position = transform.position;
+                    DetectionTransform.position = transform.position;
                     break;
 
                 case EnemyState.SLEEP:
@@ -161,9 +160,11 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    public Transform DetectionTransform { get => m_DetectionTransform; set => m_DetectionTransform = value; }
+
     private void OnDestroy()
     {
-        CharacterController2D.OnSwimChangeRaw -= OnPlayerSwim;
+
 
         Destroy(transform.parent.gameObject);
     }
@@ -191,7 +192,6 @@ public class EnemyAI : MonoBehaviour
             m_Detection = GetComponentInChildren<EnemyDetection>().gameObject;
 
 
-        CharacterController2D.OnSwimChangeRaw += OnPlayerSwim;
 
         m_ModeEnabled = new bool[m_ModeNb];
 
@@ -251,9 +251,9 @@ public class EnemyAI : MonoBehaviour
         }
         State = (m_ModeEnabled[(int)EnemyState.PATROL] == true) ? EnemyState.PATROL : EnemyState.SLEEP;
 
-        m_DetectionTransform = new GameObject().transform; // empty gameobject
-        m_DetectionTransform.parent = this.transform.parent;
-        m_DetectionTransform.name = "DetectionTransform";
+        DetectionTransform = new GameObject().transform;
+        DetectionTransform.parent = this.transform.parent;
+        DetectionTransform.name = "DetectionTransform";
 
     }
 
@@ -354,24 +354,14 @@ public class EnemyAI : MonoBehaviour
 
         if (m_Target.targettransform != null)
         {
-            if (Vector3.Distance(m_Target.targettransform.position, m_DetectionTransform.position) >= m_GiveUpDistance)
+            if (Vector3.Distance(m_Target.targettransform.position, DetectionTransform.position) >= m_GiveUpDistance)
             {
-                SetTargetState(m_DetectionTransform, 0, EnemyState.GIVEUP);
+                SetTargetState(DetectionTransform, 0, EnemyState.GIVEUP);
             }
         }
         else
         {
-            SetTargetState(m_DetectionTransform, 0, EnemyState.GIVEUP);
-        }
-
-
-        if (m_IsPlayerSwimming == m_UndetectIfPlayerSwimIs)
-            SetTargetState(m_DetectionTransform, 0, EnemyState.GIVEUP);
-
-        if (m_SpecificGiveup != null)
-        {
-            if (m_SpecificGiveup.IsSpecificGiveup())
-                SetTargetState(m_DetectionTransform, 0, EnemyState.GIVEUP);
+            SetTargetState(DetectionTransform, 0, EnemyState.GIVEUP);
         }
 
     }
@@ -416,7 +406,7 @@ public class EnemyAI : MonoBehaviour
         m_Enemy.SetRegenHealthStatus(true);
         m_ModeEnabled[(int)EnemyState.TARGET] = false;
 
-        if (Vector2.Distance(transform.position, m_DetectionTransform.position) <= 0.2f)
+        if (Vector2.Distance(transform.position, DetectionTransform.position) <= 0.2f)
         {
             m_ModeEnabled[(int)EnemyState.TARGET] = true;
             if (m_ModeEnabled[(int)EnemyState.SLEEP] == true)
@@ -429,31 +419,17 @@ public class EnemyAI : MonoBehaviour
 
     public void FlipScale()
     {
-        // unparent expressionmanager then reparent it after scaling
-        //m_ExpressionManager.transform.parent = null;
-
         m_FacingRight = !m_FacingRight;
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
-
-        //m_ExpressionManager.transform.parent = transform;
     }
 
     public void FlipRotate()
     {
-
         transform.Rotate(new Vector3(0, 180, 0));
         m_ExpressionManager.transform.Rotate(new Vector3(0, 180, 0));
-        //   transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, 0, transform.rotation.z));
-        //transform.Rotate Quaternion.Euler(new Vector3(transform.rotation.x, 180, transform.rotation.z));
-        // Switch the way the player is labelled as facing.
         m_FacingRight = !m_FacingRight;
-
-        /*Vector3 scale = m_ExpressionManager.transform.localScale;
-        scale.x *= -1;
-        m_ExpressionManager.transform.localScale = scale;*/
-
     }
 
     public void SetTargetState(Transform targettransform, int priority, EnemyState state)
@@ -468,92 +444,6 @@ public class EnemyAI : MonoBehaviour
             State = state;
         }
     }
-
-
-    /* public void SetTarget(GameObject targetobj, int priority)
-     {
-         if (State != EnemyState.TARGET)
-         {
-             m_AISetter.target = targetobj.transform;
-             m_Target.targettransform = targetobj.transform;
-
-             m_Target.targetdata.priority = priority;
-
-             State = EnemyState.TARGET;
-         }
-
-     }
-
-     public void SetPreTarget(GameObject targetobj, int priority)
-     {
-         m_AISetter.target = targetobj.transform;
-         m_Target.targettransform = targetobj.transform;
-
-         m_Target.targetdata.priority = priority;
-
-         State = EnemyState.SURPRISED;
-     }
-
-     private void UnsetTarget(GameObject targetobj, float detectiondistance, float giveupdistance, int priority)
-     {
-         m_Target.targettransform = null;
-         State = EnemyState.TARGET;
-     }*/
-
-
-
-    /* private void DetectTarget(string targetname, string targettag, float detectiondistance, float giveupdistance, int priority)
-     {
-         GameObject[] potentialtargets = GameObject.FindGameObjectsWithTag(targettag);
-         GameObject target = null;
-
-         if (potentialtargets.Length >= 1)
-         {
-             for (int i = 0; i < potentialtargets.Length; i++)
-             {
-                 if (potentialtargets[i].name == targetname)
-                 {
-                     if (target != null)
-                         Debug.Log("More than one target found with name : " + targetname + " in tags : " + targettag);
-                     target = potentialtargets[i];
-                 }
-
-             }
-             if (target == null)
-             {
-                 Debug.Log("No target found with name : " + targetname + " in tags : " + targettag);
-                 return;
-             }
-         }
-         else
-         {
-             Debug.Log("No target found with tag : " + targettag);
-             return;
-         }
-
-         if (Vector3.Distance(transform.position, target.transform.position) <= detectiondistance )
-         {
-             RaycastHit2D hit = Physics2D.Raycast(this.transform.position, target.transform.position - this.transform.position, detectiondistance, m_WhatIsTarget);
-             //if (hit)
-               //  Debug.Log("hit : " + hit.transform.gameObject.name + " " + hit.transform.gameObject.tag);
-             //Debug.DrawLine(this.transform.position, target.transform.position - this.transform.position, Color.red);
-
-             if (m_Target.targettransform != null)
-             {
-                 if (priority >= m_Target.targetdata.priority && hit.collider != null && hit.collider.gameObject.name == targetname)
-                     SetTarget(target, detectiondistance, giveupdistance, priority);
-             }
-             else
-                 SetTarget(target, detectiondistance, giveupdistance, priority);
-         }
-     }*/
-
-    /*private IEnumerator ShutOffDetection()
-    {
-        m_ShutOffDetect = true;
-        yield return new WaitForSeconds(3f);
-        m_ShutOffDetect = false;
-    }*/
 
     private int GetRandomTagetIndex()
     {
@@ -571,11 +461,6 @@ public class EnemyAI : MonoBehaviour
         return 0;
     }
 
-    private void OnPlayerSwim(bool state)
-    {
-        m_IsPlayerSwimming = state;
-
-    }
 
     private void OnParticleCollision(GameObject other)
     {
@@ -588,4 +473,6 @@ public class EnemyAI : MonoBehaviour
         if (State == EnemyState.SLEEP && collision.gameObject.tag == "Player")
             FlipRotate();
     }
+
+
 }

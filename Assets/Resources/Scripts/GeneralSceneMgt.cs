@@ -5,10 +5,13 @@ using UnityEngine.SceneManagement;
 public class GeneralSceneMgt : MonoBehaviour
 {
     public enum SceneIndex {MENU, GAME};
+    public enum GameMode { NORMAL, HARD };
 
     public static GeneralSceneMgt instance;
 
     private const float EPSILON = 0.01f;
+
+    public GameMode m_GameMode;
 
     private bool m_IsMenuPlayedOnce;
 
@@ -81,8 +84,23 @@ public class GeneralSceneMgt : MonoBehaviour
 
     }
 
-    public void GoToGame()
+    public void GoToGameNormal()
     {
+        m_GameMode = GameMode.NORMAL;
+
+        if (System.Math.Abs(Time.timeScale - 1f) > EPSILON)
+            Time.timeScale = 1f;
+        AudioManager.instance.StopSound("Guitar");
+        AudioManager.instance.PlaySound("Music");
+        AudioManager.instance.MainSound = AudioManager.instance.GetSound("Music");
+        SceneManager.LoadScene((int)SceneIndex.GAME);
+
+    }
+
+    public void GoToGameHard()
+    {
+        m_GameMode = GameMode.HARD;
+
         if (System.Math.Abs(Time.timeScale - 1f) > EPSILON)
             Time.timeScale = 1f;
         AudioManager.instance.StopSound("Guitar");

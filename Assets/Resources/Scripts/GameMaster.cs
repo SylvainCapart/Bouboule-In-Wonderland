@@ -115,6 +115,21 @@ public class GameMaster : MonoBehaviour
         if (OnPlayerRespawn != null)
             OnPlayerRespawn(); // called to relink the statusindicator in the new player instance
 
+        if (GeneralSceneMgt.instance.m_GameMode == GeneralSceneMgt.GameMode.NORMAL)
+        {
+            PlayerStats.Instance.m_MaxHealth = 250;
+            PlayerStats.Instance.m_MaxOxygen = 130;
+            PlayerStats.Instance.m_MaxBreatheCapa = 250;
+            PlayerStats.Instance.m_DrowningDamage = 30;
+        }
+        else
+        {
+            PlayerStats.Instance.m_MaxHealth = 100;
+            PlayerStats.Instance.m_MaxOxygen = 100;
+            PlayerStats.Instance.m_MaxBreatheCapa = 200;
+            PlayerStats.Instance.m_DrowningDamage = 12;
+        }
+
     }
 
     void Awake()
@@ -170,6 +185,8 @@ public class GameMaster : MonoBehaviour
         GameObject clone = (GameObject)Instantiate(Resources.Load("Prefabs\\Player"));
         clone.transform.position = m_SpawnPoint.transform.position + new Vector3(0f, 0.5f, 0f);
         clone.name = "Player";
+
+
 
         if (!gm.m_IntroSceneEnded)
             clone.GetComponentInChildren<PlayerSpit>().IsSpittingAllowed = false;

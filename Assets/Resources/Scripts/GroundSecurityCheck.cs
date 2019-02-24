@@ -13,11 +13,6 @@ public class GroundSecurityCheck : MonoBehaviour
             m_Rb = GetComponentInParent<Rigidbody2D>();
     }
 
-
-
-
-
-
     private void FixedUpdate()
     {
         //after resolving physics, check if the player is not in the ground

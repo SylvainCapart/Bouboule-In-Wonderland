@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float m_FallBoundary = -20f;
     private bool m_Drowning = false;
-    private const float m_DamageAnimShutOnDelay = 0.6f;
+    private const float m_DamageAnimShutOnDelay = 0.9f;
     private bool m_Damagable = true;
     [SerializeField] private bool m_Burnable;
 

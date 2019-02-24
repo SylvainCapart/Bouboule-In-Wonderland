@@ -5,7 +5,7 @@ public class MenuButton : MonoBehaviour
 {
     public enum ButtonAction
     {
-        QUIT, PLAY, CREDITS, BACK_CREDITS
+        QUIT, PLAY_NORMAL, PLAY_HARD, CREDITS, BACK_CREDITS
     }
 
     private Button m_Button;
@@ -22,8 +22,11 @@ public class MenuButton : MonoBehaviour
                 case ButtonAction.QUIT:
                     m_Button.onClick.AddListener(GeneralSceneMgt.instance.QuitGame);
                     break;
-                case ButtonAction.PLAY:
-                    m_Button.onClick.AddListener(GeneralSceneMgt.instance.GoToGame);
+                case ButtonAction.PLAY_NORMAL:
+                    m_Button.onClick.AddListener(GeneralSceneMgt.instance.GoToGameNormal);
+                    break;
+                case ButtonAction.PLAY_HARD:
+                    m_Button.onClick.AddListener(GeneralSceneMgt.instance.GoToGameHard);
                     break;
                 case ButtonAction.CREDITS:
                     m_Button.onClick.AddListener(CameraMenuSwitcher.instance.SetCameraToCredits);
@@ -35,11 +38,6 @@ public class MenuButton : MonoBehaviour
                     break;
             }
         }
-    }
-
-    void OnDestroy()
-    {
-        m_Button.onClick.RemoveAllListeners();
     }
 
 }

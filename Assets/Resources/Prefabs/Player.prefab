@@ -12,7 +12,7 @@ GameObject:
   m_Layer: 10
   m_Name: GroundCheck (2)
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -4498,7 +4498,7 @@ GameObject:
   m_Layer: 10
   m_Name: GroundCheck (1)
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -13444,7 +13444,6 @@ GameObject:
   - component: {fileID: 657}
   - component: {fileID: 659}
   - component: {fileID: 660}
-  - component: {fileID: 415}
   - component: {fileID: 416}
   - component: {fileID: 390}
   - component: {fileID: 446}
@@ -13452,6 +13451,7 @@ GameObject:
   - component: {fileID: 655}
   - component: {fileID: 663}
   - component: {fileID: 438}
+  - component: {fileID: 1487944015709727876}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -13567,7 +13567,7 @@ MonoBehaviour:
   m_Swim: 0
   m_Climb: 0
   m_climbingCollider: {fileID: 416}
-  m_swimmingCollider: {fileID: 415}
+  m_swimmingCollider: {fileID: 1487944015709727876}
   m_WhatIsVine:
     serializedVersion: 2
     m_Bits: 256
@@ -13601,7 +13601,7 @@ MonoBehaviour:
   - {fileID: 238}
   m_CeilingCheck: {fileID: 245}
   m_RollDisableColliderTable:
-  - {fileID: 415}
+  - {fileID: 0}
   - {fileID: 390}
   m_RollCollider: {fileID: 391}
   m_climbingTrigger: {fileID: 416}
@@ -13662,32 +13662,6 @@ MonoBehaviour:
   m_SpriteRenderer: {fileID: 532}
   m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
   m_SwimColor: {r: 0.5803922, g: 0.83137256, b: 1, a: 1}
---- !u!61 &415
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 53}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 6200000, guid: afd8c4f0c079cc448a618bd3e1876a77, type: 2}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.091798425}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.72, y: 0.74}
-    newSize: {x: 0.88, y: 0.73}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.68, y: 0.56267285}
-  m_EdgeRadius: 0
 --- !u!61 &416
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13798,6 +13772,22 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 53}
   m_Enabled: 1
+--- !u!70 &1487944015709727876
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: afd8c4f0c079cc448a618bd3e1876a77, type: 2}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.002681499, y: 0.04181433}
+  m_Size: {x: 0.67637247, y: 0.67637247}
+  m_Direction: 1
 --- !u!1 &54
 GameObject:
   m_ObjectHideFlags: 0
@@ -13810,7 +13800,7 @@ GameObject:
   m_Layer: 10
   m_Name: GroundCheckMid
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -27896,3 +27886,4 @@ MonoBehaviour:
   - {fileID: 485}
   - {fileID: 484}
   m_SpitStatus: 0
+  m_isSpittingAllowed: 1
