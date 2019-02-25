@@ -179,7 +179,7 @@ MonoBehaviour:
   m_CurrentHealth: 0
   m_MaxHealth: 0
   m_StartPcHealh: 1
-  m_Damage: 25
+  m_Damage: 40
   m_HealthRegenRate: 0.2
   m_HealthRegenAmount: 10
   m_ShakeAmountAmt: 0.1
