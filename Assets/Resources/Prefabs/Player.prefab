@@ -13450,7 +13450,6 @@ GameObject:
   - component: {fileID: 391}
   - component: {fileID: 655}
   - component: {fileID: 663}
-  - component: {fileID: 438}
   - component: {fileID: 1487944015709727876}
   m_Layer: 10
   m_Name: Player
@@ -13615,6 +13614,7 @@ MonoBehaviour:
   m_Swimming: 0
   m_Charging: 0
   m_SparkEffect: {fileID: 481}
+  m_ExtendedJump: 0
   m_GroundDir: 0
   m_SideLeftGravCoeff: 1.3
 --- !u!114 &657
@@ -13764,14 +13764,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Hidden: 0
---- !u!81 &438
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 53}
-  m_Enabled: 1
 --- !u!70 &1487944015709727876
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 
 public class ChestMgt : MonoBehaviour
@@ -11,7 +10,6 @@ public class ChestMgt : MonoBehaviour
     [SerializeField] private float m_CoinsRangeX = 1f;
     [SerializeField] private float m_CoinsRangeY = 1f;
     [SerializeField] private bool[] m_SlotFilled;
-    [SerializeField] private Transform resetButton;
     private const float JEWEL_ANIM_LENGTH = 1f;
     private Animator m_Anim;
     [SerializeField] private CameraShake cameraShake;
@@ -29,9 +27,6 @@ public class ChestMgt : MonoBehaviour
         if (m_Anim == null)
             Debug.LogError(this.name + " : Animator not found");
 
-        if (resetButton == null)
-            resetButton = GameObject.Find("UIOverlay").transform.Find("JewelResetButton");
-            
         cameraShake = CameraShake.instance;
 
         m_AudioManager = AudioManager.instance;
@@ -53,11 +48,6 @@ public class ChestMgt : MonoBehaviour
 
             Destroy(collision.gameObject);
 
-        }
-
-        if (collision.gameObject.tag == "Player")
-        {
-            resetButton.gameObject.SetActive(true);
         }
     }
 
@@ -91,7 +81,6 @@ public class ChestMgt : MonoBehaviour
             }
             m_AudioManager.PlaySound("Explosion");
             cameraShake.Shake(0.2f, 0.4f);
-            resetButton.gameObject.SetActive(false);
             Destroy(explosionClone, m_ExplosionOnDeletePrefab.GetComponent<ParticleSystem>().main.startLifetime.constant + m_ExplosionOnDeletePrefab.GetComponent<ParticleSystem>().main.duration);
             Destroy(this.gameObject);
         }
