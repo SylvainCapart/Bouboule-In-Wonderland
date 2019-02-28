@@ -1,9 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using Pathfinding;
 using UnityEngine;
 
-//[RequireComponent(typeof(EnemyAI))]
 public class Enemy : MonoBehaviour
 {
     public enum Mode { IDLE, PATROL, TARGET };
@@ -35,10 +32,6 @@ public class Enemy : MonoBehaviour
         set { m_MaxHealth = value; }
     }
 
-    //public Transform deathParticles;
-
-
-
     public void Init()
     {
         CurrentHealth = (int)(m_StartPcHealh * MaxHealth);
@@ -63,26 +56,7 @@ public class Enemy : MonoBehaviour
 
         if (m_Burnable && m_BurnEffect == null)
             m_BurnEffect = GameObject.FindGameObjectWithTag("BurnEffect").GetComponent<ParticleSystem>();
-        /*if (deathParticles == null)
-        {
-            Debug.Log("No death particles found in enemy");
-        }*/
-
-        //GameMaster.gm.onToggleUpgrademenu += OnUpgradeMenuToggle;
-
     }
-
-    /*private void OnEnable()
-    {
-        if (m_Burnable)
-            SourceFire.OnFireHit += Burn;
-    }
-
-    private void OnDisable()
-    {
-        if (m_Burnable)
-            SourceFire.OnFireHit -= Burn;
-    }*/
 
     public void DamageEnemy(int damageReceived)
     {
@@ -101,52 +75,11 @@ public class Enemy : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D _colInfo)
     {
         Player _player = _colInfo.collider.GetComponent<Player>();
-        //Vector2 repulsiveVector;
+
         if (_player != null)
         {
-            //repulsiveVector = new Vector2((_colInfo.transform.position.x - this.transform.position.x), _colInfo.transform.position.y - this.transform.position.y);
             _player.DamagePlayer(m_Damage);
-            //_player.GetComponent<Rigidbody2D>().AddForce(repulsiveVector * m_RepulsePlayerCoeff, ForceMode2D.Impulse);
         }
-    }
-
-
-    private void FixedUpdate()
-    {
-        
-    }
-
-
-    void OnUpgradeMenuToggle(bool active)
-    {
-        //handle what happens when the upgrade menu is toggled
-        /*Rigidbody2D _rb = GetComponent<Rigidbody2D>();
-        if (_rb != null)
-        {
-            _rb.velocity = Vector2.zero;
-        }*/
-
-        /*EnemyAI _AI = GetComponent<EnemyAI>();
-        if (_AI != null)
-            _AI.enabled = !active;
-
-        Rigidbody2D _rb = GetComponent<Rigidbody2D>();
-        if (_rb != null)
-        {
-            if (active)
-            {
-                _rb.bodyType = RigidbodyType2D.Static;
-
-            }
-            else
-            {
-                _rb.bodyType = RigidbodyType2D.Dynamic;
-            }
-                
-        }*/
-        //   _rb.gameObject.SetActive(!active);
-        //GetComponent<Seeker>().enabled = !active;
-
     }
 
     private void OnParticleCollision(GameObject other)
@@ -176,19 +109,14 @@ public class Enemy : MonoBehaviour
 
     private void Burn()
     {
-
         m_BurnEffect.Play();
         DamageEnemy(1);
-        //StartCoroutine(BurnCoroutine());
-
     }
 
     private IEnumerator BurnCoroutine()
     {
         m_BurnEffect.Play();
-
         yield return (new WaitForSeconds(m_BurnEffect.main.duration));
-
     }
 
 

@@ -9,6 +9,9 @@ public class EnemySpecificGiveup : MonoBehaviour
 
     private void Start()
     {
+        if (m_EnemyAI == null)
+            m_EnemyAI = GetComponentInParent<EnemyAI>();
+
         switch (transform.tag)
         {
             case "Fish":
@@ -22,15 +25,12 @@ public class EnemySpecificGiveup : MonoBehaviour
         }
     }
 
-    private void Awake()
+    private void OnEnable()
     {
-        if (m_EnemyAI == null)
-            m_EnemyAI = GetComponentInParent<EnemyAI>();
-
         CharacterController2D.OnSwimChangeRaw += OnPlayerSwim;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         CharacterController2D.OnSwimChangeRaw -= OnPlayerSwim;
     }

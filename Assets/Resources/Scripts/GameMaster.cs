@@ -4,11 +4,8 @@ using UnityStandardAssets._2D;
 
 public class GameMaster : MonoBehaviour
 {
-
     public static GameMaster gm;
 
-
-    //public Transform playerPrefab;
     private GameObject m_SpawnPoint;
     private GameObject[] m_SpawnArray;
 
@@ -118,15 +115,13 @@ public class GameMaster : MonoBehaviour
         if (GeneralSceneMgt.instance.m_GameMode == GeneralSceneMgt.GameMode.NORMAL)
         {
             PlayerStats.Instance.m_MaxHealth = 250;
-            PlayerStats.Instance.m_MaxOxygen = 130;
-            PlayerStats.Instance.m_MaxBreatheCapa = 250;
+            PlayerStats.Instance.m_MaxOxygen = 120;
             PlayerStats.Instance.m_DrowningDamage = 30;
         }
         else
         {
             PlayerStats.Instance.m_MaxHealth = 100;
             PlayerStats.Instance.m_MaxOxygen = 100;
-            PlayerStats.Instance.m_MaxBreatheCapa = 200;
             PlayerStats.Instance.m_DrowningDamage = 12;
         }
 
@@ -134,9 +129,6 @@ public class GameMaster : MonoBehaviour
 
     void Awake()
     {
-        //if (gm == null)
-        //  gm = GameObject.FindGameObjectWithTag("GM").GetComponent<GameMaster>();
-
         if (gm != null)
         {
             if (gm != this)
@@ -152,9 +144,6 @@ public class GameMaster : MonoBehaviour
         GameObject clone = (GameObject)Instantiate(Resources.Load("Prefabs\\Player"));
         clone.transform.position = m_InitSpawnPoint.position + new Vector3(0f, 0.5f, 0f);
         clone.name = "Player";
-
-        //if (gm.m_IntroSceneEnded == false)
-          //  clone.GetComponentInChildren<PlayerSpit>().IsSpittingAllowed = false;
 
         Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
         if (cameraFollow != null)

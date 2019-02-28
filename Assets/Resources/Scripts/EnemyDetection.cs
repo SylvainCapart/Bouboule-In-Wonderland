@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(EnemyAI))]
 public class EnemyDetection : MonoBehaviour
 {
-    [SerializeField] private EnemyAI m_EnemyAI;
+    private EnemyAI m_EnemyAI;
 
-    private void Awake()
+    private void Start()
     {
         if (m_EnemyAI == null)
             m_EnemyAI = GetComponentInParent<EnemyAI>();

@@ -9,87 +9,70 @@ public class EnemyAI : MonoBehaviour
 
     /* ---- DRAGON BEHAVIOR ---- */
 
-    public enum EnemyState { PATROL, TARGET, SLEEP, SURPRISED, GIVEUP };
-    [SerializeField] private EnemyState m_State;
-    private EnemyState m_LastState;
-    [SerializeField] private AILerp m_AiLerpScript;
-    [SerializeField] private AIDestinationSetter m_AISetter;
-    public bool[] m_ModeEnabled;
-    private Enemy m_Enemy;
-    private ExpressionMgt m_ExpressionManager;
-    private const int m_ModeNb = 5;
-
-
-
-    /* ----------------------------- */
+    public enum EnemyState { PATROL, TARGET, SLEEP, SURPRISED, GIVEUP }; // different EnemyAI modes
+    private const int m_ModeNb = 5; // Number of AI states
+    [SerializeField] private EnemyState m_State; // current state of the AI
+    private EnemyState m_LastState; // previous state of the AI
+    [SerializeField] private AILerp m_AiLerpScript; // Lerp script used by the astar path
+    [SerializeField] private AIDestinationSetter m_AISetter; // Setter script used by the astar pat, to set the target
+    public bool[] m_ModeEnabled; // Which modes are enabled for the AI, among the EnemyStates above
+    private Enemy m_Enemy; // Stats class used for the AI (health and other stats)
+    private ExpressionMgt m_ExpressionManager; // Expression manager allows to render some expressions near the AI (example exclamation mark)
+    [HideInInspector] public bool m_FacingRight = true; // direction the AI is facing
 
     /* ---- MODE TARGET ---- */
 
-    // target related
     [System.Serializable]
-    public class TargetData
+    public class TargetData // data class for the potential targets
     {
-        public string targettag;
-        public int priority;
+        public string targettag; // tag of the potential target
+        public int priority; // priority of the potential target, in case of conflict with other detected targets
     };
 
     [System.Serializable]
-    public class Target
+    public class Target // data class for the current target
     {
-        public Transform targettransform;
-        public int targetpriority;
-
+        public Transform targettransform; // transform reference of the target
+        public int targetpriority; // priority of the current target, in case of conflict with other detected targets
     };
 
-    [SerializeField] private Target m_Target;
-    public TargetData[] m_TargetsArray;
-    public LayerMask m_WhatIsTarget;
-    [SerializeField] private float m_GiveUpDistance = 15f;
-    [SerializeField] private bool m_CanMoveInTargetMode = true;
-    [SerializeField] private float m_TargetSpeed;
+    [SerializeField] private Target m_Target; // current target
+    public TargetData[] m_TargetsArray; // potential targets
+    public LayerMask m_WhatIsTarget; // layers where the potential targets will be searched for
+    [SerializeField] private float m_GiveUpDistance = 15f; // after detecting a target, the maximum distance the AI can move before going back to the detecting point
+    [SerializeField] private bool m_CanMoveInTargetMode = true; // should the AI move or not in target mode
+    [SerializeField] private float m_TargetSpeed; // speed of the AI in target mode
 
     // Detection
-    [SerializeField] private GameObject m_Detection;
-    [SerializeField] private GameObject m_Predetection;
-    private Transform m_DetectionTransform;
+    [SerializeField] private GameObject m_Detection; // gameobject with triggers and detection script
+    [SerializeField] private GameObject m_Predetection; // gameobject with triggers and predetection script
+    private Transform m_DetectionTransform; // transform of the point where the AI switches to target mode when a target is detected
 
 
-    [Range(0f, 1f)] [SerializeField] private float m_SleepScaleTrigger = 1f;
-    [Header("Optional : ")] public EnemySpecificGiveup m_SpecificGiveup;
-
-    // orientation
-    [HideInInspector] public bool m_FacingRight = true;
-
-    /* ----------------------------- */
+    [Range(0f, 1f)] [SerializeField] private float m_SleepScaleTrigger = 1f; // reducing factor of the triggers when sleeping
+    [Header("Optional : ")] public EnemySpecificGiveup m_SpecificGiveup; // optional additional giveup conditions following the tag of the AI
 
     /* ---- MODE PATROL ---- */
 
-    public Transform[] m_PatrolPoints;
-    [SerializeField] private int m_LastPatrolIndex = 0;
-    [SerializeField] private int m_PatrolPointIndex = 0;
-    public bool m_Randomize;
-    private int[] m_validChoices;
-    [SerializeField] private float m_PatrolSpeed;
-
-    /* ----------------------------- */
+    public Transform[] m_PatrolPoints; // array of patrol points where the AI moves
+    [SerializeField] private int m_LastPatrolIndex = 0; // index of the last patrol point that was reached
+    [SerializeField] private int m_PatrolPointIndex = 0; // current targeted patrol point index in the array
+    public bool m_Randomize; // is the path between the patrol points random or not. If not, AI moves from 0 -> 1 -> ... -> n and goes back to 0
+    private int[] m_validChoices; // attay of valid choices for the random patroling, excluding the point that is reached
+    [SerializeField] private float m_PatrolSpeed; // speed of the AI in patrol mode
 
     /* ---- MODE SLEEP ---- */
 
-    private Transform m_StartPosition;
-    public bool m_SleepRight;
-
-
-    /* ----------------------------- */
+    private Transform m_StartPosition; // fixed position iwhere the AI should sleep
+    public bool m_SleepRight; // should the AI sleeps right or left
 
     /* ---- MODE SURPRISED ---- */
 
-    [SerializeField] private float m_SurprisedDelay = 3f;
-    private bool m_IsSurprisedDelayInit;
-    private float m_InitSurprisedTime;
+    [SerializeField] private float m_SurprisedDelay = 3f; // how long should the AI be surprised
+    private float m_InitSurprisedTime; // initial time when the suprised mode is triggered
+    private bool m_IsSurprisedDelayInit; // is initial time for the surprised mode initialized, aka is the surprised mode triggered
 
     /* ----------------------------- */
-
-
 
     public EnemyState State
     {
@@ -137,8 +120,7 @@ public class EnemyAI : MonoBehaviour
                     break;
 
                 default:
-                    if (DebugMode)
-                        Debug.Log("Unknown state in " + this.name);
+                    Debug.Log("Unknown state in " + this.name);
                     break;
             }
 
@@ -150,7 +132,6 @@ public class EnemyAI : MonoBehaviour
 
         }
     }
-
 
     public Target GetTarget
     {
@@ -164,12 +145,8 @@ public class EnemyAI : MonoBehaviour
 
     private void OnDestroy()
     {
-
-
         Destroy(transform.parent.gameObject);
     }
-
-
 
     private void Awake()
     {
@@ -190,12 +167,8 @@ public class EnemyAI : MonoBehaviour
             m_Predetection = GetComponentInChildren<EnemyPredetection>().gameObject;
         if (m_Detection == null)
             m_Detection = GetComponentInChildren<EnemyDetection>().gameObject;
-
-
-
+            
         m_ModeEnabled = new bool[m_ModeNb];
-
-
 
         for (int i = 0; i < m_ModeNb; i++)
         {
@@ -208,8 +181,6 @@ public class EnemyAI : MonoBehaviour
                 Debug.Log(this.name + " will not follow any target, possible target array is empty. Mode TARGET disabled");
             m_ModeEnabled[(int)EnemyState.TARGET] = false;
         }
-
-
 
         if (m_Randomize && m_PatrolPoints.Length < 3)
         {
@@ -283,8 +254,7 @@ public class EnemyAI : MonoBehaviour
                 GiveUpMode();
                 break;
             default:
-                if (DebugMode)
-                    Debug.Log("Unknown state in " + this.name);
+                Debug.Log("Unknown state in " + this.name);
                 break;
         }
 
@@ -339,18 +309,13 @@ public class EnemyAI : MonoBehaviour
                     ++m_PatrolPointIndex;
                 }
             }
-
         }
-
     }
 
     void TargetMode()
     {
         m_Enemy.SetRegenHealthStatus(false);
         m_IsSurprisedDelayInit = false;
-
-
-
 
         if (m_Target.targettransform != null)
         {
@@ -363,7 +328,6 @@ public class EnemyAI : MonoBehaviour
         {
             SetTargetState(DetectionTransform, 0, EnemyState.GIVEUP);
         }
-
     }
 
     void SleepMode()
@@ -392,7 +356,6 @@ public class EnemyAI : MonoBehaviour
             m_IsSurprisedDelayInit = true;
         }
 
-
         if (Time.time - m_InitSurprisedTime > m_SurprisedDelay)
         {
             State = m_LastState;
@@ -414,15 +377,6 @@ public class EnemyAI : MonoBehaviour
             else
                 SetTargetState(transform.parent.transform, 0, EnemyState.PATROL);
         }
-
-    }
-
-    public void FlipScale()
-    {
-        m_FacingRight = !m_FacingRight;
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
     }
 
     public void FlipRotate()
@@ -456,7 +410,6 @@ public class EnemyAI : MonoBehaviour
         {
             if (m_validChoices[i] == value)
                 return i;
-
         }
         return 0;
     }
