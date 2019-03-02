@@ -20,7 +20,6 @@ public class GlowingFishLight : MonoBehaviour
     {
         if (m_SpriteRenderer == null)
             Debug.LogError(this.name + " : SpriteRenderer not found");
-        //m_SpriteRenderer.color = Color.blue;
 
         m_co = Glow();
         StartCoroutine(m_co);
@@ -44,7 +43,6 @@ public class GlowingFishLight : MonoBehaviour
         {
             for (float t = 0.0f; t < (0.5f * m_GlowPeriod); t += Time.deltaTime)
             {
-                //m_SpriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, originalColor.a * (1 - 2*t / m_GlowPeriod));
                 m_SpriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, m_MaxAlphaGlow + (m_MinAlphaGlow - m_MaxAlphaGlow) * (2 * t / m_GlowPeriod));
                 yield return null;
             }
@@ -53,7 +51,6 @@ public class GlowingFishLight : MonoBehaviour
 
             for (float t = 0.0f; t < (0.5f * m_GlowPeriod); t += Time.deltaTime)
             {
-                //m_SpriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, originalColor.a * (2*t / m_GlowPeriod));
                 m_SpriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, m_MinAlphaGlow + (m_MaxAlphaGlow - m_MinAlphaGlow) * (2 * t / m_GlowPeriod));
                 yield return null;
             }

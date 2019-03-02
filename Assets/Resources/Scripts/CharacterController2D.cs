@@ -1,8 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
-using System.Collections.Generic;
-
 
 public class CharacterController2D : MonoBehaviour
 {
@@ -142,37 +139,12 @@ public class CharacterController2D : MonoBehaviour
         if (Grounded && inAir)
         {
             audioManager.PlaySound("Landing");
-            //StartCoroutine(StepShutOff(0.4f));
             inAir = false;
         }
-
-
-
-
-
-        //Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_whatIsGround);
-
     }
-
-    /*void OnGUI()
-    {
-        hSliderValue = GUI.HorizontalSlider(new Rect(25, 45, 100, 30), hSliderValue, 0.0F, 3.0F);
-    }*/
-
 
     public void Move(float xMove, float yMove, bool jump, bool roll, bool charging, bool climb, bool swim)
     {
-
-        /*// If rolling, check to see if the character can stand up
-        if (!roll && !swim)
-        {
-            // If the character has a ceiling preventing them from standing up, keep them rolling
-            if (Physics2D.OverlapCircle(m_CeilingCheck.position, k_CeilingRadius, m_whatIsGround) && !climb)
-            {
-                roll = true;
-            }
-        }*/
-
         Rolling = roll;
         Climbing = climb;
         Charging = charging;
@@ -299,25 +271,6 @@ public class CharacterController2D : MonoBehaviour
 
 
                 targetVelocity = new Vector2(xMove * m_climbSpeed * 10f, yMove * m_climbSpeed * 10f);
-                /*switch (m_GroundDir)
-                {
-                    case GroundDirection.LEFT:
-                        targetVelocity = new Vector2(xMove * m_climbSpeed * 10f, yMove * m_climbSpeed * 10f);
-                        break;
-                    case GroundDirection.RIGHT:
-                        // to be implemented if needed
-                        break;
-                    case GroundDirection.TOP:
-                        // to be implemented if needed
-                        break;
-                    case GroundDirection.BOTTOM:
-                        targetVelocity = new Vector2(xMove * m_climbSpeed * 10f, yMove * m_climbSpeed * 10f);
-                        // to be implemented if needed
-                        break;
-                    default:
-                        targetVelocity = new Vector2(xMove * m_climbSpeed * 10f, yMove * m_climbSpeed * 10f);
-                        break;
-                }*/
             }
             else if (swim)
             {
@@ -331,17 +284,12 @@ public class CharacterController2D : MonoBehaviour
                 }
 
                 m_Anim.SetBool("Swimming", Swimming);
-                //this.gameObject.GetComponent<Rigidbody2D>().gravityScale = m_archimedeGravity;
-                ////
                 targetVelocity = new Vector2(xMove * m_SwimSpeed * 10f * m_DrowningSpeedReduction, yMove * m_SwimSpeed * 10f * m_DrowningSpeedReduction);
             }
             else
             {
                 m_Anim.SetBool("Climb", false);
                 m_Anim.SetBool("Swimming", false);
-                ////
-                //this.gameObject.GetComponent<Rigidbody2D>().gravityScale = m_normalGravity;
-
 
                 switch (m_GroundDir)
                 {
@@ -362,10 +310,6 @@ public class CharacterController2D : MonoBehaviour
                         break;
                 }
             }
-
-
-
-
 
             // And then smoothing it out and applying it to the character
             m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_velocity, m_movementSmoothing);
@@ -419,20 +363,14 @@ public class CharacterController2D : MonoBehaviour
                 m_Rigidbody2D.AddForce(GetGroundDirVector() * m_JumpForce * m_JumpReductionWhenClimbing);
             else
                 m_Rigidbody2D.AddForce(GetGroundDirVector() * m_JumpForce);
-
         }
 
         if (Grounded && !inAir && m_StepAllowed && IsPlayerMovingX(xMove) && !roll)
         {
             audioManager.PlaySound("FootStep");
             StartCoroutine(StepShutOff(0.4f));
-
         }
-
     }
-
-
-
 
     private void FlipScale()
     {
@@ -449,17 +387,9 @@ public class CharacterController2D : MonoBehaviour
     {
 
         transform.Rotate(new Vector3(0, 180, 0));
-        //   transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, 0, transform.rotation.z));
-        //transform.Rotate Quaternion.Euler(new Vector3(transform.rotation.x, 180, transform.rotation.z));
+
         // Switch the way the player is labelled as facing.
         m_FacingRight = !m_FacingRight;
-
-    }
-
-
-
-    private void GroundSecurityCheck()
-    {
 
     }
 
@@ -501,8 +431,6 @@ public class CharacterController2D : MonoBehaviour
         m_climbingTrigger.enabled = true;
     }
 
-
-
     void EnableParticleEffect(ParticleSystem part, bool state)
     {
         if (state)
@@ -516,8 +444,6 @@ public class CharacterController2D : MonoBehaviour
                 part.Stop();
         }
     }
-
-
 
     void RollCharge()
     {
@@ -552,8 +478,6 @@ public class CharacterController2D : MonoBehaviour
         audioManager.StopSound("FastRolling");
     }
 
-
-
     void RollChargeReset()
     {
         m_Anim.speed = 1f;
@@ -581,7 +505,6 @@ public class CharacterController2D : MonoBehaviour
 
                         collision.rigidbody.AddForce(oppositeForce);
                     }
-
                 }
             }
         }
@@ -611,8 +534,6 @@ public class CharacterController2D : MonoBehaviour
     {
         return (Mathf.Abs(x) > 0.1f);
     }
-
-
 
     public bool Rolling
     {

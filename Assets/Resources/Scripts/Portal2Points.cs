@@ -11,7 +11,6 @@ public class Portal2Points : MonoBehaviour
     {
          if (collision.tag == "Player" && m_IsDoorActive)
         {
-            //StartCoroutine(DoorShutOff(m_TargetDoor.GetComponent<CapsuleCollider2D>(), 1f));
             m_TargetDoor.GetComponent<Portal2Points>().m_IsDoorActive = false;
             collision.transform.position = m_TargetDoor.position;
         }

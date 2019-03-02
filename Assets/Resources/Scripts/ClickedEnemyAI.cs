@@ -112,7 +112,6 @@ public class ClickedEnemyAI : MonoBehaviour
         }
     }
 
-
     public Target GetTarget
     {
         get
@@ -125,8 +124,6 @@ public class ClickedEnemyAI : MonoBehaviour
     {
         Destroy(transform.parent.gameObject);
     }
-
-
 
     private void Awake()
     {
@@ -189,9 +186,6 @@ public class ClickedEnemyAI : MonoBehaviour
                 FlipRotate();
             }
         }
-
-
-
     }
 
     void PatrolMode()
@@ -245,7 +239,6 @@ public class ClickedEnemyAI : MonoBehaviour
             m_PatrolSpeed = 8f;
             State = EnemyState.PATROL;
         }
-
     }
 
 
@@ -269,8 +262,6 @@ public class ClickedEnemyAI : MonoBehaviour
         }
     }
 
-
-
     private int GetRandomTagetIndex()
     {
         return m_validChoices[(Random.Range(0, m_PatrolPoints.Length - 1))];
@@ -286,7 +277,5 @@ public class ClickedEnemyAI : MonoBehaviour
         }
         return 0;
     }
-
-
 
 }

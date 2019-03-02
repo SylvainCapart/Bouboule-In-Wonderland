@@ -12,18 +12,7 @@ public class JewelMgt : MonoBehaviour {
 
     private void Start()
     {
-
         m_RespawnPos = this.transform.position;
-
-        /*GameObject waterMap = GameObject.Find("Tilemap_Water");
-        if (waterMap != null)
-            m_RespawnLimitY = waterMap.GetComponentInChildren<WaterLevel>().WaterLevelPosition.position.y;
-        else
-        {
-            Debug.LogError(this.gameObject.name + " : tilemap_water could not be found");
-        }*/
-
-        
     }
 
     // Update is called once per frame

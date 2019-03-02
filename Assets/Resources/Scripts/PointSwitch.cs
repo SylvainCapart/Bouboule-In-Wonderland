@@ -40,7 +40,6 @@ public class PointSwitch : MonoBehaviour {
         }
 
         Move(horizontalMove * moveSpeed * Time.fixedDeltaTime);
-        //Vector2 checkDistance = new Vector2(Vector2.Distance(points[targetPointIndex].position, this.transform.position), 0);
 
         if (Vector2.Distance(points[targetPointIndex].position, this.transform.position) < 0.3f)
         {

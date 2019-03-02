@@ -2,7 +2,6 @@
 
 public class UpperChestDestroy : MonoBehaviour
 {
-
     public delegate void UpperChestDestroyDel();
     public static event UpperChestDestroyDel OnUpperChestDestroy;
 

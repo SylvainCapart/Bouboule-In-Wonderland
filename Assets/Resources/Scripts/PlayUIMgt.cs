@@ -35,8 +35,6 @@ public class PlayUIMgt : MonoBehaviour
 
     public void OpenPanel()
     {
-        //Time.timeScale = 0f;
-
         m_IsPanelOpen = true;
         m_PanelAnim.SetFloat("Speed", 1f);
 
@@ -49,8 +47,6 @@ public class PlayUIMgt : MonoBehaviour
 
     public void ClosePanel()
     {
-        //Time.timeScale = 1f;
-
         m_IsPanelOpen = false;
 
         m_PanelAnim.SetFloat("Speed", -1f);

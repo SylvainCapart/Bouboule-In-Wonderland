@@ -118,6 +118,4 @@ public class Enemy : MonoBehaviour
         m_BurnEffect.Play();
         yield return (new WaitForSeconds(m_BurnEffect.main.duration));
     }
-
-
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -68,14 +66,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (m_climbingCollider.IsTouchingLayers(m_WhatIsVine))
         {
-            // m_verticalMove = Input.GetAxisRaw("Vertical") * m_speedCoeff;
             m_Climb = true;
         }
         else
         {
-            //m_verticalMove = 0f;
             m_Climb = false;
-
         }
 
         m_horizontalMove = Input.GetAxisRaw("Horizontal") * m_speedCoeff;
@@ -117,7 +112,7 @@ public class PlayerMovement : MonoBehaviour
     void OnTriggerExit2D(Collider2D collision)
     {
 
-        if (collision.gameObject.tag == "Water" || collision.gameObject.tag == "MovingWater")// && transform.position.y <= collision.bounds.center.y + collision.bounds.extents.y)
+        if (collision.gameObject.tag == "Water" || collision.gameObject.tag == "MovingWater")
         {
             GameObject movingWaterTilemap = GameObject.FindGameObjectWithTag("MovingWater");
             GameObject waterTilemap = GameObject.FindGameObjectWithTag("Water");
@@ -133,7 +128,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
 
-        if (collision.gameObject.tag == "Water" || collision.gameObject.tag == "MovingWater")// && transform.position.y <= collision.bounds.center.y + collision.bounds.extents.y)
+        if (collision.gameObject.tag == "Water" || collision.gameObject.tag == "MovingWater")
         {
 
             m_Swim = true;

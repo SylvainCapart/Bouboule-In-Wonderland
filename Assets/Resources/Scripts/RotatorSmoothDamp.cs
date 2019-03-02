@@ -35,14 +35,6 @@ public class RotatorSmoothDamp : MonoBehaviour
     private IEnumerator Rotate()
     {
         m_IsRotating = true;
-
-        /*for (float t = 0.0f; t < m_Delay; t += Time.deltaTime)
-        {
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, (m_OriginAngle - m_TargetAngle) * (1 - t / m_Delay) + m_TargetAngle));
-            yield return null;
-        }*/
-
-        //transform.rotation = Vector3.SmoothDamp(new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z), new Vector3(m_TargetAngle.x, m_TargetAngle.y, m_TargetAngle.z), ref m_Angle, m_MovementSmoothing);
         float newangle = Mathf.SmoothDampAngle(transform.eulerAngles.z, target.eulerAngles.z, ref m_Angle, m_MovementSmoothing);
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, newangle));
 

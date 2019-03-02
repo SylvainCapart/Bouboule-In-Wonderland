@@ -148,8 +148,6 @@ public class GameMaster : MonoBehaviour
         Camera2DFollow cameraFollow = Camera.main.GetComponentInParent<Camera2DFollow>();
         if (cameraFollow != null)
             cameraFollow.target = clone.transform;
-
-
     }
 
     public IEnumerator RespawnPlayer()
@@ -190,8 +188,6 @@ public class GameMaster : MonoBehaviour
 
     public static void KillPlayer(Player player)
     {
-
-
         if (player.gameObject != null)
         {
             if (OnPlayerKill != null)

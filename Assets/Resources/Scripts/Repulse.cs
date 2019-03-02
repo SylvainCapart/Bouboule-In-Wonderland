@@ -35,7 +35,7 @@ public class Repulse : MonoBehaviour
             {
                 repulsiveVector = new Vector2(collision.transform.position.x - this.transform.position.x, collision.transform.position.y - this.transform.position.y);
                 incRb = collision.GetComponent<Rigidbody2D>();
-                if (incRb != null /*&& m_Anim.GetBool("BounceActivation")*/)
+                if (incRb != null)
                 {
                     if (collision.tag == "Player")
                     {

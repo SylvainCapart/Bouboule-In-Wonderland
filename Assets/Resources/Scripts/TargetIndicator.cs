@@ -1,9 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 public class TargetIndicator : MonoBehaviour
 {
-    //private GameObject m_player;
     private Transform m_ArrowParent;
     [SerializeField] private string m_ArrowParentStr;
     private Camera mainCamera;
@@ -15,8 +13,6 @@ public class TargetIndicator : MonoBehaviour
     [SerializeField] private Vector3 m_targetIconScale;
     [SerializeField] private float m_ArrowOffs;
     [SerializeField] private bool m_OTISystemActive;
-
-
 
     void Start()
     {
@@ -36,19 +32,13 @@ public class TargetIndicator : MonoBehaviour
     {
         RespawnFlagMgt.OnRespawnFlagStay += SetOTIState;
         CoinCounter.OnCoinCounterEnabled += SetOTISystemActive;
-        //GameMaster.OnPlayerKill += SetOTIInactive;
-        //GameMaster.OnPlayerRespawn += SetOTIActive;
     }
 
     private void OnDisable()
     {
         RespawnFlagMgt.OnRespawnFlagStay -= SetOTIState;
         CoinCounter.OnCoinCounterEnabled -= SetOTISystemActive;
-        //GameMaster.OnPlayerKill -= SetOTIInactive;
-        //GameMaster.OnPlayerRespawn -= SetOTIActive;
     }
-
-
 
     private void UpdateTargetIconPosition()
     {
@@ -58,8 +48,6 @@ public class TargetIndicator : MonoBehaviour
 
         if (screencoordinate.x > mainCamera.pixelWidth || screencoordinate.x < 0 || screencoordinate.y > mainCamera.pixelHeight || screencoordinate.y < 0)
         {
-            //m_icon.gameObject.SetActive(true);
-
             Vector3 difference = screencoordinate - m_icon.transform.position;
             difference.Normalize();
             float rotZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;

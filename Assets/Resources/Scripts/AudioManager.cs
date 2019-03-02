@@ -84,10 +84,8 @@ public class AudioManager : MonoBehaviour {
             sounds[i].initVol = sounds[i].volume;
         }
         MainSound = GetSound(m_InitSoundStr);
-        if (!GameMaster.gm.m_DebugMode)
-            PlaySound(MainSound.name);
-        else
-            PlaySound("Music");
+        PlaySound(MainSound.name);
+
 
     }
 

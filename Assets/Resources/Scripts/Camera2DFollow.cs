@@ -21,8 +21,6 @@ namespace UnityStandardAssets._2D
         private Vector3 m_LookAheadPos;
         [SerializeField] private bool m_InitializeOnPlayer;
 
-
-
         // Use this for initialization
         private void Start()
         {
@@ -42,12 +40,6 @@ namespace UnityStandardAssets._2D
             m_OffsetZ = (transform.position - target.position).z;
             if (m_ResetParentAtStart)
                 transform.parent = null;
-        }
-
-        private void Awake()
-        {
-
-
         }
 
         // Update is called once per frame

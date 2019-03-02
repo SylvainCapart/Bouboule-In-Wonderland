@@ -75,8 +75,6 @@ public class Tiling : MonoBehaviour {
             //newBuddy.GetComponent<Tiling>().reverseScale = !reverseScale;
         }
 
-        
-
         if(rightOrLeft > 0)
         {
             newBuddy.GetComponent<Tiling>().hasLeftBuddy = true;

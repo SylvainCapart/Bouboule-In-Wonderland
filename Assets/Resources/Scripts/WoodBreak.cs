@@ -21,12 +21,6 @@ public class WoodBreak : MonoBehaviour
         m_AudioManager = AudioManager.instance;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
@@ -51,11 +45,7 @@ public class WoodBreak : MonoBehaviour
                 m_AudioManager.PlaySound("WoodBreak");
 
                 Destroy(this.gameObject, 0.5f);
-
             }
         }
     }
-
-
-
 }

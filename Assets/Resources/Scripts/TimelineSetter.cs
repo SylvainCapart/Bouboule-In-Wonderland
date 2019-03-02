@@ -3,7 +3,6 @@ using UnityEngine.Playables;
 
 public class TimelineSetter : MonoBehaviour
 {
-
     private PlayableDirector m_TimelineInit;
     // Start is called before the first frame update
 

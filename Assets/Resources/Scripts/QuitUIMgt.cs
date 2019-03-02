@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-
 public class QuitUIMgt : MonoBehaviour
 {
 
@@ -68,8 +67,6 @@ public class QuitUIMgt : MonoBehaviour
         }
         yield return new WaitForSecondsRealtime(delay);
         m_CanPanelToggle = true;
-
-
     }
 
     public void PanelToggle()

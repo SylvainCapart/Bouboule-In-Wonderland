@@ -44,13 +44,6 @@ public class Player : MonoBehaviour
 
         stats.CurrentHealth = stats.m_MaxHealth;
 
-        /*if (GameObject.FindObjectsOfType<Player>().Length > 1)
-        {
-            Debug.LogError("Only one player can be instatiated");
-            Destroy(this.transform.gameObject);
-            return;
-        }*/
-
         if (statusIndicator == null)
         {
             StatusIndicator ind = GameObject.Find("PlayerHP").GetComponentInChildren<StatusIndicator>();
@@ -64,19 +57,11 @@ public class Player : MonoBehaviour
         if (m_Anim == null)
             m_Anim = GetComponent<Animator>();
 
-
-        //GameMaster.gm.onToggleUpgrademenu += OnUpgradeMenuToggle;
-
-
         m_AudioManager = AudioManager.instance;
         if (m_AudioManager == null)
         {
             Debug.LogError("No audioManager found in " + this.name);
         }
-
-
-        //GameMaster.InitializePlayerRespawn(this);
-        //statusIndicator = Camera.main.GetComponentInChildren<StatusIndicator>();
 
     }
 
@@ -170,7 +155,6 @@ public class Player : MonoBehaviour
         stats.CurrentHealth -= stats.m_DrowningDamage;
         if (stats.CurrentHealth <= 0)
         {
-            //audioManager.PlaySound(deathSoundName);
             GameMaster.KillPlayer(this);
         }
         else
@@ -239,8 +223,5 @@ public class Player : MonoBehaviour
         }
 
     }
-
-
-
 
 }

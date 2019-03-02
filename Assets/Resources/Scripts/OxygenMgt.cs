@@ -25,8 +25,6 @@ public class OxygenMgt : MonoBehaviour
         }
 
             m_AirBarUI.SetOxygen(stats.CurrentOxygen, stats.m_MaxOxygen);
-
-
     }
 
 

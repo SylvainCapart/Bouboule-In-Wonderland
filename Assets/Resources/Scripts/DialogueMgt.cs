@@ -49,13 +49,6 @@ public class DialogueMgt : MonoBehaviour {
 
     private void Update()
     {
-       /* if(!dialogueReactivated)
-        {
-            //ActivateDialogue();
-            //GameObject.Find("ContinueText").GetComponent<TextBlinker>().Awake();
-            dialogueReactivated = true;
-        }*/
-
         if (m_CurrentDialogue != null && sentences.Count >= 0 && m_ContinueButton.activeSelf)
         {
             if (Input.GetKeyDown(KeyCode.Space))
@@ -114,19 +107,14 @@ public class DialogueMgt : MonoBehaviour {
                 if (m_CurrentDialogue.scenes[i].sceneClip != null)
                 {
                     m_SceneAnim.SetBool(sentences.Count.ToString(), true);
-                    //StartCoroutine(ShutOffContinueButton(m_CurrentDialogue.scenes[i].sceneClip.length));
                 }
 
             }
         }
 
-
-
         string sentence = sentences.Dequeue();
         dialogueText.text = sentence;
 
-
-        //StopAllCoroutines();
         if (m_TypeSentenceCo != null)
             StopCoroutine(m_TypeSentenceCo);
 
@@ -161,28 +149,18 @@ public class DialogueMgt : MonoBehaviour {
 
     public void DeactivateDialogue()
     {
-
-        //if (Input.GetButtonDown("Fire1") && m_DialogueActivated)
-        // {
         m_DialogueActivated = false;
         m_ContinueButton.SetActive(false);
         m_DialogueBoxAnim.SetBool("PanelOpen", false);
         m_DialogueBoxAnim.SetBool("ArrowBlink", false);
-        //}
-        //GameObject.Find("ContinueButton").gameObject.SetActive(false);
-
     }
 
     public void ActivateDialogue()
     {
-        //GameObject.Find("DialogueBox").transform.Find("ContinueButton").gameObject.SetActive(true);
-        //if (Input.GetButtonDown("Fire1") && !m_DialogueActivated)
-        //{
         m_DialogueActivated = true;
         m_ContinueButton.SetActive(true);
         m_DialogueBoxAnim.SetBool("PanelOpen", true);
         m_DialogueBoxAnim.SetBool("ArrowBlink", true);
-        //}
     }
 
     private IEnumerator ShutOffContinueButton(float delay)
@@ -209,8 +187,5 @@ public class DialogueMgt : MonoBehaviour {
         m_ContinueButton.SetActive(true);
         m_DialogueBoxAnim.SetBool("ArrowBlink", true);
     }
-
-
-
 
 }

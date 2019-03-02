@@ -120,7 +120,6 @@ public class SceneMgt : MonoBehaviour
                 Destroy(burnprefab);
 
                 yield return new WaitForSeconds(1f);
-                //m_DialogueManager.DisplayNextSentence();
                 m_DialogueManager.ShutOnContinueButton();
                 break;
 

@@ -24,14 +24,12 @@ public class AirBarMgt : MonoBehaviour {
 
     private void OnEnable()
     {
-        //GameMaster.ResetDelegate += AirBarReset;
         PlayerSpit.OnSpitModeChange += OnSpitModeChanged;
         PlayerSpit.OnSpitActivationChange += ShowAirBarUI;
     }
 
     private void OnDisable()
     {
-        //GameMaster.ResetDelegate -= AirBarReset;
         PlayerSpit.OnSpitModeChange -= OnSpitModeChanged;
         PlayerSpit.OnSpitActivationChange -= ShowAirBarUI;
     }
@@ -46,7 +44,6 @@ public class AirBarMgt : MonoBehaviour {
         float _value = ((float)_cur / (float)_max);
 
         m_OxygenBarRect.localScale = new Vector3(_value, m_OxygenBarRect.localScale.y, m_OxygenBarRect.localScale.z);
-
     }
 
 
